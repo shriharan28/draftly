@@ -9,16 +9,18 @@
 
 | Field | Value |
 |---|---|
-| **Current stage** | **Stage 2 COMPLETE ✅** → next: Stage 3 (Auth + onboarding) |
-| **Next action** | Student: `git push` to deploy the shell, admire http://localhost:3000/dashboard (dev server hot-reloads). Then say "start Stage 3" — first step: create Supabase project together |
+| **Current stage** | **Stage 3 Auth COMPLETE ✅** → next: Stage 3 Part 2 — Onboarding Wizard |
+| **Next action** | Mockup Gate 2: build HTML preview of 3-step onboarding wizard → approve → build real wizard |
 | **Blockers** | None |
 | **App** | Draftly — AI Content Studio (working name, see DECISIONS D-002) |
-| **Live URL** | **https://draftly-pink.vercel.app** (shell deploys on next `git push`) |
+| **Live URL** | **https://draftly-pink.vercel.app** (push to deploy auth — add Supabase env vars to Vercel first) |
 | **Repo** | github.com/shriharan28/draftly · branch `main` |
 
 ---
 
 ## Entries (newest at top — append after every work session)
+
+### 006 — 2026-08-21 — ✅ STAGE 3 AUTH COMPLETE — real users, real database
 
 ### 005 — 2026-08-20 — 🏗️ STAGE 2 COMPLETE — app shell built per approved mockup
 - **Done:** Mockup Gate 1 APPROVED by student. Built: `app/(app)/layout.tsx` (shell); `components/layout/` — sidebar (desktop), bottom-nav (mobile), header (credits pill ⚡14 placeholder + avatar "S"); `components/features/quick-generate-card.tsx` (interactive: topic input, type chips, generate → toast); `components/ui/copy-button.tsx` (clipboard + toast); Dashboard page per mockup (3 stat cards, hero, recent list); stub pages for generate/library/settings/billing (each notes its build stage). `npm run build` ✅ — routes: `/ /dashboard /generate /library /settings /billing`.

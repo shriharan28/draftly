@@ -1,7 +1,8 @@
-import { Header } from "@/components/layout/header";
 import { QuickGenerateCard } from "@/components/features/quick-generate-card";
 import { Card } from "@/components/ui/card";
 import { CopyButton } from "@/components/ui/copy-button";
+import { createClient } from "@/lib/supabase/server";
+import { redirect } from "next/navigation";
 
 function StatCard({
   label,
@@ -51,15 +52,42 @@ const RECENT = [
   },
 ];
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  const supabase = await createClient();
+
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  // Real credit balance from ledger
+  const { data: ledger } = await supabase
+    .from("credit_ledger")
+    .select("balance_after")
+    .order("id", { ascending: false })
+    .limit(1)
+    .single();
+
+  const credits = ledger?.balance_after ?? 0;
+
+  // Derive display name from email
+  const emailPrefix = user.email?.split("@")[0] ?? "there";
+  const displayName =
+    emailPrefix.charAt(0).toUpperCase() + emailPrefix.slice(1).split(".")[0];
+
   return (
     <>
-      <Header title="Welcome back, Shriharan 👋" subtitle="Ready to make the internet talk?" />
+      {/* Real greeting with real user name */}
+      <header className="mb-8">
+        <h1 className="font-display text-2xl font-semibold">
+          Welcome back, {displayName} 👋
+        </h1>
+        <p className="mt-1 text-sm text-muted">Ready to make the internet talk?</p>
+      </header>
 
       <div className="mb-6 grid gap-4 sm:grid-cols-3">
-        <StatCard label="Credits left" value="14" delta="resets in 12 days" />
-        <StatCard label="This week" value="6 posts" delta="▲ 2 vs last week" deltaClass="text-success" />
-        <StatCard label="Top type" value="IG captions" delta="you're on a 4-day streak 🔥" />
+        {/* Real credit balance */}
+        <StatCard label="Credits left" value={String(credits)} delta="resets in 30 days" />
+        <StatCard label="This week" value="0 posts" delta="generate your first post!" />
+        <StatCard label="Top type" value="—" delta="nothing yet — get started" />
       </div>
 
       <div className="mb-6">
