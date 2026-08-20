@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MOCKUP GATE 1 — Draftly App Shell (Dashboard)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#0A0A0F; --surface:#12121A; --surface2:#1A1A26;
+    --border:rgba(255,255,255,.07); --text:#F4F4FA; --muted:#8E8EA3;
+    --primary:#7C5CFF; --glow:rgba(124,92,255,.35); --accent:#FF4ECD;
+    --success:#A3F65A; --display:'Space Grotesk',system-ui,sans-serif;
+    --body:'Inter',system-ui,sans-serif; --mono:'JetBrains Mono',monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:var(--body);min-height:100vh}
+  .banner{background:linear-gradient(135deg,#7C5CFF,#FF4ECD);color:#fff;text-align:center;
+    font:500 13px var(--body);padding:10px}
+  .shell{display:flex;min-height:calc(100vh - 40px)}
+
+  /* ---------- SIDEBAR ---------- */
+  .sidebar{width:240px;border-right:1px solid var(--border);padding:24px 16px;
+    display:flex;flex-direction:column;gap:8px;position:sticky;top:0;height:calc(100vh - 40px)}
+  .logo{font:700 22px var(--display);padding:0 12px 20px;letter-spacing:-.5px}
+  .logo span{background:linear-gradient(135deg,#7C5CFF,#FF4ECD);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .nav-item{display:flex;align-items:center;gap:12px;padding:12px;border-radius:14px;
+    color:var(--muted);font:500 14px var(--body);cursor:pointer;transition:.15s ease-out}
+  .nav-item:hover{background:var(--surface2);color:var(--text)}
+  .nav-item.active{background:var(--surface2);color:var(--text)}
+  .nav-item.active .ico{background:var(--primary);box-shadow:0 0 24px var(--glow)}
+  .ico{width:32px;height:32px;border-radius:10px;background:var(--surface2);
+    display:grid;place-items:center;font-size:15px;transition:.15s}
+  .sidebar-foot{margin-top:auto;padding:12px;border-radius:14px;background:var(--surface);
+    border:1px solid var(--border);font:400 12px var(--body);color:var(--muted)}
+  .sidebar-foot b{color:var(--text);font-weight:500}
+
+  /* ---------- MAIN ---------- */
+  .main{flex:1;padding:32px;max-width:1200px;margin:0 auto;width:100%}
+  .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:32px}
+  .topbar h1{font:600 24px var(--display)}
+  .top-right{display:flex;align-items:center;gap:16px}
+  .credits{display:flex;align-items:center;gap:8px;height:40px;padding:0 16px;border-radius:999px;
+    background:var(--surface);border:1px solid var(--border);font:500 14px var(--mono)}
+  .credits .zap{color:var(--primary)}
+  .avatar{width:40px;height:40px;border-radius:50%;
+    background:linear-gradient(135deg,#7C5CFF,#FF4ECD);display:grid;place-items:center;font-weight:600;font-size:14px}
+
+  /* ---------- STAT CARDS ---------- */
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:24px}
+  .stat .label{font:500 12px var(--body);color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+  .stat .value{font:700 32px var(--display);margin-top:8px}
+  .stat .delta{font:400 12px var(--body);margin-top:6px;color:var(--muted)}
+  .delta.up{color:var(--success)}
+
+  /* ---------- HERO GENERATE CARD ---------- */
+  .hero{padding:32px;margin-bottom:24px;position:relative;overflow:hidden}
+  .hero::after{content:"";position:absolute;top:-80px;right:-80px;width:260px;height:260px;border-radius:50%;
+    background:radial-gradient(circle,var(--glow),transparent 70%);pointer-events:none}
+  .hero h2{font:600 22px var(--display)}
+  .hero .sub{color:var(--muted);font-size:14px;margin-top:6px}
+  .hero-input{width:100%;height:52px;border-radius:14px;border:1px solid var(--border);background:var(--surface2);
+    padding:0 18px;color:var(--text);font:400 15px var(--body);margin:20px 0 16px;outline:none}
+  .hero-input::placeholder{color:var(--muted)}
+  .hero-input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(124,92,255,.25)}
+  .pill-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+  .pill{height:36px;padding:0 16px;border-radius:999px;border:1px solid var(--border);background:var(--surface2);
+    color:var(--muted);font:500 13px var(--body);cursor:pointer}
+  .pill.sel{background:var(--primary);border-color:var(--primary);color:#fff}
+  .cta{height:48px;padding:0 28px;border:none;border-radius:999px;background:var(--primary);color:#fff;
+    font:500 15px var(--body);cursor:pointer;transition:.15s;box-shadow:0 0 32px var(--glow)}
+  .cta:hover{filter:brightness(1.1)}
+  .cta small{opacity:.75;font:400 12px var(--mono);margin-left:8px}
+
+  /* ---------- RECENT ---------- */
+  .section-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+  .section-h h3{font:600 18px var(--display)}
+  .section-h a{color:var(--muted);font-size:13px;text-decoration:none}
+  .row{display:flex;align-items:center;gap:16px;padding:16px 20px;border-radius:16px;
+    background:var(--surface);border:1px solid var(--border);margin-bottom:10px}
+  .row .type{width:38px;height:38px;border-radius:12px;background:var(--surface2);display:grid;place-items:center}
+  .row .meta{flex:1}.row .meta b{font:500 14px var(--body);display:block}
+  .row .meta span{font:400 12px var(--body);color:var(--muted)}
+  .copy{height:34px;padding:0 14px;border-radius:999px;border:1px solid var(--border);background:var(--surface2);
+    color:var(--text);font:500 13px var(--body);cursor:pointer}
+  .copy:hover{border-color:var(--primary)}
+
+  .foot-note{text-align:center;color:var(--muted);font:400 12px var(--body);padding:24px}
+  @media(max-width:900px){.sidebar{display:none}.stats{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+  <div class="banner">🎨 MOCKUP GATE 1 — this is a preview, not the app. Approve it or ask for changes (colors, spacing, layout, anything).</div>
+
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="logo">Draft<span>ly</span></div>
+      <div class="nav-item active"><div class="ico">🏠</div>Dashboard</div>
+      <div class="nav-item"><div class="ico">✨</div>Generate</div>
+      <div class="nav-item"><div class="ico">📚</div>Library</div>
+      <div class="nav-item"><div class="ico">⚙️</div>Settings</div>
+      <div class="nav-item"><div class="ico">💳</div>Billing</div>
+      <div class="sidebar-foot">Free plan · <b>Upgrade</b></div>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <h1>Good evening, Shriharan</h1>
+        <div class="top-right">
+          <div class="credits"><span class="zap">⚡</span><span class="tnum">14</span></div>
+          <div class="avatar">S</div>
+        </div>
+      </div>
+
+      <div class="stats">
+        <div class="card stat">
+          <div class="label">Credits left</div>
+          <div class="value">14</div>
+          <div class="delta">resets in 12 days</div>
+        </div>
+        <div class="card stat">
+          <div class="label">This week</div>
+          <div class="value">6 posts</div>
+          <div class="delta up">▲ 2 vs last week</div>
+        </div>
+        <div class="card stat">
+          <div class="label">Top type</div>
+          <div class="value">IG captions</div>
+          <div class="delta">you're on a 4-day streak 🔥</div>
+        </div>
+      </div>
+
+      <div class="card hero">
+        <h2>Quick generate</h2>
+        <div class="sub">One card. Zero friction. The whole product.</div>
+        <input class="hero-input" placeholder="What do you want to post about?" />
+        <div class="pill-row">
+          <div class="pill sel">IG caption</div>
+          <div class="pill">Reel hook</div>
+          <div class="pill">X thread</div>
+          <div class="pill">LinkedIn</div>
+          <div class="pill">YouTube</div>
+        </div>
+        <button class="cta">⚡ Generate <small>· 1 credit</small></button>
+      </div>
+
+      <div class="section-h">
+        <h3>Recent</h3><a href="#">View all →</a>
+      </div>
+      <div class="row"><div class="type">📸</div><div class="meta"><b>"gym progress — 3 month transformation"</b><span>IG caption · 2h ago</span></div><button class="copy">Copy</button></div>
+      <div class="row"><div class="type">🎬</div><div class="meta"><b>"why everyone should learn to code"</b><span>Reel hook · yesterday</span></div><button class="copy">Copy</button></div>
+      <div class="row"><div class="type">💼</div><div class="meta"><b>"5 lessons from my first freelance client"</b><span>LinkedIn · 2d ago</span></div><button class="copy">Copy</button></div>
+
+      <div class="foot-note">MOCKUP GATE 1 · desktop shell — on mobile, the sidebar becomes a bottom tab bar · colors/fonts = docs/UIUX_DESIGN_BRIEF.md</div>
+    </main>
+  </div>
+</body>
+</html>
