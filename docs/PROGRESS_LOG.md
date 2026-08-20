@@ -9,16 +9,28 @@
 
 | Field | Value |
 |---|---|
-| **Current stage** | Stage 2 — skeleton built by master; **student steps pending** |
-| **Next action** | Student: push to GitHub → import to Vercel → open Mockup Gate 1 → approve or request changes (commands in entry 002) |
+| **Current stage** | Stage 2 — 90% done · only **Mockup Gate 1 verdict** left |
+| **Next action** | Student judges `mockups/gate-1-app-shell.html` → reply "mockup approved" or list changes → master builds the real app shell |
 | **Blockers** | None |
 | **App** | Draftly — AI Content Studio (working name, see DECISIONS D-002) |
-| **Live URL** | pending Vercel import (student step) |
-| **Repo** | local only, branch `main`, HEAD `1b6b587` — push pending |
+| **Live URL** | **https://draftly-pink.vercel.app** — public ✅ (verified by anonymous fetch 2026-08-20) |
+| **Repo** | github.com/shriharan28/draftly · branch `main` |
 
 ---
 
 ## Entries (newest at top — append after every work session)
+
+### 004 — 2026-08-20 — 🚀 DRAFTLY IS PUBLIC — Stage 2 deploy loop complete
+- **Done:** Deployment Protection resolved by student (new public project/alias). Master verified anonymously: **https://draftly-pink.vercel.app** serves the Stage 2 checkpoint (title "Draftly — AI Content Studio", design-system card renders). The full loop now works: `git push` → Vercel auto-deploy → live in ~1 min.
+- **Remaining in Stage 2:** Mockup Gate 1 verdict — the ONLY blocker before building the real app shell (route groups `(marketing)/(auth)/(app)`, sidebar, header, credits pill, dashboard placeholder).
+- **Blockers:** none.
+
+### 003 — 2026-08-20 — Student: push ✅ + Vercel deploy ✅ · ONE issue: Deployment Protection ON
+- **Done by student:** branch rename handled by master; `git push -u origin main` succeeded; Vercel project imported & deployed. Live URLs: `draftly-hrv9cczkk-shriharan-s.vercel.app` (deployment) / `draftly-shriharan-s.vercel.app` (production alias). Local dev server also running at localhost:3000.
+- **Issue found by master:** anonymous visitors are redirected to `vercel.com/sso-api` login wall on BOTH URLs → account has **Deployment Protection** enabled (Vercel default for new team scopes). Site is effectively private.
+- **Student fix (pending):** Vercel dashboard → `draftly` project → Settings → Deployment Protection → set to **Standard Protection** (production public, previews protected) or **Disabled** → Save. Then master re-verifies.
+- **Also pending:** Mockup Gate 1 verdict (approve or change requests).
+- **Next master step:** re-verify public URL → on mockup approval, build real app shell (route groups (marketing)/(auth)/(app), sidebar+header+credits pill).
 
 ### 002 — 2026-08-20 — Stage 1 ✅ verified · Stage 2 master-half complete
 - **Done:** Environment verified on this machine (Node 24.19, npm 10.9, git 2.42, identity configured). Scaffolded app at repo root: Next.js 16.3.1 + React 19 + Tailwind v4 + TS. Design tokens live in `app/globals.css`; fonts (Space Grotesk / Inter / JetBrains Mono) wired in `app/layout.tsx`. UI kit built in `components/ui/`: Button, Card, Chip, Input, Textarea, Toast (+`lib/cn.ts`). Checkpoint page at `/`. **Mockup Gate 1 preview** at `mockups/gate-1-app-shell.html`. `npm run build` ✅. Commit `1b6b587`.

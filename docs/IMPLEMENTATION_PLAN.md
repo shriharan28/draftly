@@ -34,8 +34,8 @@
 
 ## Stage 2 — Skeleton + deploy pipeline (Days 3–5)
 - [x] `npx create-next-app@latest .` — done 2026-08-20 (Next 16.3.1, React 19, Tailwind v4, Turbopack)
-- [ ] GitHub push → **STUDENT STEP** (git init + commits done; commands in PROGRESS_LOG entry 002)
-- [ ] Import repo into Vercel → live URL — **STUDENT STEP** (no env vars needed yet)
+- [x] GitHub push ✅ (after `master`→`main` rename lesson, PROGRESS_LOG 002/003)
+- [x] Import repo into Vercel → live at **https://draftly-pink.vercel.app** (public, verified)
 - [x] Design tokens → `app/globals.css` + fonts (Space Grotesk/Inter/JetBrains Mono) in `app/layout.tsx`
 - [x] Base components: Button, Card, Chip, Input, Textarea, Toast in `components/ui/`
 - [ ] 🎨 MOCKUP GATE 1: preview READY at `mockups/gate-1-app-shell.html` — awaiting student approval → then build the real app shell
