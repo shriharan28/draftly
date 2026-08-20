@@ -9,16 +9,20 @@
 
 | Field | Value |
 |---|---|
-| **Current stage** | **Stage 3 Auth COMPLETE ✅** → next: Stage 3 Part 2 — Onboarding Wizard |
-| **Next action** | Mockup Gate 2: build HTML preview of 3-step onboarding wizard → approve → build real wizard |
+| **Current stage** | **Stage 3 COMPLETE ✅** (Auth + Onboarding Wizard) → next: Stage 4 (AI Generation Engine) |
+| **Next action** | Stage 4: AI Generation Engine (Google Gemini 2.0 Flash integration, credit consumption, content variants generation) |
 | **Blockers** | None |
-| **App** | Draftly — AI Content Studio (working name, see DECISIONS D-002) |
-| **Live URL** | **https://draftly-pink.vercel.app** (push to deploy auth — add Supabase env vars to Vercel first) |
+| **App** | Draftly — AI Content Studio |
+| **Live URL** | **https://draftly-pink.vercel.app** |
 | **Repo** | github.com/shriharan28/draftly · branch `main` |
 
 ---
 
 ## Entries (newest at top — append after every work session)
+
+### 007 — 2026-08-21 — 🎉 STAGE 3 COMPLETE — 3-Step Onboarding Wizard & Profile Voice Integration
+- **Done:** Mockup Gate 2 APPROVED. Built `OnboardingWizard` React component with step transitions. Created `app/(app)/onboarding/actions.ts` to persist niche, target audience, platform choices, and brand voice to `profiles` and `brand_voices` tables in Supabase. Built & verified `npm run build` ✅. Pushed to `main` branch → live on Vercel.
+- **Next:** Stage 4 — AI Generation Engine (Google Gemini 2.0 Flash SDK setup, Server Action for generating 3 content variants, credit deduction via `spend_credits` RPC).
 
 ### 006 — 2026-08-21 — ✅ STAGE 3 AUTH COMPLETE — real users, real database
 
