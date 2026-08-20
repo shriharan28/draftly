@@ -9,16 +9,22 @@
 
 | Field | Value |
 |---|---|
-| **Current stage** | Stage 2 — 90% done · only **Mockup Gate 1 verdict** left |
-| **Next action** | Student judges `mockups/gate-1-app-shell.html` → reply "mockup approved" or list changes → master builds the real app shell |
+| **Current stage** | **Stage 2 COMPLETE ✅** → next: Stage 3 (Auth + onboarding) |
+| **Next action** | Student: `git push` to deploy the shell, admire http://localhost:3000/dashboard (dev server hot-reloads). Then say "start Stage 3" — first step: create Supabase project together |
 | **Blockers** | None |
 | **App** | Draftly — AI Content Studio (working name, see DECISIONS D-002) |
-| **Live URL** | **https://draftly-pink.vercel.app** — public ✅ (verified by anonymous fetch 2026-08-20) |
+| **Live URL** | **https://draftly-pink.vercel.app** (shell deploys on next `git push`) |
 | **Repo** | github.com/shriharan28/draftly · branch `main` |
 
 ---
 
 ## Entries (newest at top — append after every work session)
+
+### 005 — 2026-08-20 — 🏗️ STAGE 2 COMPLETE — app shell built per approved mockup
+- **Done:** Mockup Gate 1 APPROVED by student. Built: `app/(app)/layout.tsx` (shell); `components/layout/` — sidebar (desktop), bottom-nav (mobile), header (credits pill ⚡14 placeholder + avatar "S"); `components/features/quick-generate-card.tsx` (interactive: topic input, type chips, generate → toast); `components/ui/copy-button.tsx` (clipboard + toast); Dashboard page per mockup (3 stat cards, hero, recent list); stub pages for generate/library/settings/billing (each notes its build stage). `npm run build` ✅ — routes: `/ /dashboard /generate /library /settings /billing`.
+- **Student steps:** (1) `git push` — shell goes live on draftly-pink.vercel.app; (2) with dev server running, open http://localhost:3000/dashboard — resize browser narrow to see the mobile bottom tab bar; click Copy buttons and the Generate button (toasts work).
+- **Next session:** Stage 3 — Supabase project + `0001_init.sql` migration (BACKEND_SCHEMA §2–5) + email auth + onboarding wizard. Starts with student creating the Supabase project (master guides).
+- **Blockers:** none.
 
 ### 004 — 2026-08-20 — 🚀 DRAFTLY IS PUBLIC — Stage 2 deploy loop complete
 - **Done:** Deployment Protection resolved by student (new public project/alias). Master verified anonymously: **https://draftly-pink.vercel.app** serves the Stage 2 checkpoint (title "Draftly — AI Content Studio", design-system card renders). The full loop now works: `git push` → Vercel auto-deploy → live in ~1 min.

@@ -14,8 +14,8 @@
 | Stage | What | Days | Builds the skill of… |
 |---|---|---|---|
 | 0 ✅ | Product Bible (this docs/) | 1 | Thinking before coding |
-| 1 | Accounts + environment | 1–2 | Tooling, terminal, Git |
-| 2 | Skeleton app + deploy pipeline | 2–3 | Next.js, Tailwind, Vercel, GitHub flow |
+| 1 ✅ | Accounts + environment | 1–2 | Tooling, terminal, Git |
+| 2 ✅ | Skeleton app + deploy pipeline | 2–3 | Next.js, Tailwind, Vercel, GitHub flow |
 | 3 | Auth + onboarding | 4–5 | Supabase, RLS, forms, middleware |
 | 4 | Generator core + credits | 6–8 | AI integration, API design, ledger, the product |
 | 5 | Stripe billing + paywall | 5–6 | Payments, webhooks, entitlements |
@@ -38,7 +38,7 @@
 - [x] Import repo into Vercel → live at **https://draftly-pink.vercel.app** (public, verified)
 - [x] Design tokens → `app/globals.css` + fonts (Space Grotesk/Inter/JetBrains Mono) in `app/layout.tsx`
 - [x] Base components: Button, Card, Chip, Input, Textarea, Toast in `components/ui/`
-- [ ] 🎨 MOCKUP GATE 1: preview READY at `mockups/gate-1-app-shell.html` — awaiting student approval → then build the real app shell
+- [x] 🎨 MOCKUP GATE 1: **approved** 2026-08-20 → real app shell built: `(app)` route group, Sidebar, BottomNav, Header (credits pill + avatar), Dashboard per mockup, QuickGenerateCard, CopyButton, 4 stub pages. `npm run build` ✅ all routes
 - **DoD:** `npm run dev` works; live URL shows shell; tokens match brief; deploy triggered by `git push`.
 
 ## Stage 3 — Auth + onboarding (Days 6–10)
