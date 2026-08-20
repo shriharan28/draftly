@@ -33,12 +33,12 @@
 - **DoD:** all versions print; every account exists; API key for Gemini saved securely.
 
 ## Stage 2 — Skeleton + deploy pipeline (Days 3–5)
-- [ ] `npx create-next-app@latest . --typescript --tailwind --app --eslint` (repo root, alongside docs/)
-- [ ] Git init → GitHub private repo → first commit pushed
-- [ ] Import repo into Vercel → live URL (placeholder page) — **deploy on day 1, keep it live forever**
-- [ ] Design tokens from UIUX_DESIGN_BRIEF §2–3 into `globals.css` (colors, fonts via next/font)
-- [ ] Base components: Button, Card, Chip, Input, Toast in `components/ui/`
-- [ ] 🎨 MOCKUP GATE 1: app shell (sidebar + header + credits pill) as HTML preview → approve → build it
+- [x] `npx create-next-app@latest .` — done 2026-08-20 (Next 16.3.1, React 19, Tailwind v4, Turbopack)
+- [ ] GitHub push → **STUDENT STEP** (git init + commits done; commands in PROGRESS_LOG entry 002)
+- [ ] Import repo into Vercel → live URL — **STUDENT STEP** (no env vars needed yet)
+- [x] Design tokens → `app/globals.css` + fonts (Space Grotesk/Inter/JetBrains Mono) in `app/layout.tsx`
+- [x] Base components: Button, Card, Chip, Input, Textarea, Toast in `components/ui/`
+- [ ] 🎨 MOCKUP GATE 1: preview READY at `mockups/gate-1-app-shell.html` — awaiting student approval → then build the real app shell
 - **DoD:** `npm run dev` works; live URL shows shell; tokens match brief; deploy triggered by `git push`.
 
 ## Stage 3 — Auth + onboarding (Days 6–10)
