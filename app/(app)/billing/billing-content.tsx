@@ -171,6 +171,9 @@ export function BillingContent({
         </div>
       </div>
 
+      {/* PAY AS YOU GO FLEX CREDIT CALCULATOR CARD */}
+      <PayAsYouGoCalculator handleUpgrade={handleUpgrade} isPending={isPending} />
+
       {/* CREDIT TRANSACTION HISTORY LEDGER */}
       <div className="glass-panel p-6">
         <div className="mb-5 flex items-center justify-between">
@@ -227,6 +230,128 @@ export function BillingContent({
       </div>
 
       <PaywallModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+    </div>
+  );
+}
+
+function PayAsYouGoCalculator({
+  handleUpgrade,
+  isPending,
+}: {
+  handleUpgrade: () => void;
+  isPending: boolean;
+}) {
+  const [credits, setCredits] = useState<number>(100);
+
+  // Dynamic pricing algorithm: Volume discount tiers
+  const getUnitPrice = (c: number) => {
+    if (c >= 500) return 0.035; // Bulk Tier: 3.5 cents / credit
+    if (c >= 250) return 0.04;  // Pro Tier: 4.0 cents / credit
+    if (c >= 100) return 0.045; // Plus Tier: 4.5 cents / credit
+    return 0.05;                // Standard Tier: 5.0 cents / credit
+  };
+
+  const unitPrice = getUnitPrice(credits);
+  const totalPrice = (credits * unitPrice).toFixed(2);
+  const discountPercent = Math.round((1 - unitPrice / 0.05) * 100);
+
+  return (
+    <div className="glass-panel p-7 border-[#10B981]/30 bg-gradient-to-br from-[#10B981]/10 via-[#030305] to-[#030305]">
+      <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+        {/* LEFT TITLE & DESCRIPTION */}
+        <div>
+          <div className="inline-flex items-center gap-2 rounded-full border border-[#10B981]/30 bg-[#10B981]/15 px-3 py-1 text-xs font-semibold text-[#10B981]">
+            <span>⚡ Pay As You Go</span>
+            <span className="font-mono text-[10px] opacity-80">• Credits Never Expire</span>
+          </div>
+          <h3 className="mt-3 font-display text-2xl font-bold text-white">
+            Flex Credit Top-Up Calculator
+          </h3>
+          <p className="mt-1 text-xs text-[#9494A8] max-w-md">
+            Need extra credits without a monthly commitment? Choose your exact credit amount below.
+          </p>
+        </div>
+
+        {/* RIGHT DISPLAY PRICE BADGE */}
+        <div className="rounded-2xl border border-white/10 bg-black/40 p-5 text-right font-display shadow-inner">
+          <div className="text-xs text-[#9494A8] font-mono">Calculated Total</div>
+          <div className="text-3xl font-bold text-white tracking-tight">
+            ${totalPrice}
+          </div>
+          <div className="text-[11px] font-mono text-[#10B981] mt-0.5">
+            ${unitPrice.toFixed(3)} / credit {discountPercent > 0 && `(${discountPercent}% OFF)`}
+          </div>
+        </div>
+      </div>
+
+      {/* INTERACTIVE SLIDER & PRESETS */}
+      <div className="mt-8 space-y-6">
+        <div>
+          <div className="mb-3 flex items-center justify-between font-mono text-xs">
+            <span className="text-[#9494A8]">Adjust Credit Bar:</span>
+            <span className="text-white font-bold text-sm">
+              {credits} AI Credits <span className="text-[#10B981] font-normal">({credits} AI Posts)</span>
+            </span>
+          </div>
+
+          <input
+            type="range"
+            min={25}
+            max={1000}
+            step={25}
+            value={credits}
+            onChange={(e) => setCredits(Number(e.target.value))}
+            className="w-full h-3 rounded-lg appearance-none cursor-pointer bg-white/10 accent-[#10B981] focus:outline-none"
+          />
+
+          <div className="mt-2 flex justify-between font-mono text-[10px] text-[#9494A8]">
+            <span>25 Credits ($1.25)</span>
+            <span>250 Credits ($10.00)</span>
+            <span>500 Credits ($17.50)</span>
+            <span>1000 Credits ($35.00)</span>
+          </div>
+        </div>
+
+        {/* PRESET SHORTCUT BUTTONS */}
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-xs text-[#9494A8] font-mono mr-2">Quick Presets:</span>
+          {[50, 100, 250, 500, 1000].map((preset) => {
+            const pPrice = (preset * getUnitPrice(preset)).toFixed(2);
+            const active = credits === preset;
+            return (
+              <button
+                key={preset}
+                type="button"
+                onClick={() => setCredits(preset)}
+                className={`rounded-xl border px-3 py-1.5 text-xs font-mono transition-all ${
+                  active
+                    ? "border-[#10B981] bg-[#10B981]/20 text-[#10B981] font-bold shadow-[0_0_12px_rgba(16,185,129,0.3)]"
+                    : "border-white/10 bg-white/5 text-[#9494A8] hover:border-white/20 hover:text-white"
+                }`}
+              >
+                {preset} Credits (${pPrice})
+              </button>
+            );
+          })}
+        </div>
+
+        {/* TOP UP CHECKOUT ACTION BUTTON */}
+        <div className="pt-2">
+          <Button
+            type="button"
+            variant="primary"
+            onClick={handleUpgrade}
+            disabled={isPending}
+            className="w-full h-12 text-sm bg-gradient-to-r from-[#10B981] to-[#8B5CF6] shadow-[0_0_24px_rgba(16,185,129,0.3)]"
+          >
+            <span>
+              {isPending
+                ? "Connecting to Checkout…"
+                : `Top-Up ${credits} AI Credits for $${totalPrice}`}
+            </span>
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }
