@@ -9,6 +9,8 @@
 import { useState, useTransition } from "react";
 import { updateBrandVoiceAction } from "./actions";
 import { Button } from "@/components/ui/button";
+import { PaywallModal } from "@/components/features/paywall-modal";
+import { LockIcon } from "@/components/ui/icons";
 import { Input } from "@/components/ui/input";
 import {
   SettingsIcon,
@@ -34,6 +36,9 @@ export function SettingsContent({
   const [isPending, startTransition] = useTransition();
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isPaywallOpen, setIsPaywallOpen] = useState(false);
+
+  const isPro = subscriptionStatus === "active";
 
   const [fullName, setFullName] = useState(profile.full_name || "");
   const [niche, setNiche] = useState(profile.niche || "tech");
@@ -175,17 +180,52 @@ export function SettingsContent({
         </div>
 
         {/* CUSTOM INSTRUCTIONS */}
-        <div className="space-y-2">
-          <label className="block text-xs font-semibold text-white uppercase tracking-wider font-mono">
-            Custom Brand Voice Instructions (Optional)
-          </label>
-          <textarea
-            value={voiceInstructions}
-            onChange={(e) => setVoiceInstructions(e.target.value)}
-            placeholder="e.g. Use short sentences. Focus on actionable insights. Avoid buzzwords like 'synergy'."
-            rows={3}
-            className="w-full rounded-xl border border-white/10 bg-[#0C0C12] p-3 text-xs text-white placeholder-[#9494A8] focus:border-[#8B5CF6] focus:outline-none"
-          />
+        <div className="space-y-2 relative">
+          <div className="flex items-center justify-between">
+            <label className="block text-xs font-semibold text-white uppercase tracking-wider font-mono">
+              Custom Brand Voice Instructions (Optional)
+            </label>
+            {!isPro && (
+              <span className="rounded-full bg-[#8B5CF6]/20 border border-[#8B5CF6]/40 px-2 py-0.5 font-mono text-[9px] font-bold text-[#8B5CF6] flex items-center gap-1">
+                <LockIcon className="w-2.5 h-2.5" />
+                PRO FEATURE
+              </span>
+            )}
+          </div>
+
+          <div className="relative">
+            <textarea
+              value={isPro ? voiceInstructions : ""}
+              onChange={(e) => isPro && setVoiceInstructions(e.target.value)}
+              readOnly={!isPro}
+              placeholder={
+                isPro
+                  ? "e.g. Use short sentences. Focus on actionable insights. Avoid buzzwords like 'synergy'."
+                  : "🔒 Upgrade to Draftly Pro to unlock fine-tuning & custom brand voice rules."
+              }
+              rows={3}
+              className={`w-full rounded-xl border p-3 text-xs outline-none transition-all ${
+                isPro
+                  ? "border-white/10 bg-[#0C0C12] text-white placeholder-[#9494A8] focus:border-[#8B5CF6]"
+                  : "border-white/10 bg-white/5 text-[#9494A8] cursor-pointer placeholder-[#9494A8]/70 select-none"
+              }`}
+              onClick={() => {
+                if (!isPro) setIsPaywallOpen(true);
+              }}
+            />
+            {!isPro && (
+              <button
+                type="button"
+                onClick={() => setIsPaywallOpen(true)}
+                className="absolute inset-0 w-full h-full cursor-pointer flex items-center justify-center bg-black/40 backdrop-blur-[2px] rounded-xl border border-[#8B5CF6]/30 opacity-0 hover:opacity-100 transition-opacity duration-200"
+              >
+                <span className="rounded-full bg-[#8B5CF6] text-white text-xs font-semibold px-4 py-1.5 shadow-lg shadow-[#8B5CF6]/40 flex items-center gap-1.5">
+                  <LockIcon className="w-3.5 h-3.5" />
+                  <span>Upgrade to Pro to Unlock</span>
+                </span>
+              </button>
+            )}
+          </div>
         </div>
 
         {error && (
@@ -258,6 +298,8 @@ export function SettingsContent({
           </div>
         </div>
       </div>
+
+      <PaywallModal isOpen={isPaywallOpen} onClose={() => setIsPaywallOpen(false)} />
     </div>
   );
 }
