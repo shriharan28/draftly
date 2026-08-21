@@ -25,7 +25,7 @@ export function SettingsContent({
   userCredits,
   userEmail,
 }: {
-  profile: { full_name?: string; niche?: string; target_audience?: string };
+  profile: { full_name?: string; niche?: string; tone?: string; target_audience?: string };
   brandVoice: { tone?: string; voice_instructions?: string };
   subscriptionStatus: string;
   userCredits: number;
@@ -40,7 +40,7 @@ export function SettingsContent({
   const [targetAudience, setTargetAudience] = useState(
     profile.target_audience || "Developers & Tech Enthusiasts"
   );
-  const [tone, setTone] = useState(brandVoice.tone || "Bold & Punchy");
+  const [tone, setTone] = useState(profile.tone || brandVoice.tone || "Bold & Punchy");
   const [voiceInstructions, setVoiceInstructions] = useState(
     brandVoice.voice_instructions || ""
   );

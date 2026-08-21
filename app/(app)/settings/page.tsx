@@ -17,17 +17,20 @@ export default async function SettingsPage() {
   // 1. Fetch Profile
   const { data: profile } = await supabase
     .from("profiles")
-    .select("full_name, niche, target_audience")
+    .select("full_name, niche, tone, target_audience")
     .eq("id", user?.id || "")
     .single();
 
   // 2. Fetch Default Brand Voice
   const { data: brandVoice } = await supabase
     .from("brand_voices")
-    .select("tone, voice_instructions")
+    .select("tones, sample_text")
     .eq("user_id", user?.id || "")
     .eq("is_default", true)
     .single();
+
+  const savedTone = (brandVoice?.tones && brandVoice.tones[0]) || profile?.tone || "Bold & Punchy";
+  const savedInstructions = brandVoice?.sample_text || "";
 
   // 3. Fetch Subscription Status
   const { data: sub } = await supabase
@@ -50,7 +53,7 @@ export default async function SettingsPage() {
   return (
     <SettingsContent
       profile={profile || {}}
-      brandVoice={brandVoice || {}}
+      brandVoice={{ tone: savedTone, voice_instructions: savedInstructions }}
       subscriptionStatus={sub?.status || "inactive"}
       userCredits={userCredits}
       userEmail={user?.email || ""}

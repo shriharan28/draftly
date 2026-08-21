@@ -31,7 +31,7 @@ export default async function DashboardPage() {
 
   const { data: brandVoice } = await supabase
     .from("brand_voices")
-    .select("tone")
+    .select("tones")
     .eq("user_id", user?.id || "")
     .eq("is_default", true)
     .single();
@@ -77,7 +77,10 @@ export default async function DashboardPage() {
     displayName = "Creator";
   }
 
-  const activeTone = brandVoice?.tone || profile?.tone || "Bold & Punchy";
+  const activeTone =
+    (brandVoice?.tones && brandVoice.tones[0]) ||
+    profile?.tone ||
+    "Bold & Punchy";
   const activeNiche = profile?.niche ? `${profile.niche.toUpperCase()} Persona` : "100% Calibrated";
   const userCredits = ledger?.balance_after ?? 15;
 

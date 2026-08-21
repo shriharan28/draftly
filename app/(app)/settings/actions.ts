@@ -25,26 +25,29 @@ export async function updateBrandVoiceAction(formData: FormData) {
   const voiceInstructions = formData.get("voiceInstructions") as string;
 
   try {
-    // 1. Update Profile full_name, niche & target audience
+    // 1. Update Profile full_name, niche, tone & target audience
     await supabase
       .from("profiles")
       .update({
         full_name: fullName || null,
         niche: niche || null,
+        tone: tone || "Bold & Punchy",
         target_audience: targetAudience || null,
         updated_at: new Date().toISOString(),
       })
       .eq("id", user.id);
 
-    // 2. Upsert Brand Voice
-    await supabase.from("brand_voices").upsert({
-      user_id: user.id,
-      name: "Default Voice",
-      tone: tone || "Bold & Punchy",
-      voice_instructions: voiceInstructions || null,
-      is_default: true,
-      updated_at: new Date().toISOString(),
-    });
+    // 2. Upsert Brand Voice with proper schema (tones text[], sample_text text)
+    await supabase.from("brand_voices").upsert(
+      {
+        user_id: user.id,
+        name: "Default Voice",
+        tones: tone ? [tone] : ["Bold & Punchy"],
+        sample_text: voiceInstructions || null,
+        is_default: true,
+      },
+      { onConflict: "user_id, name" }
+    );
 
     revalidatePath("/settings");
     revalidatePath("/dashboard");
