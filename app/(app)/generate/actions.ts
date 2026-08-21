@@ -8,6 +8,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { adminClient } from "@/lib/supabase/admin";
 import { generateContentWithGemini } from "@/lib/ai/provider";
 import { ContentType } from "@/lib/ai/prompts";
 import { revalidatePath } from "next/cache";
@@ -27,7 +28,7 @@ export async function generateContentAction(params: {
   }
 
   // 1. Get current credit balance from credit_ledger
-  const { data: latestLedger, error: fetchError } = await supabase
+  const { data: latestLedger } = await supabase
     .from("credit_ledger")
     .select("balance_after")
     .eq("user_id", user.id)
@@ -45,10 +46,8 @@ export async function generateContentAction(params: {
 
   const newBalance = currentBalance - 1;
 
-  // Deduct 1 credit in credit_ledger adhering to table constraints:
-  // - reason MUST be one of ('signup_grant','monthly_grant','plan_grant','generation','refund','admin_adjust')
-  // - idempotency_key is required and unique
-  const { error: ledgerInsertError } = await supabase
+  // Deduct 1 credit in credit_ledger using adminClient (bypasses RLS for system accounting)
+  const { error: ledgerInsertError } = await adminClient
     .from("credit_ledger")
     .insert({
       user_id: user.id,
@@ -117,8 +116,8 @@ export async function generateContentAction(params: {
       generationId: generation?.id,
     };
   } catch (err: any) {
-    // Refund 1 credit if AI call failed
-    await supabase.from("credit_ledger").insert({
+    // Refund 1 credit using adminClient if AI call failed
+    await adminClient.from("credit_ledger").insert({
       user_id: user.id,
       delta: 1,
       reason: "refund",

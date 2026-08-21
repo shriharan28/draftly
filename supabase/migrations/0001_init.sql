@@ -180,8 +180,9 @@ create policy "gen_select_own"       on public.generations   for select using (a
 create policy "gen_insert_own"       on public.generations   for insert with check (auth.uid() = user_id);
 create policy "gen_update_own"       on public.generations   for update using (auth.uid() = user_id);
 
--- Ledger: select own only (insert happens via RPC functions above)
+-- Ledger: select own and insert own
 create policy "ledger_select_own"    on public.credit_ledger for select using (auth.uid() = user_id);
+create policy "ledger_insert_own"    on public.credit_ledger for insert with check (auth.uid() = user_id);
 
 -- Subscriptions: select own only (write happens via service role in webhook)
 create policy "subs_select_own"      on public.subscriptions for select using (auth.uid() = user_id);
