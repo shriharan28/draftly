@@ -261,7 +261,9 @@ export function StudioGenerator({
             <span className="flex items-center gap-2">
               <ZapIcon className="w-4 h-4" />
               <span>Generate 3 AI Variants</span>
-              <span className="font-mono text-xs opacity-80">· 1 credit</span>
+              <span className="font-mono text-xs opacity-80">
+                · {selectedModel === "gemini-3.6-flash" ? "3 credits" : "1 credit"}
+              </span>
             </span>
           )}
         </Button>
