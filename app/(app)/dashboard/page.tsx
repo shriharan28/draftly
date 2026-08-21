@@ -51,12 +51,24 @@ export default async function DashboardPage() {
     .order("created_at", { ascending: false })
     .limit(3);
 
-  const displayName =
+  let displayName =
     profile?.full_name ||
     user?.user_metadata?.full_name ||
-    user?.user_metadata?.name ||
-    user?.email?.split("@")[0] ||
-    "Creator";
+    user?.user_metadata?.name;
+
+  if (!displayName && user?.email) {
+    const rawHandle = user.email.split("@")[0]; // e.g. "regan.mit11"
+    const firstName = rawHandle.split(/[._\d]/)[0]; // e.g. "regan"
+    if (firstName && firstName.length > 1) {
+      displayName = firstName.charAt(0).toUpperCase() + firstName.slice(1);
+    } else {
+      displayName = rawHandle;
+    }
+  }
+
+  if (!displayName) {
+    displayName = "Creator";
+  }
 
   const userCredits = ledger?.balance_after ?? 15;
 

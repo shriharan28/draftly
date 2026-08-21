@@ -18,16 +18,18 @@ export async function updateBrandVoiceAction(formData: FormData) {
     return { error: "Authentication required." };
   }
 
+  const fullName = formData.get("fullName") as string;
   const niche = formData.get("niche") as string;
   const targetAudience = formData.get("targetAudience") as string;
   const tone = formData.get("tone") as string;
   const voiceInstructions = formData.get("voiceInstructions") as string;
 
   try {
-    // 1. Update Profile niche & target audience
+    // 1. Update Profile full_name, niche & target audience
     await supabase
       .from("profiles")
       .update({
+        full_name: fullName || null,
         niche: niche || null,
         target_audience: targetAudience || null,
         updated_at: new Date().toISOString(),
@@ -45,6 +47,7 @@ export async function updateBrandVoiceAction(formData: FormData) {
     });
 
     revalidatePath("/settings");
+    revalidatePath("/dashboard");
     revalidatePath("/generate");
     return { success: true };
   } catch (err: any) {

@@ -25,7 +25,7 @@ export function SettingsContent({
   userCredits,
   userEmail,
 }: {
-  profile: { niche?: string; target_audience?: string };
+  profile: { full_name?: string; niche?: string; target_audience?: string };
   brandVoice: { tone?: string; voice_instructions?: string };
   subscriptionStatus: string;
   userCredits: number;
@@ -35,6 +35,7 @@ export function SettingsContent({
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const [fullName, setFullName] = useState(profile.full_name || "");
   const [niche, setNiche] = useState(profile.niche || "tech");
   const [targetAudience, setTargetAudience] = useState(
     profile.target_audience || "Developers & Tech Enthusiasts"
@@ -50,6 +51,7 @@ export function SettingsContent({
     setSuccess(false);
 
     const formData = new FormData();
+    formData.set("fullName", fullName);
     formData.set("niche", niche);
     formData.set("targetAudience", targetAudience);
     formData.set("tone", tone);
@@ -93,6 +95,19 @@ export function SettingsContent({
               Gemini 2.0 Flash uses these preferences for every generated post variant.
             </p>
           </div>
+        </div>
+
+        {/* FULL NAME */}
+        <div className="space-y-2">
+          <label className="block text-xs font-semibold text-white uppercase tracking-wider font-mono">
+            Full Name
+          </label>
+          <Input
+            value={fullName}
+            onChange={(e) => setFullName(e.target.value)}
+            placeholder="e.g. Regan"
+            className="h-11 text-xs"
+          />
         </div>
 
         {/* NICHE SELECTOR */}
