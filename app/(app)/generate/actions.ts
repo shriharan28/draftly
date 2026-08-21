@@ -16,6 +16,7 @@ import { revalidatePath } from "next/cache";
 export async function generateContentAction(params: {
   topic: string;
   contentType: ContentType;
+  model?: string;
 }) {
   const supabase = await createClient();
 
@@ -87,7 +88,8 @@ export async function generateContentAction(params: {
   const sub = subRes.data;
 
   const isPro = sub?.status === "active";
-  const selectedModel = isPro ? "gemini-3.6-flash" : "gemini-2.5-flash";
+  const requestedModel = params.model || (isPro ? "gemini-3.6-flash" : "gemini-2.5-flash");
+  const selectedModel = (requestedModel === "gemini-3.6-flash" && isPro) ? "gemini-3.6-flash" : "gemini-2.5-flash";
 
   try {
     // 3. Call Gemini AI Model matching user subscription tier

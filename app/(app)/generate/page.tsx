@@ -22,9 +22,10 @@ export default async function GeneratePage({
   let latestGen = null;
   let activeTone = "Bold & Punchy";
   let activeNicheLabel = "General";
+  let isPro = false;
 
   if (user) {
-    const [genRes, profileRes, voiceRes] = await Promise.all([
+    const [genRes, profileRes, voiceRes, subRes] = await Promise.all([
       supabase
         .from("generations")
         .select("topic, content_type, variants")
@@ -44,12 +45,19 @@ export default async function GeneratePage({
         .eq("user_id", user.id)
         .eq("is_default", true)
         .single(),
+      supabase
+        .from("subscriptions")
+        .select("status")
+        .eq("user_id", user.id)
+        .single(),
     ]);
 
     latestGen = genRes.data;
     const profile = profileRes.data;
     const voice = voiceRes.data;
+    const sub = subRes.data;
 
+    isPro = sub?.status === "active";
     activeTone = (voice?.tones && voice.tones[0]) || profile?.tone || "Bold & Punchy";
 
     const NICHE_LABELS: Record<string, string> = {
@@ -83,6 +91,7 @@ export default async function GeneratePage({
         initialVariants={initialVariants}
         activeTone={activeTone}
         activeNicheLabel={activeNicheLabel}
+        isPro={isPro}
       />
     </div>
   );

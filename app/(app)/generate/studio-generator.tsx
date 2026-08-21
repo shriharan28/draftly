@@ -25,6 +25,8 @@ import {
   LightbulbIcon,
 } from "@/components/ui/icons";
 
+import { PaywallModal } from "@/components/features/paywall-modal";
+
 const FORMATS: { id: ContentType; label: string; icon: React.ReactNode }[] = [
   { id: "ig_caption", label: "IG Caption", icon: <InstagramIcon className="w-5 h-5" /> },
   { id: "reel_hook", label: "Reel Hook", icon: <ReelIcon className="w-5 h-5" /> },
@@ -79,17 +81,23 @@ export function StudioGenerator({
   initialVariants = null,
   activeTone = "Bold & Punchy",
   activeNicheLabel = "General",
+  isPro = false,
 }: {
   initialTopic?: string;
   initialType?: string;
   initialVariants?: { angle: string; text: string }[] | null;
   activeTone?: string;
   activeNicheLabel?: string;
+  isPro?: boolean;
 }) {
   const [topic, setTopic] = useState(initialTopic);
   const [selectedFormat, setSelectedFormat] = useState<ContentType>(
     (initialType as ContentType) || "ig_caption"
   );
+  const [selectedModel, setSelectedModel] = useState<string>(
+    isPro ? "gemini-3.6-flash" : "gemini-2.5-flash"
+  );
+  const [isPaywallOpen, setIsPaywallOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
@@ -108,6 +116,7 @@ export function StudioGenerator({
       const res = await generateContentAction({
         topic,
         contentType: selectedFormat,
+        model: selectedModel,
       });
 
       if (res.error) {
@@ -129,12 +138,65 @@ export function StudioGenerator({
           </div>
         </div>
 
-        <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[#8B5CF6]/30 bg-[#8B5CF6]/10 px-3.5 py-1.5 text-xs text-[#F4F4FA]">
-          <MicIcon className="w-3.5 h-3.5 text-[#8B5CF6]" />
-          <span>Voice Persona:</span>
-          <span className="font-semibold text-[#8B5CF6]">
-            {activeTone} <span className="opacity-60">·</span> {activeNicheLabel}
-          </span>
+        <div className="mb-5 flex flex-wrap items-center gap-2">
+          {/* VOICE PERSONA BADGE */}
+          <div className="inline-flex items-center gap-2 rounded-full border border-[#8B5CF6]/30 bg-[#8B5CF6]/10 px-3.5 py-1.5 text-xs text-[#F4F4FA]">
+            <MicIcon className="w-3.5 h-3.5 text-[#8B5CF6]" />
+            <span>Voice Persona:</span>
+            <span className="font-semibold text-[#8B5CF6]">
+              {activeTone} <span className="opacity-60">·</span> {activeNicheLabel}
+            </span>
+          </div>
+        </div>
+
+        {/* AI MODEL SELECTOR */}
+        <div className="mb-5">
+          <label className="mb-2 block text-[11px] font-medium uppercase tracking-wider text-[#9494A8]">
+            AI Model Engine
+          </label>
+          <div className="grid grid-cols-2 gap-2.5">
+            {/* GEMINI 2.5 FLASH BUTTON */}
+            <button
+              type="button"
+              onClick={() => setSelectedModel("gemini-2.5-flash")}
+              className={`flex items-center justify-between rounded-2xl border p-3 text-xs font-medium transition-all duration-200 ${
+                selectedModel === "gemini-2.5-flash"
+                  ? "border-[#8B5CF6] bg-[#8B5CF6]/20 text-white shadow-[0_0_15px_rgba(139,92,246,0.3)] scale-[1.01]"
+                  : "border-white/10 bg-white/5 text-[#9494A8] hover:border-white/20 hover:text-white"
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                <SparklesIcon className="w-4 h-4 text-[#8B5CF6]" />
+                <span>Gemini 2.5 Flash</span>
+              </div>
+              <span className="text-[10px] font-mono text-[#9494A8]">Free</span>
+            </button>
+
+            {/* GEMINI 3.6 FLASH (PRO) BUTTON */}
+            <button
+              type="button"
+              onClick={() => {
+                if (!isPro) {
+                  setIsPaywallOpen(true);
+                } else {
+                  setSelectedModel("gemini-3.6-flash");
+                }
+              }}
+              className={`flex items-center justify-between rounded-2xl border p-3 text-xs font-medium transition-all duration-200 ${
+                selectedModel === "gemini-3.6-flash"
+                  ? "border-[#10B981] bg-[#10B981]/20 text-white shadow-[0_0_15px_rgba(16,185,129,0.3)] scale-[1.01]"
+                  : "border-white/10 bg-white/5 text-[#9494A8] hover:border-white/20 hover:text-white"
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                <ZapIcon className="w-4 h-4 text-[#10B981]" />
+                <span>Gemini 3.6 Flash</span>
+              </div>
+              <span className="rounded-full bg-[#10B981]/20 border border-[#10B981]/40 px-2 py-0.5 font-mono text-[9px] font-bold text-[#10B981]">
+                PRO
+              </span>
+            </button>
+          </div>
         </div>
 
         <div className="mb-5">
@@ -285,6 +347,8 @@ export function StudioGenerator({
           </div>
         )}
       </div>
+
+      <PaywallModal isOpen={isPaywallOpen} onClose={() => setIsPaywallOpen(false)} />
     </div>
   );
 }
