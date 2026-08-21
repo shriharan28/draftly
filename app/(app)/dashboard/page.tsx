@@ -25,8 +25,15 @@ export default async function DashboardPage() {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("full_name")
+    .select("full_name, tone, niche")
     .eq("id", user?.id || "")
+    .single();
+
+  const { data: brandVoice } = await supabase
+    .from("brand_voices")
+    .select("tone")
+    .eq("user_id", user?.id || "")
+    .eq("is_default", true)
     .single();
 
   const { data: ledger } = await supabase
@@ -70,6 +77,8 @@ export default async function DashboardPage() {
     displayName = "Creator";
   }
 
+  const activeTone = brandVoice?.tone || profile?.tone || "Bold & Punchy";
+  const activeNiche = profile?.niche ? `${profile.niche.toUpperCase()} Persona` : "100% Calibrated";
   const userCredits = ledger?.balance_after ?? 15;
 
   const realGenerations = (rawGenerations || []).map((gen) => {
@@ -127,13 +136,15 @@ export default async function DashboardPage() {
 
         <div className="glass-panel p-5">
           <div className="flex items-center justify-between text-xs text-[#9494A8] mb-3">
-            <span>Active Brand Voice</span>
+            <span>Active Brand Tone</span>
             <LibraryIcon className="w-4 h-4 text-[#8B5CF6]" />
           </div>
           <p className="font-display text-xl font-bold text-white truncate">
-            Default Voice
+            {activeTone}
           </p>
-          <p className="text-xs text-[#10B981] mt-1 font-medium">100% Calibrated</p>
+          <p className="text-xs text-[#10B981] mt-1 font-medium truncate">
+            {activeNiche}
+          </p>
         </div>
       </div>
 
