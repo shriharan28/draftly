@@ -37,46 +37,45 @@ export default async function DashboardPage() {
     .limit(1)
     .single();
 
-  const { count: totalGenerations } = await supabase
+  const { count: totalSavedCount } = await supabase
     .from("generations")
     .select("*", { count: "exact", head: true })
-    .eq("user_id", user?.id || "");
+    .eq("user_id", user?.id || "")
+    .not("chosen_index", "is", null);
 
-  const displayName = profile?.full_name || user?.email?.split("@")[0] || "Creator";
+  const { data: rawGenerations } = await supabase
+    .from("generations")
+    .select("id, created_at, content_type, topic, variants")
+    .eq("user_id", user?.id || "")
+    .not("chosen_index", "is", null)
+    .order("created_at", { ascending: false })
+    .limit(3);
+
+  const displayName =
+    profile?.full_name ||
+    user?.user_metadata?.full_name ||
+    user?.user_metadata?.name ||
+    user?.email?.split("@")[0] ||
+    "Creator";
+
   const userCredits = ledger?.balance_after ?? 15;
 
-  const mockGenerations = [
-    {
-      id: "1",
-      platform: "Instagram",
-      icon: <InstagramIcon className="w-5 h-5" />,
-      type: "IG Caption",
-      topic: "30-Day Fitness Transformation Journey",
-      created: "2 hours ago",
-      preview:
-        "3 months. 0 excuses. The version of me from January wouldn't recognize today's version — and that's the point. #transformation #consistency",
-    },
-    {
-      id: "2",
-      platform: "Reels",
-      icon: <ReelIcon className="w-5 h-5" />,
-      type: "Reel Hook",
-      topic: "Why Most Developers Fail at Freelancing",
-      created: "5 hours ago",
-      preview:
-        "Your job will change in 5 years. Coding won't wait for you to be ready — start ugly, start now.",
-    },
-    {
-      id: "3",
-      platform: "LinkedIn",
-      icon: <LinkedInIcon className="w-5 h-5" />,
-      type: "LinkedIn Post",
-      topic: "How I Closed My First $5k Client",
-      created: "1 day ago",
-      preview:
-        "My first client paid me less than my monthly phone bill. Best ROI of my life. Here's what it taught me about value vs. price.",
-    },
-  ];
+  const realGenerations = (rawGenerations || []).map((gen) => {
+    let text = "";
+    if (Array.isArray(gen.variants)) {
+      const first = gen.variants[0];
+      text = typeof first === "string" ? first : first?.text || JSON.stringify(first);
+    } else if (typeof gen.variants === "string") {
+      text = gen.variants;
+    }
+    return {
+      id: gen.id,
+      type: (gen.content_type || "ig_caption").replace("_", " ").toUpperCase(),
+      topic: gen.topic || "AI Draft",
+      created: new Date(gen.created_at).toISOString().split("T")[0],
+      preview: text,
+    };
+  });
 
   return (
     <div className="space-y-8 py-2">
@@ -109,7 +108,7 @@ export default async function DashboardPage() {
             <SparklesIcon className="w-4 h-4 text-[#10B981]" />
           </div>
           <p className="font-display text-3xl font-bold text-white">
-            {totalGenerations || 3}
+            {totalSavedCount ?? 0}
           </p>
           <p className="text-xs text-[#9494A8] mt-1">Saved in library</p>
         </div>
@@ -137,31 +136,45 @@ export default async function DashboardPage() {
           </h2>
         </div>
 
-        <div className="grid gap-4">
-          {mockGenerations.map((gen) => (
-            <div key={gen.id} className="glass-panel p-5 transition hover:border-[#8B5CF6]/40">
-              <div className="mb-3 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <span className="grid h-8 w-8 place-items-center rounded-xl bg-white/5">
-                    {gen.icon}
-                  </span>
-                  <div>
-                    <h3 className="font-display text-sm font-semibold text-white">
-                      {gen.topic}
-                    </h3>
-                    <p className="text-[11px] text-[#9494A8]">
-                      {gen.type} · {gen.created}
-                    </p>
-                  </div>
-                </div>
-                <CopyButton text={gen.preview} />
-              </div>
-              <p className="text-xs leading-relaxed text-[#9494A8] line-clamp-2 bg-white/5 p-3 rounded-xl">
-                "{gen.preview}"
-              </p>
+        {realGenerations.length === 0 ? (
+          <div className="glass-panel p-8 text-center border border-dashed border-white/10 rounded-2xl">
+            <div className="mx-auto mb-3 grid h-10 w-10 place-items-center rounded-xl bg-white/5 text-[#8E8EA3]">
+              <SparklesIcon className="w-5 h-5 text-[#8B5CF6]" />
             </div>
-          ))}
-        </div>
+            <h3 className="font-display text-sm font-semibold text-white mb-1">
+              No saved posts yet
+            </h3>
+            <p className="text-xs text-[#9494A8]">
+              Your first viral post is 30 seconds away! Type a topic above to start generating.
+            </p>
+          </div>
+        ) : (
+          <div className="grid gap-4">
+            {realGenerations.map((gen) => (
+              <div key={gen.id} className="glass-panel p-5 transition hover:border-[#8B5CF6]/40">
+                <div className="mb-3 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <span className="grid h-8 w-8 place-items-center rounded-xl bg-white/5 text-[#8B5CF6]">
+                      <SparklesIcon className="w-4 h-4" />
+                    </span>
+                    <div>
+                      <h3 className="font-display text-sm font-semibold text-white">
+                        "{gen.topic}"
+                      </h3>
+                      <p className="text-[11px] text-[#9494A8]">
+                        {gen.type} · {gen.created}
+                      </p>
+                    </div>
+                  </div>
+                  <CopyButton text={gen.preview} />
+                </div>
+                <p className="text-xs leading-relaxed text-[#9494A8] line-clamp-2 bg-white/5 p-3 rounded-xl font-sans">
+                  {gen.preview}
+                </p>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

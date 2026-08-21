@@ -26,6 +26,7 @@ import { headers } from "next/headers";
 export async function signUp(formData: FormData) {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
+  const fullName = (formData.get("full_name") as string) || "";
 
   // Basic validation — never trust user input, even on the server
   if (!email || !password) {
@@ -45,8 +46,10 @@ export async function signUp(formData: FormData) {
     email,
     password,
     options: {
-      // After they click the verification link, they land here
       emailRedirectTo: `${origin}/auth/confirm`,
+      data: {
+        full_name: fullName,
+      },
     },
   });
 
@@ -56,6 +59,14 @@ export async function signUp(formData: FormData) {
       return { error: "An account with this email already exists. Try logging in." };
     }
     return { error: error.message };
+  }
+
+  // Update profile full_name if user exists
+  if (data?.user && fullName) {
+    await supabase
+      .from("profiles")
+      .update({ full_name: fullName })
+      .eq("id", data.user.id);
   }
 
   // If Supabase returns a session immediately, email confirmation is disabled
