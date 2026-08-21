@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mockup Gate 5 — Draftly Landing Page</title>
+  <title>Mockup Gate 5 — Draftly Landing Page (Animated Version)</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
@@ -42,43 +42,66 @@
       font-family: 'JetBrains Mono', monospace;
     }
 
-    /* GRADIENTS & GLOWS */
-    .text-gradient {
-      background: linear-gradient(135deg, #8B5CF6 0%, #FF4ECD 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+    /* BACKGROUND GRID & PULSING GLOWS */
+    .bg-grid {
+      position: absolute;
+      inset: 0;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(circle at 50% 30%, black 20%, transparent 80%);
+      pointer-events: none;
+      z-index: 0;
     }
 
-    .bg-gradient {
-      background: linear-gradient(135deg, #8B5CF6 0%, #10B981 100%);
+    @keyframes pulse-sphere-1 {
+      0%, 100% { transform: scale(1) translate(0, 0); opacity: 0.15; }
+      50% { transform: scale(1.15) translate(-20px, 15px); opacity: 0.25; }
     }
 
-    .btn-glow {
-      box-shadow: 0 0 32px rgba(139, 92, 246, 0.4);
+    @keyframes pulse-sphere-2 {
+      0%, 100% { transform: scale(1) translate(0, 0); opacity: 0.12; }
+      50% { transform: scale(1.2) translate(30px, -20px); opacity: 0.22; }
     }
 
     .glow-sphere {
       position: absolute;
       border-radius: 50%;
-      filter: blur(120px);
+      filter: blur(140px);
       pointer-events: none;
       z-index: 0;
     }
 
+    /* GRADIENTS & SHIMMER TEXT ANIMATION */
+    @keyframes text-shimmer {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .text-gradient {
+      background: linear-gradient(135deg, #8B5CF6 0%, #FF4ECD 50%, #10B981 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: text-shimmer 6s ease infinite;
+    }
+
     /* FLOATING ANIMATED ICONS IN NEGATIVE SPACE */
     @keyframes float-1 {
-      0%, 100% { transform: translateY(0px) rotate(0deg); }
-      50% { transform: translateY(-16px) rotate(6deg); }
+      0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
+      50% { transform: translateY(-18px) rotate(6deg) scale(1.05); }
     }
 
     @keyframes float-2 {
-      0%, 100% { transform: translateY(0px) rotate(0deg); }
-      50% { transform: translateY(14px) rotate(-8deg); }
+      0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
+      50% { transform: translateY(16px) rotate(-8deg) scale(1.05); }
     }
 
     @keyframes float-3 {
-      0%, 100% { transform: translateY(0px) rotate(0deg); }
-      50% { transform: translateY(-12px) rotate(-4deg); }
+      0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
+      50% { transform: translateY(-14px) rotate(-4deg) scale(1.05); }
     }
 
     .floating-icon {
@@ -86,13 +109,18 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 52px;
-      height: 52px;
-      border-radius: 16px;
+      width: 54px;
+      height: 54px;
+      border-radius: 18px;
       backdrop-filter: blur(12px);
       z-index: 2;
       transition: all 0.3s ease;
-      pointer-events: none;
+      cursor: pointer;
+    }
+
+    .floating-icon:hover {
+      transform: scale(1.25) !important;
+      z-index: 10;
     }
 
     .floating-icon svg {
@@ -100,26 +128,25 @@
       height: 24px;
     }
 
-    /* Color Accents */
     .float-violet {
-      background: rgba(139, 92, 246, 0.12);
-      border: 1px solid rgba(139, 92, 246, 0.3);
+      background: rgba(139, 92, 246, 0.14);
+      border: 1px solid rgba(139, 92, 246, 0.35);
       color: #8B5CF6;
-      box-shadow: 0 0 24px rgba(139, 92, 246, 0.25);
+      box-shadow: 0 0 30px rgba(139, 92, 246, 0.3);
     }
 
     .float-pink {
-      background: rgba(255, 78, 205, 0.12);
-      border: 1px solid rgba(255, 78, 205, 0.3);
+      background: rgba(255, 78, 205, 0.14);
+      border: 1px solid rgba(255, 78, 205, 0.35);
       color: #FF4ECD;
-      box-shadow: 0 0 24px rgba(255, 78, 205, 0.25);
+      box-shadow: 0 0 30px rgba(255, 78, 205, 0.3);
     }
 
     .float-emerald {
-      background: rgba(16, 185, 129, 0.12);
-      border: 1px solid rgba(16, 185, 129, 0.3);
+      background: rgba(16, 185, 129, 0.14);
+      border: 1px solid rgba(16, 185, 129, 0.35);
       color: #10B981;
-      box-shadow: 0 0 24px rgba(16, 185, 129, 0.25);
+      box-shadow: 0 0 30px rgba(16, 185, 129, 0.3);
     }
 
     /* CONTAINER */
@@ -135,8 +162,8 @@
     header {
       position: sticky;
       top: 0;
-      background: rgba(10, 10, 15, 0.8);
-      backdrop-filter: blur(16px);
+      background: rgba(10, 10, 15, 0.85);
+      backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--border);
       z-index: 50;
       padding: 16px 0;
@@ -224,11 +251,13 @@
       background: linear-gradient(135deg, #8B5CF6 0%, #10B981 100%);
       color: #fff;
       box-shadow: 0 0 24px rgba(139, 92, 246, 0.3);
+      position: relative;
+      overflow: hidden;
     }
 
     .btn-primary:hover {
       transform: translateY(-2px);
-      box-shadow: 0 0 32px rgba(139, 92, 246, 0.5);
+      box-shadow: 0 0 36px rgba(139, 92, 246, 0.5);
     }
 
     /* HERO */
@@ -236,6 +265,11 @@
       padding: 96px 0 64px;
       text-align: center;
       position: relative;
+    }
+
+    @keyframes badge-pulse {
+      0%, 100% { border-color: rgba(139, 92, 246, 0.3); box-shadow: 0 0 0px rgba(139, 92, 246, 0); }
+      50% { border-color: rgba(139, 92, 246, 0.6); box-shadow: 0 0 16px rgba(139, 92, 246, 0.3); }
     }
 
     .pill-badge {
@@ -249,6 +283,7 @@
       font-size: 12px;
       color: #F4F4FA;
       margin-bottom: 24px;
+      animation: badge-pulse 3s infinite;
     }
 
     .hero-title {
@@ -267,7 +302,7 @@
       margin: 0 auto 36px;
     }
 
-    /* DEMO INTERACTIVE WIDGET */
+    /* DEMO INTERACTIVE AUTO-SWITCHING WIDGET */
     .demo-widget {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -277,6 +312,8 @@
       margin: 40px auto 0;
       text-align: left;
       box-shadow: 0 20px 80px rgba(0, 0, 0, 0.5);
+      position: relative;
+      overflow: hidden;
     }
 
     .demo-header {
@@ -298,16 +335,23 @@
       background: var(--surface-2);
       border: 1px solid var(--border);
       color: var(--text-muted);
-      padding: 6px 14px;
+      padding: 6px 16px;
       border-radius: 99px;
       font-size: 12px;
       cursor: pointer;
+      transition: all 0.3s;
     }
 
     .demo-chip.active {
       background: var(--primary);
       color: #fff;
       border-color: var(--primary);
+      box-shadow: 0 0 16px rgba(139, 92, 246, 0.4);
+    }
+
+    .demo-input-wrapper {
+      position: relative;
+      margin-bottom: 16px;
     }
 
     .demo-input {
@@ -318,18 +362,45 @@
       padding: 14px;
       border-radius: 12px;
       font-size: 14px;
-      margin-bottom: 16px;
       outline: none;
+      font-family: 'Inter', sans-serif;
     }
 
-    .demo-output {
+    .demo-output-box {
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid var(--border);
       border-radius: 16px;
       padding: 20px;
       font-size: 14px;
       color: #F4F4FA;
+      min-height: 180px;
+      transition: opacity 0.3s ease;
       white-space: pre-wrap;
+    }
+
+    /* LIVE TICKER ANIMATION */
+    .live-ticker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 24px;
+      font-size: 13px;
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .ticker-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 10px var(--success);
+      animation: blink 1.2s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
     }
 
     /* FEATURES GRID */
@@ -362,12 +433,13 @@
       border: 1px solid var(--border);
       border-radius: 20px;
       padding: 32px;
-      transition: all 0.2s;
+      transition: all 0.3s ease;
     }
 
     .feature-card:hover {
-      border-color: rgba(139, 92, 246, 0.4);
-      transform: translateY(-4px);
+      border-color: rgba(139, 92, 246, 0.5);
+      transform: translateY(-6px);
+      box-shadow: 0 16px 40px rgba(139, 92, 246, 0.15);
     }
 
     .feature-icon {
@@ -457,19 +529,19 @@
       justify-content: space-between;
     }
 
-    /* Hide floating icons on small mobile screens to keep negative space clean */
     @media (max-width: 900px) {
-      .floating-icon {
-        display: none;
-      }
+      .floating-icon { display: none; }
     }
   </style>
 </head>
 <body>
 
-  <!-- GLOW BG -->
-  <div class="glow-sphere" style="top: 10%; left: 30%; width: 500px; height: 500px; background: rgba(139, 92, 246, 0.15);"></div>
-  <div class="glow-sphere" style="top: 50%; right: 10%; width: 400px; height: 400px; background: rgba(16, 185, 129, 0.1);"></div>
+  <!-- BACKGROUND GRID MESH -->
+  <div class="bg-grid"></div>
+
+  <!-- GLOW SPHERES -->
+  <div class="glow-sphere" style="top: 10%; left: 25%; width: 550px; height: 550px; background: rgba(139, 92, 246, 0.15); animation: pulse-sphere-1 8s ease-in-out infinite;"></div>
+  <div class="glow-sphere" style="top: 45%; right: 10%; width: 450px; height: 450px; background: rgba(16, 185, 129, 0.12); animation: pulse-sphere-2 10s ease-in-out infinite;"></div>
 
   <!-- NAVBAR -->
   <header>
@@ -496,9 +568,8 @@
   <section class="hero-section">
     <div class="container" style="position: relative;">
       
-      <!-- FLOATING CONTENT CREATION ICONS IN NEGATIVE SPACE -->
-      <!-- Left Top: Voice Persona Mic -->
-      <div class="floating-icon float-violet" style="top: 10px; left: 20px; animation: float-1 5s ease-in-out infinite;">
+      <!-- FLOATING ANIMATED ICONS -->
+      <div class="floating-icon float-violet" style="top: 10px; left: 20px; animation: float-1 5s ease-in-out infinite;" title="Voice Persona">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/>
           <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
@@ -506,38 +577,33 @@
         </svg>
       </div>
 
-      <!-- Left Middle: Content Draft Pen -->
-      <div class="floating-icon float-pink" style="top: 130px; left: 80px; animation: float-2 6s ease-in-out infinite;">
+      <div class="floating-icon float-pink" style="top: 130px; left: 80px; animation: float-2 6s ease-in-out infinite;" title="Draft Pen">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M12 20h9"/>
           <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
         </svg>
       </div>
 
-      <!-- Left Bottom: Video Reel -->
-      <div class="floating-icon float-emerald" style="top: 250px; left: 10px; animation: float-3 5.5s ease-in-out infinite;">
+      <div class="floating-icon float-emerald" style="top: 250px; left: 10px; animation: float-3 5.5s ease-in-out infinite;" title="Video Script">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polygon points="23 7 16 12 23 17 23 7"/>
           <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
         </svg>
       </div>
 
-      <!-- Right Top: AI Sparkles -->
-      <div class="floating-icon float-pink" style="top: 15px; right: 25px; animation: float-2 5.2s ease-in-out infinite;">
+      <div class="floating-icon float-pink" style="top: 15px; right: 25px; animation: float-2 5.2s ease-in-out infinite;" title="AI Magic">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3L12 3z"/>
         </svg>
       </div>
 
-      <!-- Right Middle: Speed Lightning -->
-      <div class="floating-icon float-violet" style="top: 140px; right: 75px; animation: float-1 6.2s ease-in-out infinite;">
+      <div class="floating-icon float-violet" style="top: 140px; right: 75px; animation: float-1 6.2s ease-in-out infinite;" title="Lightning Speed">
         <svg viewBox="0 0 24 24" fill="currentColor">
           <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
         </svg>
       </div>
 
-      <!-- Right Bottom: Viral Rocket -->
-      <div class="floating-icon float-emerald" style="top: 260px; right: 15px; animation: float-3 5.8s ease-in-out infinite;">
+      <div class="floating-icon float-emerald" style="top: 260px; right: 15px; animation: float-3 5.8s ease-in-out infinite;" title="Viral Growth">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/>
           <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/>
@@ -562,34 +628,32 @@
         </a>
       </div>
 
-      <!-- INTERACTIVE DEMO WIDGET -->
+      <!-- LIVE TICKER ANIMATION -->
+      <div class="live-ticker">
+        <span class="ticker-dot"></span>
+        <span>4,892 posts generated today</span>
+      </div>
+
+      <!-- INTERACTIVE DYNAMIC AUTO-SWITCHING WIDGET -->
       <div id="demo" class="demo-widget">
         <div class="demo-header">
           <span class="font-display" style="font-weight: 700; color: #fff;">Interactive Studio Preview</span>
-          <span class="font-mono" style="font-size: 12px; color: var(--primary);">Gemini 3.6 Flash</span>
+          <span class="font-mono" style="font-size: 12px; color: var(--primary);" id="model-label">Gemini 3.6 Flash</span>
         </div>
 
         <div class="demo-chips">
-          <button class="demo-chip active">X Thread</button>
-          <button class="demo-chip">IG Caption</button>
-          <button class="demo-chip">LinkedIn</button>
-          <button class="demo-chip">Reel Hook</button>
+          <button class="demo-chip active" onclick="switchFormat('x_thread')">X Thread</button>
+          <button class="demo-chip" onclick="switchFormat('ig_caption')">IG Caption</button>
+          <button class="demo-chip" onclick="switchFormat('linkedin')">LinkedIn</button>
+          <button class="demo-chip" onclick="switchFormat('reel_hook')">Reel Hook</button>
         </div>
 
-        <input type="text" class="demo-input" value="5 harsh truths about launching a SaaS in 2026 without an audience" readonly>
+        <div class="demo-input-wrapper">
+          <input type="text" class="demo-input" id="demo-input" value="" readonly>
+        </div>
 
-        <div class="demo-output">
-<strong style="color: var(--primary); font-family: 'JetBrains Mono', monospace;">1/5 — Direct Hype Hook</strong>
-2026 is officially the year where building a SaaS is easy, but getting anyone to care is 100x harder.
-
-If you have 0 audience and 0 pre-launch distribution, read this before touching code: 🧵👇
-
-<strong style="color: var(--primary); font-family: 'JetBrains Mono', monospace;">2/5 — The Distribution Trap</strong>
-Most indie hackers spend 3 months polishing features and 0 days talking to customers.
-In 2026, your product isn't your moat—your distribution loop is.
-
-<strong style="color: var(--primary); font-family: 'JetBrains Mono', monospace;">3/5 — Proof Over Hype</strong>
-Build in public from day one. Show raw metrics, failed launches, and real user feedback. People don't follow products; they follow honest builders.
+        <div class="demo-output-box" id="demo-output">
+          <!-- Dynamically populated via Javascript -->
         </div>
       </div>
     </div>
@@ -674,6 +738,100 @@ Build in public from day one. Show raw metrics, failed launches, and real user f
       </div>
     </div>
   </footer>
+
+  <!-- DYNAMIC LIVE ANIMATION SCRIPT -->
+  <script>
+    const DEMO_DATA = {
+      x_thread: {
+        topic: "5 harsh truths about launching a SaaS in 2026",
+        output: `<strong style="color: var(--primary); font-family: 'JetBrains Mono', monospace;">1/5 — Direct Hype Hook</strong>
+2026 is officially the year where building a SaaS is easy, but getting anyone to care is 100x harder. If you have 0 audience, read this: 🧵👇
+
+<strong style="color: var(--primary); font-family: 'JetBrains Mono', monospace;">2/5 — The Distribution Trap</strong>
+Most indie hackers spend 3 months polishing features and 0 days talking to users. In 2026, your product isn't your moat—your distribution loop is.`
+      },
+      ig_caption: {
+        topic: "Why morning routines are overrated for productivity",
+        output: `<strong style="color: var(--primary); font-family: 'JetBrains Mono', monospace;">Option 1 — Bold Contrarian</strong>
+Stop waking up at 4 AM just because a Twitter influencer told you to. 🚫
+
+Real productivity isn't about waking up before the sun—it's about protecting your deep focus hours when your energy peaks.
+
+Drop a 🔥 if you agree! #ProductivityTips #CreatorEconomy #WorkSmart`
+      },
+      linkedin: {
+        topic: "How we scaled our AI studio to 10k users in 30 days",
+        output: `<strong style="color: var(--primary); font-family: 'JetBrains Mono', monospace;">Option 1 — Founder Insights</strong>
+We spent $0 on ads and grew from 0 to 10,000 active users in 30 days.
+
+Here are the 3 non-obvious growth levers we pulled:
+1. Built in public on X and LinkedIn daily
+2. Gave away 15 free credits without requiring a credit card
+3. Kept our UI brutally simple
+
+What's your #1 organic growth strategy this year?`
+      },
+      reel_hook: {
+        topic: "3 AI tools that will save you 10 hours a week",
+        output: `<strong style="color: var(--primary); font-family: 'JetBrains Mono', monospace;">Option 1 — High Energy Short Hook</strong>
+[On-Screen Visual: Fast cut of phone screen showing Draftly AI studio]
+[Voiceover]: "Stop spending 3 hours writing captions manually! Here are 3 AI tools that do it in 5 seconds flat..."`
+      }
+    };
+
+    let currentFormatIndex = 0;
+    const formats = ['x_thread', 'ig_caption', 'linkedin', 'reel_hook'];
+
+    function renderFormat(formatKey) {
+      const data = DEMO_DATA[formatKey];
+      const inputEl = document.getElementById('demo-input');
+      const outputEl = document.getElementById('demo-output');
+
+      // Update chip active states
+      const chips = document.querySelectorAll('.demo-chip');
+      chips.forEach((c, idx) => {
+        if (formats[idx] === formatKey) {
+          c.classList.add('active');
+        } else {
+          c.classList.remove('active');
+        }
+      });
+
+      // Typewriter effect for input
+      inputEl.value = '';
+      let charIdx = 0;
+      const text = data.topic;
+      
+      outputEl.style.opacity = '0.4';
+
+      function typeChar() {
+        if (charIdx < text.length) {
+          inputEl.value += text.charAt(charIdx);
+          charIdx++;
+          setTimeout(typeChar, 30);
+        } else {
+          outputEl.style.opacity = '1';
+          outputEl.innerHTML = data.output;
+        }
+      }
+
+      typeChar();
+    }
+
+    function switchFormat(formatKey) {
+      currentFormatIndex = formats.indexOf(formatKey);
+      renderFormat(formatKey);
+    }
+
+    // Auto cycle formats every 7 seconds
+    setInterval(() => {
+      currentFormatIndex = (currentFormatIndex + 1) % formats.length;
+      renderFormat(formats[currentFormatIndex]);
+    }, 7000);
+
+    // Initial render
+    renderFormat('x_thread');
+  </script>
 
 </body>
 </html>

@@ -1,23 +1,47 @@
 /**
  * app/page.tsx
  *
- * Stage 6: High-Converting Draftly Landing Page.
- * Dark-mode GenZ native design with live interactive studio preview,
- * feature breakdown, pricing teaser, and direct auth funnel entry.
+ * Stage 6: High-Converting Animated Draftly Landing Page.
+ * Features GenZ-native dark mode aesthetics, cosmic grid mesh,
+ * floating content creation icons, metallic gradient text shimmer,
+ * interactive studio demo, live activity ticker, and pricing cards.
  */
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { DraftlyLogo, SparklesIcon, ZapIcon, MicIcon, LibraryIcon } from "@/components/ui/icons";
+import {
+  DraftlyLogo,
+  SparklesIcon,
+  ZapIcon,
+  MicIcon,
+  LibraryIcon,
+  RocketIcon,
+  ReelIcon,
+  TargetIcon,
+} from "@/components/ui/icons";
+import { InteractiveLandingDemo } from "@/components/features/interactive-landing-demo";
 
 export default function LandingPage() {
   return (
-    <div className="relative min-h-screen bg-[#0A0A0F] text-[#F4F4FA] selection:bg-[#8B5CF6]/30">
-      {/* BACKGROUND GLOW SPHERES */}
-      <div className="pointer-events-none absolute left-1/2 top-0 h-[600px] w-[800px] -translate-x-1/2 rounded-full bg-[#8B5CF6]/15 blur-[140px]" />
-      <div className="pointer-events-none absolute right-10 top-[40%] h-[400px] w-[400px] rounded-full bg-[#10B981]/10 blur-[120px]" />
+    <div className="relative min-h-screen bg-[#0A0A0F] text-[#F4F4FA] selection:bg-[#8B5CF6]/30 overflow-x-hidden">
+      {/* BACKGROUND GRID MESH */}
+      <div
+        className="pointer-events-none absolute inset-0 z-0 opacity-40"
+        style={{
+          backgroundImage: `
+            linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px)
+          `,
+          backgroundSize: "60px 60px",
+          maskImage: "radial-gradient(circle at 50% 30%, black 20%, transparent 80%)",
+        }}
+      />
+
+      {/* PULSING GLOW SPHERES */}
+      <div className="pointer-events-none absolute left-1/2 top-0 h-[600px] w-[800px] -translate-x-1/2 rounded-full bg-[#8B5CF6]/15 blur-[140px] animate-pulse" />
+      <div className="pointer-events-none absolute right-10 top-[40%] h-[450px] w-[450px] rounded-full bg-[#10B981]/10 blur-[130px] animate-pulse" />
 
       {/* STICKY NAVBAR */}
-      <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0A0A0F]/80 backdrop-blur-xl">
+      <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0A0A0F]/85 backdrop-blur-xl">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <Link href="/" className="flex items-center gap-2.5 font-display text-xl font-bold text-white">
             <DraftlyLogo className="h-7 w-7" />
@@ -62,87 +86,102 @@ export default function LandingPage() {
 
       {/* HERO SECTION */}
       <section className="relative z-10 px-6 pt-20 pb-16 text-center">
-        <div className="mx-auto max-w-4xl">
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#8B5CF6]/30 bg-[#8B5CF6]/10 px-4 py-1.5 font-mono text-xs text-[#F4F4FA]">
+        <div className="relative mx-auto max-w-4xl">
+          {/* FLOATING ANIMATED CONTENT ICONS IN NEGATIVE SPACE */}
+          <div className="hidden lg:block">
+            {/* Left Top: Mic */}
+            <div
+              className="absolute -top-4 -left-16 z-20 flex h-14 w-14 items-center justify-center rounded-2xl border border-[#8B5CF6]/30 bg-[#8B5CF6]/15 text-[#8B5CF6] shadow-[0_0_24px_rgba(139,92,246,0.25)] backdrop-blur-xl transition hover:scale-125 duration-300 animate-bounce"
+              style={{ animationDuration: "5s" }}
+              title="Voice Persona"
+            >
+              <MicIcon className="w-6 h-6" />
+            </div>
+
+            {/* Left Middle: Target */}
+            <div
+              className="absolute top-28 -left-28 z-20 flex h-14 w-14 items-center justify-center rounded-2xl border border-[#FF4ECD]/30 bg-[#FF4ECD]/15 text-[#FF4ECD] shadow-[0_0_24px_rgba(255,78,205,0.25)] backdrop-blur-xl transition hover:scale-125 duration-300 animate-pulse"
+              style={{ animationDuration: "6s" }}
+              title="Target Audience"
+            >
+              <TargetIcon className="w-6 h-6" />
+            </div>
+
+            {/* Left Bottom: Reel */}
+            <div
+              className="absolute top-60 -left-16 z-20 flex h-14 w-14 items-center justify-center rounded-2xl border border-[#10B981]/30 bg-[#10B981]/15 text-[#10B981] shadow-[0_0_24px_rgba(16,185,129,0.25)] backdrop-blur-xl transition hover:scale-125 duration-300 animate-bounce"
+              style={{ animationDuration: "5.5s" }}
+              title="Reels & Short Video"
+            >
+              <ReelIcon className="w-6 h-6" />
+            </div>
+
+            {/* Right Top: Sparkles */}
+            <div
+              className="absolute -top-4 -right-16 z-20 flex h-14 w-14 items-center justify-center rounded-2xl border border-[#FF4ECD]/30 bg-[#FF4ECD]/15 text-[#FF4ECD] shadow-[0_0_24px_rgba(255,78,205,0.25)] backdrop-blur-xl transition hover:scale-125 duration-300 animate-pulse"
+              style={{ animationDuration: "5.2s" }}
+              title="AI Sparkles"
+            >
+              <SparklesIcon className="w-6 h-6" />
+            </div>
+
+            {/* Right Middle: Lightning */}
+            <div
+              className="absolute top-28 -right-28 z-20 flex h-14 w-14 items-center justify-center rounded-2xl border border-[#8B5CF6]/30 bg-[#8B5CF6]/15 text-[#8B5CF6] shadow-[0_0_24px_rgba(139,92,246,0.25)] backdrop-blur-xl transition hover:scale-125 duration-300 animate-bounce"
+              style={{ animationDuration: "6.2s" }}
+              title="Instant Speed"
+            >
+              <ZapIcon className="w-6 h-6" />
+            </div>
+
+            {/* Right Bottom: Rocket */}
+            <div
+              className="absolute top-60 -right-16 z-20 flex h-14 w-14 items-center justify-center rounded-2xl border border-[#10B981]/30 bg-[#10B981]/15 text-[#10B981] shadow-[0_0_24px_rgba(16,185,129,0.25)] backdrop-blur-xl transition hover:scale-125 duration-300 animate-pulse"
+              style={{ animationDuration: "5.8s" }}
+              title="Viral Growth"
+            >
+              <RocketIcon className="w-6 h-6" />
+            </div>
+          </div>
+
+          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#8B5CF6]/40 bg-[#8B5CF6]/10 px-4 py-1.5 font-mono text-xs text-[#F4F4FA] shadow-[0_0_16px_rgba(139,92,246,0.2)]">
             <SparklesIcon className="w-3.5 h-3.5 text-[#8B5CF6]" />
             <span>Powered by Gemini 3.6 Flash AI Model</span>
           </div>
 
-          <h1 className="font-display text-4xl font-extrabold tracking-tight sm:text-6xl lg:text-7xl leading-[1.1]">
+          <h1 className="font-display text-4xl font-extrabold tracking-tight sm:text-6xl lg:text-7xl leading-[1.15]">
             Turn Any Idea Into{" "}
-            <span className="bg-gradient-to-r from-[#8B5CF6] via-[#FF4ECD] to-[#10B981] bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[#8B5CF6] via-[#FF4ECD] to-[#10B981] bg-clip-text text-transparent animate-pulse">
               3 Viral Posts
             </span>{" "}
             in 5 Seconds
           </h1>
 
           <p className="mx-auto mt-6 max-w-2xl text-base text-[#8E8EA3] sm:text-lg">
-            The GenZ-native AI Content Studio tuned to your authentic brand persona. Generate high-converting IG Captions, Reel Scripts, X Threads, and LinkedIn posts instantly.
+            The GenZ-native AI Content Studio tuned to your authentic brand persona. Generate high-converting IG Captions, Reel Hooks, X Threads, and LinkedIn posts instantly.
           </p>
 
           <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link href="/signup">
               <Button
                 variant="primary"
-                className="h-13 px-8 text-base font-semibold shadow-[0_0_36px_rgba(139,92,246,0.5)] bg-gradient-to-r from-[#8B5CF6] to-[#10B981] w-full sm:w-auto"
+                className="h-13 px-8 text-base font-semibold shadow-[0_0_36px_rgba(139,92,246,0.5)] bg-gradient-to-r from-[#8B5CF6] to-[#10B981] w-full sm:w-auto hover:scale-105 transition-all duration-200"
               >
                 <ZapIcon className="w-5 h-5" />
                 <span>Start Generating Free · 15 Credits</span>
               </Button>
             </Link>
           </div>
-        </div>
 
-        {/* DEMO WIDGET PREVIEW */}
-        <div id="demo" className="mx-auto mt-14 max-w-4xl text-left">
-          <div className="glass-panel p-6 sm:p-8 border border-white/10 shadow-[0_20px_80px_rgba(0,0,0,0.6)]">
-            <div className="mb-4 flex items-center justify-between border-b border-white/10 pb-4">
-              <div className="flex items-center gap-2">
-                <SparklesIcon className="w-5 h-5 text-[#8B5CF6]" />
-                <h3 className="font-display text-base font-bold text-white">
-                  Interactive Studio Preview
-                </h3>
-              </div>
-              <span className="font-mono text-xs text-[#8E8EA3]">Gemini 3.6 Flash</span>
-            </div>
-
-            <div className="mb-4 flex flex-wrap gap-2">
-              <span className="rounded-full bg-[#8B5CF6] px-3.5 py-1 text-xs font-semibold text-white shadow-md shadow-[#8B5CF6]/30">
-                X Thread
-              </span>
-              <span className="rounded-full border border-white/10 bg-white/5 px-3.5 py-1 text-xs text-[#8E8EA3]">
-                IG Caption
-              </span>
-              <span className="rounded-full border border-white/10 bg-white/5 px-3.5 py-1 text-xs text-[#8E8EA3]">
-                LinkedIn
-              </span>
-              <span className="rounded-full border border-white/10 bg-white/5 px-3.5 py-1 text-xs text-[#8E8EA3]">
-                Reel Hook
-              </span>
-            </div>
-
-            <div className="mb-4 rounded-xl border border-white/10 bg-white/5 p-3.5 text-xs text-[#F4F4FA] font-sans">
-              Topic: "5 harsh truths about launching a SaaS in 2026 without an audience"
-            </div>
-
-            <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4 text-xs font-sans text-[#F4F4FA] leading-relaxed whitespace-pre-wrap">
-              <span className="font-mono text-[#8B5CF6] font-semibold block mb-1">
-                1/5 — Direct Hype Hook
-              </span>
-              2026 is officially the year where building a SaaS is easy, but getting anyone to care is 100x harder. If you have 0 audience and 0 pre-launch distribution, read this before touching code: 🧵👇
-              {"\n\n"}
-              <span className="font-mono text-[#8B5CF6] font-semibold block mb-1">
-                2/5 — The Distribution Trap
-              </span>
-              Most indie hackers spend 3 months polishing features and 0 days talking to customers. In 2026, your product isn't your moat—your distribution loop is.
-              {"\n\n"}
-              <span className="font-mono text-[#8B5CF6] font-semibold block mb-1">
-                3/5 — Build in Public
-              </span>
-              Show raw metrics, failed launches, and real user feedback. People don't follow products; they follow honest builders.
-            </div>
+          {/* LIVE TICKER BADGE */}
+          <div className="mt-6 inline-flex items-center gap-2 font-mono text-xs text-[#8E8EA3]">
+            <span className="h-2 w-2 rounded-full bg-[#10B981] shadow-[0_0_8px_#10B981] animate-ping" />
+            <span>4,892 posts generated today</span>
           </div>
         </div>
+
+        {/* INTERACTIVE DEMO WIDGET */}
+        <InteractiveLandingDemo />
       </section>
 
       {/* FEATURES SECTION */}
@@ -158,7 +197,7 @@ export default function LandingPage() {
           </div>
 
           <div className="grid gap-8 md:grid-cols-3">
-            <div className="glass-panel p-8 transition duration-200 hover:border-[#8B5CF6]/40 hover:-translate-y-1">
+            <div className="glass-panel p-8 transition duration-300 hover:border-[#8B5CF6]/50 hover:-translate-y-1.5 hover:shadow-[0_16px_40px_rgba(139,92,246,0.15)]">
               <div className="mb-5 grid h-12 w-12 place-items-center rounded-xl bg-[#8B5CF6]/15 text-[#8B5CF6]">
                 <MicIcon className="w-6 h-6" />
               </div>
@@ -170,7 +209,7 @@ export default function LandingPage() {
               </p>
             </div>
 
-            <div className="glass-panel p-8 transition duration-200 hover:border-[#8B5CF6]/40 hover:-translate-y-1">
+            <div className="glass-panel p-8 transition duration-300 hover:border-[#8B5CF6]/50 hover:-translate-y-1.5 hover:shadow-[0_16px_40px_rgba(139,92,246,0.15)]">
               <div className="mb-5 grid h-12 w-12 place-items-center rounded-xl bg-[#8B5CF6]/15 text-[#8B5CF6]">
                 <ZapIcon className="w-6 h-6" />
               </div>
@@ -182,7 +221,7 @@ export default function LandingPage() {
               </p>
             </div>
 
-            <div className="glass-panel p-8 transition duration-200 hover:border-[#8B5CF6]/40 hover:-translate-y-1">
+            <div className="glass-panel p-8 transition duration-300 hover:border-[#8B5CF6]/50 hover:-translate-y-1.5 hover:shadow-[0_16px_40px_rgba(139,92,246,0.15)]">
               <div className="mb-5 grid h-12 w-12 place-items-center rounded-xl bg-[#8B5CF6]/15 text-[#8B5CF6]">
                 <LibraryIcon className="w-6 h-6" />
               </div>
