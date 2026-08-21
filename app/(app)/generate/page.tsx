@@ -1,21 +1,24 @@
-import { Header } from "@/components/layout/header";
-import { Card } from "@/components/ui/card";
+/**
+ * app/(app)/generate/page.tsx
+ *
+ * Stage 4: Content Studio Generator Page.
+ * Renders the StudioGenerator component with optional initial query params.
+ */
+import { StudioGenerator } from "./studio-generator";
 
-export default function GeneratePage() {
+export default async function GeneratePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ topic?: string; type?: string }>;
+}) {
+  const params = await searchParams;
+
   return (
-    <>
-      <Header title="Generate" subtitle="Topic in, three posts out." />
-      <Card className="mx-auto mt-16 max-w-md text-center">
-        <p className="text-4xl">✨</p>
-        <p className="mt-4 font-display text-xl font-semibold">
-          The Studio arrives in Stage 4
-        </p>
-        <p className="mt-2 text-sm text-muted">
-          This is where a raw idea becomes 3 platform-ready variants — in your
-          voice, in under 15 seconds. The shell you're standing in is what we
-          build it into.
-        </p>
-      </Card>
-    </>
+    <div className="py-2">
+      <StudioGenerator
+        initialTopic={params.topic || ""}
+        initialType={params.type || "ig_caption"}
+      />
+    </div>
   );
 }

@@ -1,60 +1,75 @@
 @import "tailwindcss";
 
 /* ============================================================
-   DRAFTLY ULTRA-PREMIUM TECHNICAL AI THEME
-   Inspiration: SV-Blocks, Curated Design, Linear, SaaSpo
+   DRAFTLY — WATERMELON UI INPIRED THEME (ui.watermelon.sh)
    ============================================================ */
 
-@layer base {
-  :root {
-    --bg-dark: #07070A;
-    --surface-glass: rgba(15, 15, 23, 0.85);
-    --surface-card: #101018;
-    --surface-hover: #171724;
-    --border-hairline: rgba(255, 255, 255, 0.09);
-    --border-glow: rgba(124, 92, 255, 0.5);
+:root {
+  --background: #030305;
+  --surface: rgba(18, 18, 24, 0.75);
+  --surface-2: rgba(28, 28, 38, 0.6);
+  --border: rgba(255, 255, 255, 0.09);
+  --foreground: #F4F4FA;
+  --muted: #9494A8;
+  --primary: #8B5CF6;                /* Watermelon violet */
+  --primary-glow: rgba(139, 92, 246, 0.4);
+  --accent: #10B981;                 /* Watermelon emerald */
+  --accent-glow: rgba(16, 185, 129, 0.35);
+  --danger: #EF4444;
+}
 
-    --primary-purple: #7C5CFF;
-    --primary-glow: rgba(124, 92, 255, 0.4);
-    --accent-pink: #FF4ECD;
-    --accent-lime: #A3F65A;
-  }
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-primary: var(--primary);
+  --color-primary-glow: var(--primary-glow);
+  --color-accent: var(--accent);
+  --color-accent-glow: var(--accent-glow);
+  --color-danger: var(--danger);
 
-  body {
-    background-color: #07070A !important;
-    color: #F4F4FA !important;
-    font-family: var(--font-inter), system-ui, sans-serif;
-    min-height: 100vh;
-    position: relative;
-    overflow-x: hidden;
-  }
+  --font-display: var(--font-space-grotesk), system-ui, sans-serif;
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+}
 
-  /* Technical Dotted Grid Pattern */
-  body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
-    background-size: 28px 28px;
-    pointer-events: none;
-    z-index: -2;
-    opacity: 0.7;
-  }
+body {
+  background-color: #030305 !important;
+  color: #F4F4FA !important;
+  font-family: var(--font-inter), system-ui, sans-serif;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
 
-  /* Ambient Purple/Pink Gradient Glow Orb */
-  body::after {
-    content: "";
-    position: fixed;
-    width: 650px;
-    height: 650px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(124, 92, 255, 0.15) 0%, rgba(255, 78, 205, 0.08) 35%, transparent 70%);
-    top: -220px;
-    right: -120px;
-    pointer-events: none;
-    z-index: -1;
-    animation: orbPulse 9s ease-in-out infinite alternate;
-  }
+/* Watermelon Dotted Grid Background Overlay */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.09) 1px, transparent 1px);
+  background-size: 24px 24px;
+  pointer-events: none;
+  z-index: -2;
+  opacity: 0.6;
+}
+
+/* Watermelon Radial Gradient Glows */
+body::after {
+  content: "";
+  position: fixed;
+  width: 700px;
+  height: 700px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.16) 0%, rgba(16, 185, 129, 0.06) 40%, transparent 70%);
+  top: -240px;
+  right: -140px;
+  pointer-events: none;
+  z-index: -1;
+  animation: orbPulse 10s ease-in-out infinite alternate;
 }
 
 @keyframes orbPulse {
@@ -62,32 +77,17 @@
   100% { transform: scale(1.15) translate(-40px, 50px); }
 }
 
-/* Gradient Text Effect */
+/* Gradient Text Effect (Watermelon Violet -> Emerald) */
 .text-gradient {
-  background: linear-gradient(135deg, #7C5CFF 0%, #FF4ECD 100%);
+  background: linear-gradient(135deg, #8B5CF6 0%, #34D399 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent !important;
 }
 
-/* Shimmering Text Animation */
-.text-shimmer {
-  background: linear-gradient(90deg, #8E8EA3 0%, #F4F4FA 30%, #7C5CFF 50%, #FF4ECD 70%, #8E8EA3 100%);
-  background-size: 250% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent !important;
-  animation: textShimmer 2.5s linear infinite;
-}
-
-@keyframes textShimmer {
-  0% { background-position: 100% 0; }
-  100% { background-position: -100% 0; }
-}
-
-/* Premium Glass Panel */
+/* Watermelon Glass Panel */
 .glass-panel {
-  background: rgba(15, 15, 23, 0.85);
+  background: rgba(18, 18, 24, 0.75);
   border: 1px solid rgba(255, 255, 255, 0.09);
   backdrop-filter: blur(24px);
   border-radius: 24px;
@@ -96,16 +96,16 @@
 }
 
 .glass-panel:hover {
-  border-color: rgba(124, 92, 255, 0.4);
-  box-shadow: 0 12px 48px rgba(124, 92, 255, 0.15);
+  border-color: rgba(139, 92, 246, 0.4);
+  box-shadow: 0 12px 48px rgba(139, 92, 246, 0.15);
 }
 
-/* Tabular Numbers for Meters */
+/* Tabular Numbers */
 .tnum {
   font-variant-numeric: tabular-nums;
 }
 
 ::selection {
-  background: #7C5CFF;
+  background: #8B5CF6;
   color: #FFFFFF;
 }
