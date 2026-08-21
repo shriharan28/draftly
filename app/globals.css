@@ -1,100 +1,82 @@
 @import "tailwindcss";
 
 /* ============================================================
-   DRAFTLY DESIGN TOKENS — Technical AI Era Aesthetic
+   DRAFTLY ULTRA-PREMIUM TECHNICAL AI THEME
+   Inspiration: SV-Blocks, Curated Design, Linear, SaaSpo
    ============================================================ */
 
-:root {
-  --background: #09090E;               /* Pitch-black canvas with deep indigo tint */
-  --surface: rgba(18, 18, 26, 0.75);   /* Translucent glass card */
-  --surface-2: rgba(26, 26, 38, 0.6);  /* Nested elements */
-  --border: rgba(255, 255, 255, 0.08); /* Hairline borders */
-  --border-active: rgba(124, 92, 255, 0.4);
-  --foreground: #F4F4FA;               /* Primary white text */
-  --muted: #8E8EA3;                    /* Secondary muted text */
-  --primary: #7C5CFF;                  /* Electric violet */
-  --primary-glow: rgba(124, 92, 255, 0.35);
-  --accent: #FF4ECD;                   /* Neon pink accent */
-  --success: #A3F65A;                  /* Neon lime */
-  --warning: #FFB020;
-  --danger: #FF5C5C;
-}
+@layer base {
+  :root {
+    --bg-dark: #07070A;
+    --surface-glass: rgba(15, 15, 23, 0.85);
+    --surface-card: #101018;
+    --surface-hover: #171724;
+    --border-hairline: rgba(255, 255, 255, 0.09);
+    --border-glow: rgba(124, 92, 255, 0.5);
 
-@theme inline {
-  --color-background: var(--background);
-  --color-surface: var(--surface);
-  --color-surface-2: var(--surface-2);
-  --color-border: var(--border);
-  --color-border-active: var(--border-active);
-  --color-foreground: var(--foreground);
-  --color-muted: var(--muted);
-  --color-primary: var(--primary);
-  --color-primary-glow: var(--primary-glow);
-  --color-accent: var(--accent);
-  --color-success: var(--success);
-  --color-warning: var(--warning);
-  --color-danger: var(--danger);
+    --primary-purple: #7C5CFF;
+    --primary-glow: rgba(124, 92, 255, 0.4);
+    --accent-pink: #FF4ECD;
+    --accent-lime: #A3F65A;
+  }
 
-  --font-display: var(--font-space-grotesk), system-ui, sans-serif;
-  --font-sans: var(--font-inter), system-ui, sans-serif;
-  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
-}
+  body {
+    background-color: #07070A !important;
+    color: #F4F4FA !important;
+    font-family: var(--font-inter), system-ui, sans-serif;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+  }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-inter), system-ui, sans-serif;
-  min-height: 100vh;
-  position: relative;
-  overflow-x: hidden;
-}
+  /* Technical Dotted Grid Pattern */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+    background-size: 28px 28px;
+    pointer-events: none;
+    z-index: -2;
+    opacity: 0.7;
+  }
 
-/* Subtle Technical Grid Background */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-  background-size: 32px 32px;
-  pointer-events: none;
-  z-index: -2;
-  opacity: 0.6;
-}
-
-/* Ambient Radial Glow Orb */
-.bg-glow-orb {
-  position: fixed;
-  width: 600px;
-  height: 600px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(124,92,255,0.12) 0%, rgba(255,78,205,0.05) 40%, transparent 70%);
-  top: -200px;
-  right: -100px;
-  pointer-events: none;
-  z-index: -1;
-  animation: orbPulse 8s ease-in-out infinite alternate;
+  /* Ambient Purple/Pink Gradient Glow Orb */
+  body::after {
+    content: "";
+    position: fixed;
+    width: 650px;
+    height: 650px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(124, 92, 255, 0.15) 0%, rgba(255, 78, 205, 0.08) 35%, transparent 70%);
+    top: -220px;
+    right: -120px;
+    pointer-events: none;
+    z-index: -1;
+    animation: orbPulse 9s ease-in-out infinite alternate;
+  }
 }
 
 @keyframes orbPulse {
   0% { transform: scale(1) translate(0, 0); }
-  100% { transform: scale(1.15) translate(-30px, 40px); }
+  100% { transform: scale(1.15) translate(-40px, 50px); }
 }
 
-/* Gradient Text */
+/* Gradient Text Effect */
 .text-gradient {
-  background: linear-gradient(135deg, #7c5cff, #ff4ecd);
+  background: linear-gradient(135deg, #7C5CFF 0%, #FF4ECD 100%);
   -webkit-background-clip: text;
   background-clip: text;
-  color: transparent;
+  color: transparent !important;
 }
 
-/* Shimmer Animated Text (SV-Animations Style) */
-.shimmer-text {
+/* Shimmering Text Animation */
+.text-shimmer {
   background: linear-gradient(90deg, #8E8EA3 0%, #F4F4FA 30%, #7C5CFF 50%, #FF4ECD 70%, #8E8EA3 100%);
   background-size: 250% 100%;
   -webkit-background-clip: text;
   background-clip: text;
-  color: transparent;
+  color: transparent !important;
   animation: textShimmer 2.5s linear infinite;
 }
 
@@ -103,20 +85,27 @@ body::before {
   100% { background-position: -100% 0; }
 }
 
-/* Glassmorphism Card Style */
+/* Premium Glass Panel */
 .glass-panel {
-  background: var(--surface);
-  border: 1px solid var(--border);
+  background: rgba(15, 15, 23, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  backdrop-filter: blur(24px);
   border-radius: 24px;
-  backdrop-filter: blur(20px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-panel:hover {
+  border-color: rgba(124, 92, 255, 0.4);
+  box-shadow: 0 12px 48px rgba(124, 92, 255, 0.15);
+}
+
+/* Tabular Numbers for Meters */
+.tnum {
+  font-variant-numeric: tabular-nums;
 }
 
 ::selection {
-  background: var(--primary);
-  color: white;
-}
-
-.tnum {
-  font-variant-numeric: tabular-nums;
+  background: #7C5CFF;
+  color: #FFFFFF;
 }
