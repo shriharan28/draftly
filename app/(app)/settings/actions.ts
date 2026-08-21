@@ -26,7 +26,7 @@ export async function updateBrandVoiceAction(formData: FormData) {
 
   try {
     // 1. Update Profile full_name, niche, tone & target audience
-    await supabase
+    const { error: profileError } = await supabase
       .from("profiles")
       .update({
         full_name: fullName || null,
@@ -37,17 +37,44 @@ export async function updateBrandVoiceAction(formData: FormData) {
       })
       .eq("id", user.id);
 
-    // 2. Upsert Brand Voice with proper schema (tones text[], sample_text text)
-    await supabase.from("brand_voices").upsert(
-      {
+    if (profileError) {
+      console.error("Error updating profiles table:", profileError);
+      return { error: profileError.message };
+    }
+
+    // 2. Safely update or insert default brand voice
+    const { data: existingVoice } = await supabase
+      .from("brand_voices")
+      .select("id")
+      .eq("user_id", user.id)
+      .eq("is_default", true)
+      .maybeSingle();
+
+    if (existingVoice) {
+      const { error: voiceError } = await supabase
+        .from("brand_voices")
+        .update({
+          tones: tone ? [tone] : ["Bold & Punchy"],
+          sample_text: voiceInstructions || null,
+        })
+        .eq("id", existingVoice.id);
+
+      if (voiceError) {
+        console.error("Error updating brand_voices table:", voiceError);
+      }
+    } else {
+      const { error: voiceError } = await supabase.from("brand_voices").insert({
         user_id: user.id,
         name: "Default Voice",
         tones: tone ? [tone] : ["Bold & Punchy"],
         sample_text: voiceInstructions || null,
         is_default: true,
-      },
-      { onConflict: "user_id, name" }
-    );
+      });
+
+      if (voiceError) {
+        console.error("Error inserting brand_voices table:", voiceError);
+      }
+    }
 
     revalidatePath("/settings");
     revalidatePath("/dashboard");
