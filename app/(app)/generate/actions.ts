@@ -26,20 +26,38 @@ export async function generateContentAction(params: {
     return { error: "Authentication required to generate content." };
   }
 
-  // 1. Spend 1 credit via RPC
-  const { data: creditSpent, error: creditError } = await supabase.rpc(
-    "spend_credits",
-    {
-      p_user_id: user.id,
-      p_amount: 1,
-      p_reason: `generation:${params.contentType}`,
-    }
-  );
+  // 1. Get current credit balance from credit_ledger
+  const { data: latestLedger } = await supabase
+    .from("credit_ledger")
+    .select("balance_after")
+    .eq("user_id", user.id)
+    .order("id", { ascending: false })
+    .limit(1)
+    .single();
 
-  if (creditError || !creditSpent) {
+  const currentBalance = latestLedger?.balance_after ?? 0;
+
+  if (currentBalance < 1) {
     return {
       error: "Insufficient credits! Upgrade your plan or wait for your monthly reset.",
     };
+  }
+
+  const newBalance = currentBalance - 1;
+
+  // Deduct 1 credit in credit_ledger
+  const { error: ledgerInsertError } = await supabase
+    .from("credit_ledger")
+    .insert({
+      user_id: user.id,
+      delta: -1,
+      reason: `generation:${params.contentType}`,
+      balance_after: newBalance,
+    });
+
+  if (ledgerInsertError) {
+    console.error("Error updating credit_ledger:", ledgerInsertError);
+    return { error: "Failed to process credit transaction. Please try again." };
   }
 
   // 2. Fetch user's profile and default brand voice for context
@@ -97,10 +115,11 @@ export async function generateContentAction(params: {
     };
   } catch (err: any) {
     // Refund 1 credit if AI call failed
-    await supabase.rpc("spend_credits", {
-      p_user_id: user.id,
-      p_amount: -1,
-      p_reason: "refund:generation_failed",
+    await supabase.from("credit_ledger").insert({
+      user_id: user.id,
+      delta: 1,
+      reason: "refund:generation_failed",
+      balance_after: currentBalance,
     });
 
     return {
