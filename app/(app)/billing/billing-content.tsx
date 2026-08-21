@@ -194,8 +194,8 @@ export function BillingContent({
             <tbody className="divide-y divide-white/5">
               {ledgerRows.map((row) => (
                 <tr key={row.id}>
-                  <td className="py-3.5 px-3 text-[#9494A8]">
-                    {new Date(row.created_at).toLocaleDateString()}
+                  <td className="py-3.5 px-3 text-[#9494A8]" suppressHydrationWarning>
+                    {row.created_at ? new Date(row.created_at).toISOString().split("T")[0] : "—"}
                   </td>
                   <td className="py-3.5 px-3">
                     {row.delta > 0 ? (
