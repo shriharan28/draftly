@@ -1,47 +1,69 @@
 /**
  * components/ui/icons.tsx
  *
- * Vector UI & Brand Icons for Draftly. Zero emojis throughout the codebase.
+ * Official Vector UI & Brand Icons for Draftly.
+ * Contains the exact futuristic purple vortex Draftly AI brand logo.
  */
 import React from "react";
 
-/* --- OFFICIAL DRAFTLY BRAND LOGO --- */
+/* --- OFFICIAL DRAFTLY BRAND LOGO (Futuristic Purple Vortex) --- */
 
 export function DraftlyLogo({ className = "w-8 h-8" }: { className?: string }) {
   return (
-    <svg viewBox="0 0 36 36" fill="none" className={className}>
+    <svg viewBox="0 0 100 100" fill="none" className={className}>
       <defs>
-        <linearGradient id="draftly-brand-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#8B5CF6" />
-          <stop offset="50%" stopColor="#7C3AED" />
-          <stop offset="100%" stopColor="#10B981" />
+        {/* Outer Lobe Gradient */}
+        <linearGradient id="vortex-outer" x1="10%" y1="10%" x2="90%" y2="90%">
+          <stop offset="0%" stopColor="#D8B4FE" />
+          <stop offset="40%" stopColor="#A855F7" />
+          <stop offset="80%" stopColor="#6D28D9" />
+          <stop offset="100%" stopColor="#3B0764" />
         </linearGradient>
-        <linearGradient id="draftly-inner-spark" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#FFFFFF" />
-          <stop offset="100%" stopColor="#A7F3D0" />
+
+        {/* Inner Lobe Gradient */}
+        <linearGradient id="vortex-inner" x1="0%" y1="100%" x2="100%" y2="0%">
+          <stop offset="0%" stopColor="#C084FC" />
+          <stop offset="60%" stopColor="#7E22CE" />
+          <stop offset="100%" stopColor="#2E1065" />
         </linearGradient>
-        <filter id="draftly-glow" x="-20%" y="-20%" width="140%" height="140%">
-          <feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="#8B5CF6" floodOpacity="0.4" />
+
+        {/* Core Orb Radial Gradient */}
+        <radialGradient id="vortex-orb" cx="40%" cy="40%" r="60%">
+          <stop offset="0%" stopColor="#F5D0FE" />
+          <stop offset="50%" stopColor="#D8B4FE" />
+          <stop offset="100%" stopColor="#7E22CE" />
+        </radialGradient>
+
+        <filter id="vortex-glow" x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="0" dy="4" stdDeviation="6" floodColor="#A855F7" floodOpacity="0.5" />
         </filter>
       </defs>
-      {/* Brand Rounded Squircle Container */}
-      <rect width="36" height="36" rx="10" fill="url(#draftly-brand-grad)" filter="url(#draftly-glow)" />
 
-      {/* Geometric Monogram: Draft Page ('D') + AI Spark Beam */}
-      <path
-        d="M10 9.5H17.5C21.6421 9.5 25 12.8579 25 17C25 21.1421 21.6421 24.5 17.5 24.5H10V9.5Z"
-        stroke="#FFFFFF"
-        strokeWidth="3"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      {/* Inner AI Spark Nib */}
-      <path
-        d="M15 14L20 19M20 14L15 19"
-        stroke="url(#draftly-inner-spark)"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-      />
+      <g filter="url(#vortex-glow)">
+        {/* Lobe 1 (Top Right Curve) */}
+        <path
+          d="M 50 12 C 68 12 88 35 84 55 C 80 75 58 84 45 84 C 32 84 15 72 20 52 C 24 34 38 12 50 12 Z"
+          fill="url(#vortex-outer)"
+        />
+
+        {/* Lobe 2 (Swirling Inner Vortex Ribbons) */}
+        <path
+          d="M 52 20 C 66 22 78 40 73 57 C 68 72 50 78 38 74 C 28 70 24 55 29 44 C 34 32 42 19 52 20 Z"
+          fill="url(#vortex-inner)"
+          opacity="0.9"
+        />
+
+        {/* Lobe 3 (Deep Core Shading) */}
+        <path
+          d="M 50 28 C 60 30 68 44 64 56 C 60 67 46 70 38 65 C 32 60 31 49 36 41 C 41 33 45 27 50 28 Z"
+          fill="#1E1B4B"
+          opacity="0.8"
+        />
+
+        {/* Center Nucleus Orb */}
+        <circle cx="50" cy="51" r="7.5" fill="url(#vortex-orb)" />
+        <circle cx="48" cy="49" r="2.5" fill="#FFFFFF" opacity="0.8" />
+      </g>
     </svg>
   );
 }
