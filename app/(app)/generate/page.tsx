@@ -20,17 +20,51 @@ export default async function GeneratePage({
   } = await supabase.auth.getUser();
 
   let latestGen = null;
-  if (user) {
-    const { data } = await supabase
-      .from("generations")
-      .select("topic, content_type, variants")
-      .eq("user_id", user.id)
-      .is("chosen_index", null)
-      .order("created_at", { ascending: false })
-      .limit(1)
-      .maybeSingle();
+  let activeTone = "Bold & Punchy";
+  let activeNicheLabel = "General";
 
-    latestGen = data;
+  if (user) {
+    const [genRes, profileRes, voiceRes] = await Promise.all([
+      supabase
+        .from("generations")
+        .select("topic, content_type, variants")
+        .eq("user_id", user.id)
+        .is("chosen_index", null)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle(),
+      supabase
+        .from("profiles")
+        .select("tone, niche")
+        .eq("id", user.id)
+        .single(),
+      supabase
+        .from("brand_voices")
+        .select("tones")
+        .eq("user_id", user.id)
+        .eq("is_default", true)
+        .single(),
+    ]);
+
+    latestGen = genRes.data;
+    const profile = profileRes.data;
+    const voice = voiceRes.data;
+
+    activeTone = (voice?.tones && voice.tones[0]) || profile?.tone || "Bold & Punchy";
+
+    const NICHE_LABELS: Record<string, string> = {
+      tech: "Tech & Software",
+      saas: "B2B SaaS & Startup",
+      business: "Business & E-Commerce",
+      marketing: "Digital Marketing",
+      fitness: "Health & Fitness",
+      design: "Design & Creative",
+      creator: "Content Creator",
+      lifestyle: "Lifestyle & Brand",
+    };
+
+    const rawNiche = (profile?.niche || "").toLowerCase();
+    activeNicheLabel = NICHE_LABELS[rawNiche] || profile?.niche || "General";
   }
 
   const initialVariants = Array.isArray(latestGen?.variants)
@@ -47,6 +81,8 @@ export default async function GeneratePage({
         initialTopic={params.topic || latestGen?.topic || ""}
         initialType={params.type || latestGen?.content_type || "ig_caption"}
         initialVariants={initialVariants}
+        activeTone={activeTone}
+        activeNicheLabel={activeNicheLabel}
       />
     </div>
   );

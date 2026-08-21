@@ -77,10 +77,14 @@ export function StudioGenerator({
   initialTopic = "",
   initialType = "ig_caption",
   initialVariants = null,
+  activeTone = "Bold & Punchy",
+  activeNicheLabel = "General",
 }: {
   initialTopic?: string;
   initialType?: string;
   initialVariants?: { angle: string; text: string }[] | null;
+  activeTone?: string;
+  activeNicheLabel?: string;
 }) {
   const [topic, setTopic] = useState(initialTopic);
   const [selectedFormat, setSelectedFormat] = useState<ContentType>(
@@ -128,7 +132,9 @@ export function StudioGenerator({
         <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[#8B5CF6]/30 bg-[#8B5CF6]/10 px-3.5 py-1.5 text-xs text-[#F4F4FA]">
           <MicIcon className="w-3.5 h-3.5 text-[#8B5CF6]" />
           <span>Voice Persona:</span>
-          <span className="font-semibold text-[#8B5CF6]">Active Profile Settings</span>
+          <span className="font-semibold text-[#8B5CF6]">
+            {activeTone} <span className="opacity-60">·</span> {activeNicheLabel}
+          </span>
         </div>
 
         <div className="mb-5">
