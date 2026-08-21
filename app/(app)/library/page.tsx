@@ -1,20 +1,25 @@
-import { Header } from "@/components/layout/header";
-import { Card } from "@/components/ui/card";
+/**
+ * app/(app)/library/page.tsx
+ *
+ * Content Library Page Stub.
+ * Zero emojis — Uses technical vector SVG icons.
+ */
+import { LibraryIcon } from "@/components/ui/icons";
 
 export default function LibraryPage() {
   return (
-    <>
-      <Header title="Library" subtitle="Every post you've ever made." />
-      <Card className="mx-auto mt-16 max-w-md text-center">
-        <p className="text-4xl">📚</p>
-        <p className="mt-4 font-display text-xl font-semibold">
-          Empty — for now
+    <div className="py-6">
+      <div className="glass-panel p-8 text-center max-w-xl mx-auto">
+        <div className="mb-4 grid h-14 w-14 place-items-center rounded-2xl bg-white/5 text-[#8B5CF6] mx-auto">
+          <LibraryIcon className="w-7 h-7" />
+        </div>
+        <h1 className="font-display text-2xl font-bold text-white mb-2">
+          Saved Content Library
+        </h1>
+        <p className="text-xs text-[#9494A8] leading-relaxed">
+          Access all your previously generated AI posts, filter by platform, and export.
         </p>
-        <p className="mt-2 text-sm text-muted">
-          Your generations will live here, searchable and re-copyable. It fills
-          up the moment the Studio opens (Stage 4).
-        </p>
-      </Card>
-    </>
+      </div>
+    </div>
   );
 }

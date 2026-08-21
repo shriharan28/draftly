@@ -3,6 +3,7 @@
  *
  * Watermelon UI Inspired Content Studio React Component.
  * White-labeled AI Generation powered by Draftly AI & Supabase.
+ * Zero emojis — Uses technical vector SVG icons throughout.
  */
 "use client";
 
@@ -17,6 +18,11 @@ import {
   XIcon,
   LinkedInIcon,
   YouTubeIcon,
+  SparklesIcon,
+  MicIcon,
+  ZapIcon,
+  TargetIcon,
+  LightbulbIcon,
 } from "@/components/ui/icons";
 
 const FORMATS: { id: ContentType; label: string; icon: React.ReactNode }[] = [
@@ -70,11 +76,15 @@ export function StudioGenerator({
       {/* LEFT PANEL: CONTROL STUDIO */}
       <div className="glass-panel p-6">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="font-display text-lg font-bold">✨ Create Content</h2>
+          <div className="flex items-center gap-2">
+            <SparklesIcon className="w-5 h-5 text-[#8B5CF6]" />
+            <h2 className="font-display text-lg font-bold text-white">Create Content</h2>
+          </div>
         </div>
 
         <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[#8B5CF6]/30 bg-[#8B5CF6]/10 px-3.5 py-1.5 text-xs text-[#F4F4FA]">
-          <span>🎙️ Voice Persona:</span>
+          <MicIcon className="w-3.5 h-3.5 text-[#8B5CF6]" />
+          <span>Voice Persona:</span>
           <span className="font-semibold text-[#8B5CF6]">Active Profile Settings</span>
         </div>
 
@@ -138,7 +148,8 @@ export function StudioGenerator({
             </span>
           ) : (
             <span className="flex items-center gap-2">
-              <span>⚡ Generate 3 AI Variants</span>
+              <ZapIcon className="w-4 h-4" />
+              <span>Generate 3 AI Variants</span>
               <span className="font-mono text-xs opacity-80">· 1 credit</span>
             </span>
           )}
@@ -148,7 +159,10 @@ export function StudioGenerator({
       {/* RIGHT PANEL: AI VARIANTS OUTPUT */}
       <div className="glass-panel p-6">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="font-display text-lg font-bold">🎯 AI Generated Variants</h2>
+          <div className="flex items-center gap-2">
+            <TargetIcon className="w-5 h-5 text-[#8B5CF6]" />
+            <h2 className="font-display text-lg font-bold text-white">AI Generated Variants</h2>
+          </div>
           <span className="font-mono text-xs text-[#9494A8]">
             {FORMAT_NAMES[selectedFormat]}
           </span>
@@ -159,8 +173,8 @@ export function StudioGenerator({
           <div className="flex min-h-[350px] flex-col items-center justify-center p-8 text-center animate-in fade-in duration-300">
             <div className="relative mb-6 flex h-16 w-16 items-center justify-center">
               <div className="absolute inset-0 animate-ping rounded-full border-2 border-[#8B5CF6] opacity-75" />
-              <div className="grid h-12 w-12 place-items-center rounded-full bg-gradient-to-tr from-[#8B5CF6] to-[#10B981] text-xl shadow-lg shadow-[#8B5CF6]/50">
-                ✨
+              <div className="grid h-12 w-12 place-items-center rounded-full bg-gradient-to-tr from-[#8B5CF6] to-[#10B981] text-xl shadow-lg shadow-[#8B5CF6]/50 text-white">
+                <SparklesIcon className="w-6 h-6" />
               </div>
             </div>
             <p className="text-shimmer font-display text-lg font-bold">
@@ -175,10 +189,10 @@ export function StudioGenerator({
         {/* EMPTY INITIAL STATE */}
         {!isPending && !variants && (
           <div className="flex min-h-[350px] flex-col items-center justify-center p-8 text-center border border-dashed border-white/10 rounded-2xl">
-            <div className="mb-4 grid h-14 w-14 place-items-center rounded-2xl bg-white/5 text-2xl text-[#8B5CF6]">
-              💡
+            <div className="mb-4 grid h-14 w-14 place-items-center rounded-2xl bg-white/5 text-[#8B5CF6]">
+              <LightbulbIcon className="w-7 h-7" />
             </div>
-            <h3 className="font-display text-base font-semibold">Ready to generate</h3>
+            <h3 className="font-display text-base font-semibold text-white">Ready to generate</h3>
             <p className="mt-1 max-w-xs text-xs text-[#9494A8]">
               Enter a topic on the left and click Generate to produce 3 unique AI content angles.
             </p>

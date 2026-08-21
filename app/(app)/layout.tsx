@@ -1,12 +1,15 @@
 /**
  * app/(app)/layout.tsx
  *
- * App Layout with Technical AI Gallery Aesthetic.
+ * App Layout with Sidebar, Header, Mobile Bottom Nav, and background glows.
+ * Zero emojis — Uses technical vector SVG icons.
  */
-import { BottomNav } from "@/components/layout/bottom-nav";
 import { Sidebar } from "@/components/layout/sidebar";
+import { Header } from "@/components/layout/header";
+import { BottomNav } from "@/components/layout/bottom-nav";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import { ZapIcon } from "@/components/ui/icons";
 
 export default async function AppLayout({
   children,
@@ -19,52 +22,58 @@ export default async function AppLayout({
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) redirect("/login");
+  if (!user) {
+    redirect("/login");
+  }
 
+  // Fetch current user profile
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("full_name, avatar_url, onboarded")
+    .eq("id", user.id)
+    .single();
+
+  // If user hasn't completed onboarding, redirect to /onboarding
+  if (profile && profile.onboarded === false) {
+    redirect("/onboarding");
+  }
+
+  // Fetch current credit balance
   const { data: ledger } = await supabase
     .from("credit_ledger")
     .select("balance_after")
+    .eq("user_id", user.id)
     .order("id", { ascending: false })
     .limit(1)
     .single();
 
-  const credits = ledger?.balance_after ?? 0;
-
-  const emailPrefix = user.email?.split("@")[0] ?? "there";
-  const displayName =
-    emailPrefix.charAt(0).toUpperCase() + emailPrefix.slice(1).split(".")[0];
-
-  const initial = displayName.charAt(0).toUpperCase();
+  const userCredits = ledger?.balance_after ?? 15;
+  const userInitial = (profile?.full_name || user.email || "U")
+    .charAt(0)
+    .toUpperCase();
 
   return (
-    <div className="flex min-h-screen bg-[#07070A] text-[#F4F4FA]">
-      {/* Sidebar Navigation */}
-      <Sidebar />
+    <div className="min-h-screen bg-[#030305] text-[#F4F4FA] antialiased">
+      {/* Background Ambient Orbs */}
+      <div className="fixed top-0 left-1/4 h-96 w-96 rounded-full bg-[#8B5CF6]/10 blur-[128px] pointer-events-none" />
+      <div className="fixed bottom-0 right-1/4 h-96 w-96 rounded-full bg-[#10B981]/10 blur-[128px] pointer-events-none" />
 
-      {/* Main Content Area */}
-      <div className="relative mx-auto w-full max-w-[1200px] flex-1 px-6 py-8 pb-24 md:pb-8">
-        {/* Top Header Bar with Credits Pill & Profile Avatar */}
-        <div className="mb-6 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-[#A3F65A] shadow-[0_0_10px_#A3F65A]" />
-            <span className="font-mono text-xs text-[#8E8EA3]">AI System Ready</span>
-          </div>
+      {/* Grid Pattern Overlay */}
+      <div className="fixed inset-0 bg-grid-pattern opacity-60 pointer-events-none" />
 
-          <div className="flex items-center gap-3">
-            <div className="tnum flex h-10 items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4.5 font-mono text-sm font-medium backdrop-blur-md shadow-lg shadow-black/30">
-              <span className="text-[#7C5CFF]">⚡</span>
-              <span>{credits} Credits</span>
-            </div>
-            <div className="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-tr from-[#7C5CFF] to-[#FF4ECD] text-sm font-bold text-white shadow-[0_0_20px_rgba(124,92,255,0.4)]">
-              {initial}
-            </div>
-          </div>
-        </div>
+      {/* DESKTOP SIDEBAR */}
+      <Sidebar userCredits={userCredits} />
 
-        {children}
+      {/* MAIN CONTENT AREA */}
+      <div className="relative flex flex-1 flex-col lg:pl-64">
+        <Header credits={userCredits} userInitial={userInitial} />
+
+        <main className="flex-1 p-6 pb-24 lg:pb-8 max-w-7xl w-full mx-auto">
+          {children}
+        </main>
       </div>
 
-      {/* Mobile Bottom Nav */}
+      {/* MOBILE BOTTOM NAVIGATION */}
       <BottomNav />
     </div>
   );

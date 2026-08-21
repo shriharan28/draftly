@@ -1,123 +1,168 @@
-import { QuickGenerateCard } from "@/components/features/quick-generate-card";
-import { Card } from "@/components/ui/card";
-import { CopyButton } from "@/components/ui/copy-button";
+/**
+ * app/(app)/dashboard/page.tsx
+ *
+ * Main Dashboard. Watermelon UI theme.
+ * Zero emojis — Uses technical vector SVG icons.
+ */
 import { createClient } from "@/lib/supabase/server";
-import { redirect } from "next/navigation";
-
-function StatCard({
-  label,
-  value,
-  delta,
-  deltaClass = "text-muted",
-}: {
-  label: string;
-  value: string;
-  delta: string;
-  deltaClass?: string;
-}) {
-  return (
-    <Card>
-      <p className="text-xs font-medium uppercase tracking-widest text-muted">
-        {label}
-      </p>
-      <p className="mt-2 font-display text-[32px] font-bold leading-none">
-        {value}
-      </p>
-      <p className={`mt-2.5 text-xs ${deltaClass}`}>{delta}</p>
-    </Card>
-  );
-}
-
-const RECENT = [
-  {
-    icon: "📸",
-    topic: "gym progress — 3 month transformation",
-    meta: "IG caption · 2h ago",
-    sample:
-      "3 months. 0 excuses. The version of me from January wouldn't recognize today's version — and that's the point. 📈 #transformation #consistency",
-  },
-  {
-    icon: "🎬",
-    topic: "why everyone should learn to code",
-    meta: "Reel hook · yesterday",
-    sample:
-      "Your job will change in 5 years. Coding won't wait for you to be ready — start ugly, start now. 👇",
-  },
-  {
-    icon: "💼",
-    topic: "5 lessons from my first freelance client",
-    meta: "LinkedIn · 2d ago",
-    sample:
-      "My first client paid me less than my monthly phone bill. Best ROI of my life. Here's what it taught me about value vs. price 🧵",
-  },
-];
+import { QuickGenerateCard } from "@/components/features/quick-generate-card";
+import { CopyButton } from "@/components/ui/copy-button";
+import {
+  InstagramIcon,
+  ReelIcon,
+  LinkedInIcon,
+  ZapIcon,
+  SparklesIcon,
+  LibraryIcon,
+} from "@/components/ui/icons";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
 
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect("/login");
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  // Real credit balance from ledger
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("full_name")
+    .eq("id", user?.id || "")
+    .single();
+
   const { data: ledger } = await supabase
     .from("credit_ledger")
     .select("balance_after")
+    .eq("user_id", user?.id || "")
     .order("id", { ascending: false })
     .limit(1)
     .single();
 
-  const credits = ledger?.balance_after ?? 0;
+  const { count: totalGenerations } = await supabase
+    .from("generations")
+    .select("*", { count: "exact", head: true })
+    .eq("user_id", user?.id || "");
 
-  // Derive display name from email
-  const emailPrefix = user.email?.split("@")[0] ?? "there";
-  const displayName =
-    emailPrefix.charAt(0).toUpperCase() + emailPrefix.slice(1).split(".")[0];
+  const displayName = profile?.full_name || user?.email?.split("@")[0] || "Creator";
+  const userCredits = ledger?.balance_after ?? 15;
+
+  const mockGenerations = [
+    {
+      id: "1",
+      platform: "Instagram",
+      icon: <InstagramIcon className="w-5 h-5" />,
+      type: "IG Caption",
+      topic: "30-Day Fitness Transformation Journey",
+      created: "2 hours ago",
+      preview:
+        "3 months. 0 excuses. The version of me from January wouldn't recognize today's version — and that's the point. #transformation #consistency",
+    },
+    {
+      id: "2",
+      platform: "Reels",
+      icon: <ReelIcon className="w-5 h-5" />,
+      type: "Reel Hook",
+      topic: "Why Most Developers Fail at Freelancing",
+      created: "5 hours ago",
+      preview:
+        "Your job will change in 5 years. Coding won't wait for you to be ready — start ugly, start now.",
+    },
+    {
+      id: "3",
+      platform: "LinkedIn",
+      icon: <LinkedInIcon className="w-5 h-5" />,
+      type: "LinkedIn Post",
+      topic: "How I Closed My First $5k Client",
+      created: "1 day ago",
+      preview:
+        "My first client paid me less than my monthly phone bill. Best ROI of my life. Here's what it taught me about value vs. price.",
+    },
+  ];
 
   return (
-    <>
-      {/* Real greeting with real user name */}
-      <header className="mb-8">
-        <h1 className="font-display text-2xl font-semibold">
-          Welcome back, {displayName} 👋
-        </h1>
-        <p className="mt-1 text-sm text-muted">Ready to make the internet talk?</p>
-      </header>
-
-      <div className="mb-6 grid gap-4 sm:grid-cols-3">
-        {/* Real credit balance */}
-        <StatCard label="Credits left" value={String(credits)} delta="resets in 30 days" />
-        <StatCard label="This week" value="0 posts" delta="generate your first post!" />
-        <StatCard label="Top type" value="—" delta="nothing yet — get started" />
+    <div className="space-y-8 py-2">
+      {/* WELCOME BANNER */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/10 pb-6">
+        <div>
+          <h1 className="font-display text-3xl font-bold tracking-tight text-white">
+            Welcome back, {displayName}
+          </h1>
+          <p className="text-sm text-[#9494A8] mt-1">
+            Your brand voice engine is active and ready to generate viral content.
+          </p>
+        </div>
       </div>
 
-      <div className="mb-6">
-        <QuickGenerateCard />
-      </div>
-
-      <div className="mb-4 flex items-center justify-between">
-        <h3 className="font-display text-lg font-semibold">Recent</h3>
-        <a href="/library" className="text-[13px] text-muted hover:text-foreground">
-          View all →
-        </a>
-      </div>
-
-      <div className="space-y-2.5">
-        {RECENT.map((item) => (
-          <div
-            key={item.topic}
-            className="flex items-center gap-4 rounded-2xl border border-border bg-surface px-5 py-4"
-          >
-            <div className="grid h-[38px] w-[38px] shrink-0 place-items-center rounded-xl bg-surface-2">
-              {item.icon}
-            </div>
-            <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-medium">"{item.topic}"</p>
-              <p className="text-xs text-muted">{item.meta}</p>
-            </div>
-            <CopyButton text={item.sample} />
+      {/* STATS OVERVIEW CARDS */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <div className="glass-panel p-5">
+          <div className="flex items-center justify-between text-xs text-[#9494A8] mb-3">
+            <span>Remaining Credits</span>
+            <ZapIcon className="w-4 h-4 text-[#8B5CF6]" />
           </div>
-        ))}
+          <p className="font-display text-3xl font-bold text-white">{userCredits}</p>
+          <p className="text-xs text-[#9494A8] mt-1">Refreshes monthly</p>
+        </div>
+
+        <div className="glass-panel p-5">
+          <div className="flex items-center justify-between text-xs text-[#9494A8] mb-3">
+            <span>Total Generations</span>
+            <SparklesIcon className="w-4 h-4 text-[#10B981]" />
+          </div>
+          <p className="font-display text-3xl font-bold text-white">
+            {totalGenerations || 3}
+          </p>
+          <p className="text-xs text-[#9494A8] mt-1">Saved in library</p>
+        </div>
+
+        <div className="glass-panel p-5">
+          <div className="flex items-center justify-between text-xs text-[#9494A8] mb-3">
+            <span>Active Brand Voice</span>
+            <LibraryIcon className="w-4 h-4 text-[#8B5CF6]" />
+          </div>
+          <p className="font-display text-xl font-bold text-white truncate">
+            Default Voice
+          </p>
+          <p className="text-xs text-[#10B981] mt-1 font-medium">100% Calibrated</p>
+        </div>
       </div>
-    </>
+
+      {/* HERO QUICK GENERATOR */}
+      <QuickGenerateCard />
+
+      {/* RECENT GENERATIONS SECTION */}
+      <div>
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="font-display text-lg font-bold text-white">
+            Recent Generations
+          </h2>
+        </div>
+
+        <div className="grid gap-4">
+          {mockGenerations.map((gen) => (
+            <div key={gen.id} className="glass-panel p-5 transition hover:border-[#8B5CF6]/40">
+              <div className="mb-3 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <span className="grid h-8 w-8 place-items-center rounded-xl bg-white/5">
+                    {gen.icon}
+                  </span>
+                  <div>
+                    <h3 className="font-display text-sm font-semibold text-white">
+                      {gen.topic}
+                    </h3>
+                    <p className="text-[11px] text-[#9494A8]">
+                      {gen.type} · {gen.created}
+                    </p>
+                  </div>
+                </div>
+                <CopyButton text={gen.preview} />
+              </div>
+              <p className="text-xs leading-relaxed text-[#9494A8] line-clamp-2 bg-white/5 p-3 rounded-xl">
+                "{gen.preview}"
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }

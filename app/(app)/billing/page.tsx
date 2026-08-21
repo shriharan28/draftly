@@ -1,21 +1,25 @@
-import { Header } from "@/components/layout/header";
-import { Card } from "@/components/ui/card";
+/**
+ * app/(app)/billing/page.tsx
+ *
+ * Billing & Subscription Page Stub.
+ * Zero emojis — Uses technical vector SVG icons.
+ */
+import { CreditCardIcon } from "@/components/ui/icons";
 
 export default function BillingPage() {
   return (
-    <>
-      <Header title="Billing" subtitle="Plan, credits, and invoices." />
-      <Card className="mx-auto mt-16 max-w-md text-center">
-        <p className="text-4xl">💳</p>
-        <p className="mt-4 font-display text-xl font-semibold">
-          Arrives in Stage 5
+    <div className="py-6">
+      <div className="glass-panel p-8 text-center max-w-xl mx-auto">
+        <div className="mb-4 grid h-14 w-14 place-items-center rounded-2xl bg-white/5 text-[#8B5CF6] mx-auto">
+          <CreditCardIcon className="w-7 h-7" />
+        </div>
+        <h1 className="font-display text-2xl font-bold text-white mb-2">
+          Billing & Subscription
+        </h1>
+        <p className="text-xs text-[#9494A8] leading-relaxed">
+          Upgrade to Draftly Pro ($9/mo) for 300 monthly credits and custom voice fine-tuning.
         </p>
-        <p className="mt-2 text-sm text-muted">
-          Stripe subscriptions land here: upgrade to Pro ($9/mo, 500 credits),
-          manage or cancel anytime. The real thing — real money, real
-          invoices.
-        </p>
-      </Card>
-    </>
+      </div>
+    </div>
   );
 }

@@ -1,52 +1,69 @@
 /**
  * app/(app)/onboarding/onboarding-wizard.tsx
  *
- * 3-step interactive Onboarding Wizard component.
- * Built directly from approved Mockup Gate 2 design.
+ * 3-Step Animated Onboarding Wizard.
+ * Zero emojis — Uses technical vector SVG icons.
  */
 "use client";
 
 import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { saveOnboarding } from "./actions";
 import { Button } from "@/components/ui/button";
+import {
+  RocketIcon,
+  BriefcaseIcon,
+  DumbbellIcon,
+  PaletteIcon,
+  InstagramIcon,
+  LinkedInIcon,
+  XIcon,
+  ReelIcon,
+  ZapIcon,
+  BrainIcon,
+  MessageIcon,
+  FlameIcon,
+} from "@/components/ui/icons";
 
 const NICHES = [
-  { id: "tech", label: "Tech & SaaS", icon: "🚀", subtext: "AI, Software, Startups, Build in Public" },
-  { id: "business", label: "Business & Finance", icon: "💼", subtext: "Entrepreneurship, Investing, Growth" },
-  { id: "fitness", label: "Fitness & Health", icon: "💪", subtext: "Workouts, Nutrition, Biohacking" },
-  { id: "creator", label: "Creator & Design", icon: "🎨", subtext: "Personal Brand, Art, Content Creation" },
+  { id: "tech", label: "Tech & SaaS", icon: <RocketIcon className="w-5 h-5 text-[#8B5CF6]" />, subtext: "AI, Software, Startups, Build in Public" },
+  { id: "business", label: "Business & Finance", icon: <BriefcaseIcon className="w-5 h-5 text-[#10B981]" />, subtext: "Entrepreneurship, Investing, Growth" },
+  { id: "fitness", label: "Fitness & Health", icon: <DumbbellIcon className="w-5 h-5 text-amber-400" />, subtext: "Workouts, Nutrition, Biohacking" },
+  { id: "creator", label: "Creator & Design", icon: <PaletteIcon className="w-5 h-5 text-pink-400" />, subtext: "Personal Brand, Art, Content Creation" },
 ];
 
 const PLATFORMS = [
-  { id: "instagram", label: "Instagram", icon: "📸", subtext: "Carousels, Reel Hooks, Captions" },
-  { id: "linkedin", label: "LinkedIn", icon: "💼", subtext: "Story Posts, Insights, Thought Leadership" },
-  { id: "x", label: "X / Twitter", icon: "🐦", subtext: "Short Tweets, Value Threads" },
-  { id: "short_video", label: "Short Video", icon: "🎬", subtext: "YouTube Shorts, TikTok Scripts" },
+  { id: "instagram", label: "Instagram", icon: <InstagramIcon className="w-5 h-5" />, subtext: "Carousels, Reel Hooks, Captions" },
+  { id: "linkedin", label: "LinkedIn", icon: <LinkedInIcon className="w-5 h-5" />, subtext: "Story Posts, Insights, Thought Leadership" },
+  { id: "x", label: "X / Twitter", icon: <XIcon className="w-4 h-4" />, subtext: "Short Tweets, Value Threads" },
+  { id: "short_video", label: "Short Video", icon: <ReelIcon className="w-5 h-5" />, subtext: "YouTube Shorts, TikTok Scripts" },
 ];
 
 const TONES = [
-  { id: "bold", label: "Bold & Punchy", icon: "⚡", subtext: "Short sentences, strong hooks, zero fluff" },
-  { id: "educational", label: "Educational & Deep", icon: "🧠", subtext: "Structured, step-by-step, highly actionable" },
-  { id: "casual", label: "Casual & Relatable", icon: "💬", subtext: "Conversational, witty, human feel" },
-  { id: "contrarian", label: "Contrarian", icon: "🔥", subtext: "Challenges common wisdom, provokes debate" },
+  { id: "bold", label: "Bold & Punchy", icon: <ZapIcon className="w-5 h-5 text-[#8B5CF6]" />, subtext: "Short sentences, strong hooks, zero fluff" },
+  { id: "educational", label: "Educational & Deep", icon: <BrainIcon className="w-5 h-5 text-[#10B981]" />, subtext: "Structured, step-by-step, highly actionable" },
+  { id: "casual", label: "Casual & Relatable", icon: <MessageIcon className="w-5 h-5 text-sky-400" />, subtext: "Conversational, witty, human feel" },
+  { id: "contrarian", label: "Contrarian", icon: <FlameIcon className="w-5 h-5 text-rose-500" />, subtext: "Challenges common wisdom, provokes debate" },
 ];
 
 export function OnboardingWizard() {
-  const [step, setStep] = useState<1 | 2 | 3>(1);
+  const router = useRouter();
+  const [step, setStep] = useState(1);
+  const [selectedNiche, setSelectedNiche] = useState("tech");
+  const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>(["instagram", "linkedin"]);
+  const [selectedTone, setSelectedTone] = useState("bold");
+  const [sampleWriting, setSampleWriting] = useState("");
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
-  // Form State
-  const [selectedNiche, setSelectedNiche] = useState("tech");
-  const [targetAudience, setTargetAudience] = useState("Indie hackers & solo founders looking to build in public");
-  const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>(["instagram", "linkedin", "x"]);
-  const [selectedTone, setSelectedTone] = useState("bold");
-  const [customRules, setCustomRules] = useState("Use minimal emojis. Speak directly to builders. Avoid corporate jargon.");
-
   function togglePlatform(id: string) {
-    setSelectedPlatforms((prev) =>
-      prev.includes(id) ? prev.filter((p) => p !== id) : [...prev, id]
-    );
+    if (selectedPlatforms.includes(id)) {
+      if (selectedPlatforms.length > 1) {
+        setSelectedPlatforms(selectedPlatforms.filter((p) => p !== id));
+      }
+    } else {
+      setSelectedPlatforms([...selectedPlatforms, id]);
+    }
   }
 
   function handleComplete() {
@@ -54,206 +71,237 @@ export function OnboardingWizard() {
     startTransition(async () => {
       const res = await saveOnboarding({
         niche: selectedNiche,
-        targetAudience,
+        targetAudience: selectedNiche === "tech" ? "Software Engineers & Founders" : "Ambitious Professionals",
         platforms: selectedPlatforms,
         tonePreset: selectedTone,
-        customRules,
+        customRules: sampleWriting,
       });
 
-      if (res?.error) {
+      if (res.error) {
         setError(res.error);
+      } else {
+        router.push("/dashboard");
       }
     });
   }
 
   return (
-    <div className="relative mx-auto my-6 w-full max-w-[680px] overflow-hidden rounded-[28px] border border-border bg-surface p-6 shadow-2xl md:p-9">
-      {/* Background Radial Glow */}
-      <div className="pointer-events-none absolute -right-24 -top-24 h-[250px] w-[250px] rounded-full bg-primary/20 blur-3xl" />
-
-      {/* Header & Progress */}
-      <div className="mb-7">
-        <div className="mb-5 text-center font-display text-xl font-bold">
-          Draft<span className="text-gradient">ly</span>
-        </div>
-
-        {/* Progress Track */}
-        <div className="mb-3 h-1.5 w-full overflow-hidden rounded-full bg-surface-2">
-          <div
-            className="h-full bg-gradient-to-r from-primary to-accent transition-all duration-300 ease-out"
-            style={{ width: `${(step / 3) * 100}%` }}
-          />
-        </div>
-
-        <div className="flex justify-between font-mono text-xs text-muted">
-          <span>Step {step} of 3</span>
-          <span>
-            {step === 1 && "Niche & Audience"}
-            {step === 2 && "Target Platforms"}
-            {step === 3 && "Brand Voice & Tone"}
-          </span>
-        </div>
+    <div className="w-full max-w-xl mx-auto">
+      {/* STEP INDICATORS */}
+      <div className="mb-8 flex items-center justify-between px-2">
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="flex items-center gap-2">
+            <div
+              className={`grid h-8 w-8 place-items-center rounded-full font-mono text-xs font-bold transition-all duration-300 ${
+                step === i
+                  ? "bg-[#8B5CF6] text-white shadow-[0_0_16px_rgba(139,92,246,0.5)] scale-110"
+                  : step > i
+                  ? "bg-[#10B981] text-white"
+                  : "bg-white/10 text-[#9494A8]"
+              }`}
+            >
+              {step > i ? "✓" : i}
+            </div>
+            <span className="hidden sm:inline text-xs text-[#9494A8]">
+              {i === 1 ? "Niche" : i === 2 ? "Platforms" : "Brand Voice"}
+            </span>
+          </div>
+        ))}
       </div>
 
-      {/* STEP 1: Niche & Audience */}
-      {step === 1 && (
-        <div className="animate-in fade-in slide-in-from-bottom-2 duration-200">
-          <h2 className="mb-2 font-display text-2xl font-bold tracking-tight">
-            What&apos;s your core niche?
-          </h2>
-          <p className="mb-6 text-sm text-muted">
-            Draftly uses this to tailor post angles, terminology, and viral formats for your domain.
-          </p>
+      <div className="glass-panel p-8">
+        {/* STEP 1: NICHE SELECTION */}
+        {step === 1 && (
+          <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
+            <div>
+              <h2 className="font-display text-xl font-bold text-white">
+                What is your core niche?
+              </h2>
+              <p className="text-xs text-[#9494A8] mt-1">
+                Draftly tunes AI prompts to match your domain's exact terminology.
+              </p>
+            </div>
 
-          <div className="mb-6 grid gap-3 sm:grid-cols-2">
-            {NICHES.map((item) => {
-              const active = selectedNiche === item.id;
-              return (
+            <div className="grid grid-cols-1 gap-3">
+              {NICHES.map((item) => (
                 <button
-                  type="button"
                   key={item.id}
+                  type="button"
                   onClick={() => setSelectedNiche(item.id)}
-                  className={`flex flex-col text-left p-4 rounded-2xl border transition-all duration-150 ${
-                    active
-                      ? "border-primary bg-primary/10 shadow-[0_0_20px_rgba(124,92,255,0.2)]"
-                      : "border-border bg-surface-2 hover:border-primary/40"
+                  className={`flex items-start gap-4 rounded-2xl border p-4 text-left transition-all duration-200 ${
+                    selectedNiche === item.id
+                      ? "border-[#8B5CF6] bg-[#8B5CF6]/15 shadow-[0_0_20px_rgba(139,92,246,0.3)]"
+                      : "border-white/10 bg-white/5 hover:border-white/20"
                   }`}
                 >
-                  <span className="mb-2 text-2xl">{item.icon}</span>
-                  <span className="font-semibold text-sm">{item.label}</span>
-                  <span className="text-xs text-muted mt-1 leading-relaxed">{item.subtext}</span>
+                  <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-white/5">
+                    {item.icon}
+                  </span>
+                  <div>
+                    <h3 className="font-display text-sm font-semibold text-white">
+                      {item.label}
+                    </h3>
+                    <p className="text-xs text-[#9494A8] mt-0.5">{item.subtext}</p>
+                  </div>
                 </button>
-              );
-            })}
-          </div>
+              ))}
+            </div>
 
-          <div className="mb-6">
-            <label htmlFor="audience" className="mb-2 block text-xs font-medium uppercase tracking-wider text-muted">
-              Who is your target audience?
-            </label>
-            <input
-              id="audience"
-              value={targetAudience}
-              onChange={(e) => setTargetAudience(e.target.value)}
-              placeholder="e.g. Early-stage founders, indie hackers, remote software engineers"
-              className="w-full rounded-2xl border border-border bg-surface-2 px-4 py-3.5 text-sm text-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
-            />
-          </div>
-
-          <div className="flex items-center justify-between border-t border-border pt-5">
-            <span className="text-xs text-muted">1/3 Complete</span>
-            <Button variant="primary" onClick={() => setStep(2)}>
-              Next: Platforms →
+            <Button
+              type="button"
+              variant="primary"
+              onClick={() => setStep(2)}
+              className="w-full h-12 bg-gradient-to-r from-[#8B5CF6] to-[#10B981]"
+            >
+              Continue to Platforms
             </Button>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* STEP 2: Target Platforms */}
-      {step === 2 && (
-        <div className="animate-in fade-in slide-in-from-bottom-2 duration-200">
-          <h2 className="mb-2 font-display text-2xl font-bold tracking-tight">
-            Where do you post content?
-          </h2>
-          <p className="mb-6 text-sm text-muted">
-            Select your primary channels. Draftly formats posts specifically for each platform&apos;s algorithm.
-          </p>
+        {/* STEP 2: PLATFORMS SELECTION */}
+        {step === 2 && (
+          <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
+            <div>
+              <h2 className="font-display text-xl font-bold text-white">
+                Where do you publish?
+              </h2>
+              <p className="text-xs text-[#9494A8] mt-1">
+                Select your primary platforms (you can select multiple).
+              </p>
+            </div>
 
-          <div className="mb-6 grid gap-3 sm:grid-cols-2">
-            {PLATFORMS.map((item) => {
-              const active = selectedPlatforms.includes(item.id);
-              return (
+            <div className="grid grid-cols-1 gap-3">
+              {PLATFORMS.map((item) => {
+                const isSelected = selectedPlatforms.includes(item.id);
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => togglePlatform(item.id)}
+                    className={`flex items-start gap-4 rounded-2xl border p-4 text-left transition-all duration-200 ${
+                      isSelected
+                        ? "border-[#8B5CF6] bg-[#8B5CF6]/15 shadow-[0_0_20px_rgba(139,92,246,0.3)]"
+                        : "border-white/10 bg-white/5 hover:border-white/20"
+                    }`}
+                  >
+                    <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-white/5">
+                      {item.icon}
+                    </span>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between">
+                        <h3 className="font-display text-sm font-semibold text-white">
+                          {item.label}
+                        </h3>
+                        {isSelected && (
+                          <span className="text-xs text-[#10B981] font-semibold">Selected</span>
+                        )}
+                      </div>
+                      <p className="text-xs text-[#9494A8] mt-0.5">{item.subtext}</p>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className="flex gap-3">
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => setStep(1)}
+                className="w-1/3"
+              >
+                Back
+              </Button>
+              <Button
+                type="button"
+                variant="primary"
+                onClick={() => setStep(3)}
+                className="w-2/3 bg-gradient-to-r from-[#8B5CF6] to-[#10B981]"
+              >
+                Continue to Voice
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {/* STEP 3: BRAND VOICE SETUP */}
+        {step === 3 && (
+          <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
+            <div>
+              <h2 className="font-display text-xl font-bold text-white">
+                Define your brand tone
+              </h2>
+              <p className="text-xs text-[#9494A8] mt-1">
+                Choose a tone persona and optionally paste a sample post.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              {TONES.map((item) => (
                 <button
-                  type="button"
                   key={item.id}
-                  onClick={() => togglePlatform(item.id)}
-                  className={`flex flex-col text-left p-4 rounded-2xl border transition-all duration-150 ${
-                    active
-                      ? "border-primary bg-primary/10 shadow-[0_0_20px_rgba(124,92,255,0.2)]"
-                      : "border-border bg-surface-2 hover:border-primary/40"
-                  }`}
-                >
-                  <span className="mb-2 text-2xl">{item.icon}</span>
-                  <span className="font-semibold text-sm">{item.label}</span>
-                  <span className="text-xs text-muted mt-1 leading-relaxed">{item.subtext}</span>
-                </button>
-              );
-            })}
-          </div>
-
-          <div className="flex items-center justify-between border-t border-border pt-5">
-            <Button variant="secondary" onClick={() => setStep(1)}>
-              ← Back
-            </Button>
-            <Button variant="primary" onClick={() => setStep(3)}>
-              Next: Voice & Tone →
-            </Button>
-          </div>
-        </div>
-      )}
-
-      {/* STEP 3: Brand Voice & Tone */}
-      {step === 3 && (
-        <div className="animate-in fade-in slide-in-from-bottom-2 duration-200">
-          <h2 className="mb-2 font-display text-2xl font-bold tracking-tight">
-            Define your Brand Voice
-          </h2>
-          <p className="mb-6 text-sm text-muted">
-            Choose a tone persona or customize it so generated content actually sounds like you.
-          </p>
-
-          <div className="mb-6 grid gap-3 sm:grid-cols-2">
-            {TONES.map((item) => {
-              const active = selectedTone === item.id;
-              return (
-                <button
                   type="button"
-                  key={item.id}
                   onClick={() => setSelectedTone(item.id)}
-                  className={`flex flex-col text-left p-4 rounded-2xl border transition-all duration-150 ${
-                    active
-                      ? "border-primary bg-primary/10 shadow-[0_0_20px_rgba(124,92,255,0.2)]"
-                      : "border-border bg-surface-2 hover:border-primary/40"
+                  className={`flex flex-col items-start p-4 rounded-2xl border text-left transition-all ${
+                    selectedTone === item.id
+                      ? "border-[#8B5CF6] bg-[#8B5CF6]/15 shadow-[0_0_16px_rgba(139,92,246,0.3)]"
+                      : "border-white/10 bg-white/5 hover:border-white/20"
                   }`}
                 >
-                  <span className="mb-2 text-2xl">{item.icon}</span>
-                  <span className="font-semibold text-sm">{item.label}</span>
-                  <span className="text-xs text-muted mt-1 leading-relaxed">{item.subtext}</span>
+                  <span className="mb-2 grid h-8 w-8 place-items-center rounded-xl bg-white/5">
+                    {item.icon}
+                  </span>
+                  <h3 className="font-display text-xs font-semibold text-white">
+                    {item.label}
+                  </h3>
+                  <p className="text-[11px] text-[#9494A8] mt-1 line-clamp-2">
+                    {item.subtext}
+                  </p>
                 </button>
-              );
-            })}
-          </div>
+              ))}
+            </div>
 
-          <div className="mb-6">
-            <label htmlFor="rules" className="mb-2 block text-xs font-medium uppercase tracking-wider text-muted">
-              Custom Voice Rules (Optional)
-            </label>
-            <textarea
-              id="rules"
-              rows={3}
-              value={customRules}
-              onChange={(e) => setCustomRules(e.target.value)}
-              placeholder="e.g. Use emojis sparingly. Avoid corporate jargon like 'synergy'. Always end tweets with a question."
-              className="w-full rounded-2xl border border-border bg-surface-2 p-4 text-sm text-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
-            />
-          </div>
+            <div>
+              <label className="block text-[11px] font-medium uppercase tracking-wider text-[#9494A8] mb-2">
+                Sample Writing (Optional)
+              </label>
+              <textarea
+                rows={3}
+                value={sampleWriting}
+                onChange={(e) => setSampleWriting(e.target.value)}
+                placeholder="Paste a past post you loved. Draftly will emulate your vocabulary and style structure..."
+                className="w-full rounded-2xl border border-white/10 bg-white/5 p-4 text-xs text-white outline-none transition placeholder:text-[#9494A8] focus:border-[#8B5CF6]"
+              />
+            </div>
 
-          {error && (
-            <p className="mb-4 rounded-xl bg-danger/10 px-4 py-2.5 text-sm text-danger">
-              {error}
-            </p>
-          )}
+            {error && (
+              <p className="rounded-xl bg-red-500/10 p-3 text-xs text-red-400 border border-red-500/20">
+                {error}
+              </p>
+            )}
 
-          <div className="flex items-center justify-between border-t border-border pt-5">
-            <Button variant="secondary" onClick={() => setStep(2)} disabled={isPending}>
-              ← Back
-            </Button>
-            <Button variant="primary" onClick={handleComplete} disabled={isPending}>
-              {isPending ? "Saving setup…" : "Complete Setup 🚀"}
-            </Button>
+            <div className="flex gap-3">
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => setStep(2)}
+                className="w-1/3"
+              >
+                Back
+              </Button>
+              <Button
+                type="button"
+                variant="primary"
+                disabled={isPending}
+                onClick={handleComplete}
+                className="w-2/3 h-12 bg-gradient-to-r from-[#8B5CF6] to-[#10B981] shadow-[0_0_24px_rgba(139,92,246,0.4)]"
+              >
+                {isPending ? "Saving setup…" : "Complete Setup"}
+              </Button>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

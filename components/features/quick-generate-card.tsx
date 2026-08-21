@@ -1,10 +1,18 @@
+/**
+ * components/features/quick-generate-card.tsx
+ *
+ * Hero Quick Generator Card for Dashboard.
+ * Zero emojis — Uses technical vector SVG icons.
+ */
 "use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { ZapIcon, SparklesIcon } from "@/components/ui/icons";
+import { ContentType, FORMAT_NAMES } from "@/lib/ai/prompts";
 
-const TYPES = [
+const TYPES: { id: ContentType; label: string }[] = [
   { id: "ig_caption", label: "IG Caption" },
   { id: "reel_hook", label: "Reel Hook" },
   { id: "x_thread", label: "X Thread" },
@@ -16,63 +24,81 @@ const TYPES = [
 export function QuickGenerateCard() {
   const router = useRouter();
   const [topic, setTopic] = useState("");
-  const [selectedType, setSelectedType] = useState("ig_caption");
+  const [selectedType, setSelectedType] = useState<ContentType>("ig_caption");
 
   function handleGenerate() {
     if (!topic.trim()) return;
-    router.push(`/generate?topic=${encodeURIComponent(topic)}&type=${selectedType}`);
+    const query = new URLSearchParams({
+      topic,
+      type: selectedType,
+    }).toString();
+    router.push(`/generate?${query}`);
   }
 
   return (
-    <div className="relative overflow-hidden rounded-[26px] border border-border bg-surface/80 p-8 backdrop-blur-2xl shadow-2xl transition-all duration-300 hover:border-primary/40">
-      {/* Glow orb background behind card */}
-      <div className="pointer-events-none absolute -right-20 -top-20 h-[220px] w-[220px] rounded-full bg-primary/20 blur-3xl" />
+    <div className="glass-panel relative overflow-hidden p-6 md:p-8">
+      <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-[#8B5CF6]/15 blur-3xl" />
+      <div className="absolute -bottom-20 -left-20 h-64 w-64 rounded-full bg-[#10B981]/15 blur-3xl" />
 
-      <h2 className="font-display text-2xl font-bold tracking-tight">Quick Generate</h2>
-      <p className="mt-1 text-sm text-muted">
-        Instant AI viral generation powered by Gemini 2.0 Flash
-      </p>
+      <div className="relative">
+        <div className="mb-4 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <SparklesIcon className="w-5 h-5 text-[#8B5CF6]" />
+            <h2 className="font-display text-xl font-bold text-white">
+              Instant AI Content Studio
+            </h2>
+          </div>
+          <span className="font-mono text-xs text-[#9494A8]">
+            Format: {FORMAT_NAMES[selectedType]}
+          </span>
+        </div>
 
-      <input
-        type="text"
-        value={topic}
-        onChange={(e) => setTopic(e.target.value)}
-        onKeyDown={(e) => e.key === "Enter" && handleGenerate()}
-        placeholder="What do you want to post about today?"
-        className="mt-6 h-13 w-full rounded-2xl border border-border bg-surface-2/80 px-5 text-sm text-foreground outline-none transition-all duration-200 placeholder:text-muted focus:border-primary focus:ring-4 focus:ring-primary/20"
-      />
+        <div className="mb-4 flex flex-wrap gap-2">
+          {TYPES.map((t) => {
+            const active = selectedType === t.id;
+            return (
+              <button
+                key={t.id}
+                type="button"
+                onClick={() => setSelectedType(t.id)}
+                className={`rounded-full border px-3.5 py-1.5 text-xs font-medium transition-all ${
+                  active
+                    ? "border-[#8B5CF6] bg-[#8B5CF6] text-white shadow-[0_0_12px_rgba(139,92,246,0.4)]"
+                    : "border-white/10 bg-white/5 text-[#9494A8] hover:border-white/20 hover:text-white"
+                }`}
+              >
+                {t.label}
+              </button>
+            );
+          })}
+        </div>
 
-      <div className="mt-4 flex flex-wrap gap-2">
-        {TYPES.map((type) => {
-          const active = selectedType === type.id;
-          return (
-            <button
-              key={type.id}
-              type="button"
-              onClick={() => setSelectedType(type.id)}
-              className={`rounded-full px-4 py-2 text-xs font-medium transition-all duration-200 ${
-                active
-                  ? "bg-primary text-white shadow-[0_0_16px_var(--primary-glow)] scale-105"
-                  : "border border-border bg-surface-2/50 text-muted hover:border-primary/40 hover:text-foreground"
-              }`}
-            >
-              {type.label}
-            </button>
-          );
-        })}
-      </div>
+        <div className="mb-4">
+          <textarea
+            rows={3}
+            value={topic}
+            onChange={(e) => setTopic(e.target.value)}
+            placeholder="What would you like to post about today? (e.g., 3 lessons launching a product in 2026)..."
+            className="w-full rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-white outline-none transition placeholder:text-[#9494A8] focus:border-[#8B5CF6] focus:ring-4 focus:ring-[#8B5CF6]/20"
+          />
+        </div>
 
-      <div className="mt-6 flex items-center justify-between">
-        <Button
-          type="button"
-          variant="primary"
-          size="lg"
-          onClick={handleGenerate}
-          className="px-8"
-        >
-          <span>⚡ Generate 3 Variants</span>
-          <span className="font-mono text-xs opacity-75">· 1 credit</span>
-        </Button>
+        <div className="flex items-center justify-between gap-4">
+          <p className="text-xs text-[#9494A8]">
+            Generates 3 distinct post variants tuned to your brand voice.
+          </p>
+          <Button
+            type="button"
+            variant="primary"
+            onClick={handleGenerate}
+            className="shrink-0 bg-gradient-to-r from-[#8B5CF6] to-[#10B981] shadow-[0_0_24px_rgba(139,92,246,0.3)]"
+          >
+            <span className="flex items-center gap-2">
+              <ZapIcon className="w-4 h-4" />
+              <span>Generate 3 Variants</span>
+            </span>
+          </Button>
+        </div>
       </div>
     </div>
   );

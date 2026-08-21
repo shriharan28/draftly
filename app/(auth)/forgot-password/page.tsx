@@ -1,71 +1,116 @@
+/**
+ * app/(auth)/forgot-password/page.tsx
+ *
+ * Forgot Password Page. Watermelon UI theme.
+ * Zero emojis — Uses technical vector SVG icons.
+ */
 "use client";
 
-import Link from "next/link";
 import { useState, useTransition } from "react";
-import { resetPassword } from "../actions/auth";
+import Link from "next/link";
+import { resetPassword } from "@/app/(auth)/actions/auth";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { KeyIcon, MailIcon } from "@/components/ui/icons";
 
 export default function ForgotPasswordPage() {
+  const [email, setEmail] = useState("");
+  const [sent, setSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
   const [isPending, startTransition] = useTransition();
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
     setError(null);
-    const formData = new FormData(event.currentTarget);
+    const formData = new FormData();
+    formData.set("email", email);
     startTransition(async () => {
-      const result = await resetPassword(formData);
-      if (result?.error) setError(result.error);
-      else setSuccess(true);
+      const res = await resetPassword(formData);
+      if (res?.error) {
+        setError(res.error);
+      } else {
+        setSent(true);
+      }
     });
   }
 
-  if (success) {
+  if (sent) {
     return (
-      <div className="w-full max-w-sm text-center">
-        <div className="mb-6 text-5xl">🔑</div>
-        <h1 className="mb-3 font-display text-2xl font-bold">Check your inbox</h1>
-        <p className="text-sm text-muted">
-          If that email is registered, we sent a reset link. Check your spam too.
-        </p>
-        <Link href="/login" className="mt-6 block text-sm text-primary hover:underline">
-          ← Back to login
-        </Link>
-      </div>
+      <main className="flex min-h-screen items-center justify-center p-4">
+        <div className="glass-panel w-full max-w-md p-8 text-center">
+          <div className="mb-6 grid h-16 w-16 place-items-center rounded-2xl bg-[#10B981]/15 border border-[#10B981]/30 text-[#10B981] mx-auto">
+            <MailIcon className="w-8 h-8" />
+          </div>
+          <h1 className="font-display text-2xl font-bold text-white mb-2">
+            Reset Link Sent
+          </h1>
+          <p className="text-xs text-[#9494A8] mb-6">
+            If an account exists for {email}, you will receive password reset instructions.
+          </p>
+          <Link
+            href="/login"
+            className="inline-flex h-11 items-center justify-center rounded-2xl border border-white/10 bg-white/5 px-6 text-xs font-semibold text-white transition hover:bg-white/10"
+          >
+            Back to Login
+          </Link>
+        </div>
+      </main>
     );
   }
 
   return (
-    <div className="w-full max-w-sm">
-      <Link href="/" className="mb-8 block font-display text-2xl font-bold tracking-tight text-center">
-        Draft<span className="text-gradient">ly</span>
-      </Link>
-      <div className="rounded-3xl border border-border bg-surface p-8">
-        <h1 className="mb-1 font-display text-xl font-bold">Reset password</h1>
-        <p className="mb-6 text-sm text-muted">
-          Enter your email and we&apos;ll send a reset link.
-        </p>
+    <main className="flex min-h-screen items-center justify-center p-4">
+      <div className="glass-panel w-full max-w-md p-8">
+        <div className="mb-8 text-center">
+          <div className="mx-auto mb-4 grid h-12 w-12 place-items-center rounded-2xl bg-white/5 text-[#8B5CF6]">
+            <KeyIcon className="w-6 h-6" />
+          </div>
+          <h1 className="font-display text-2xl font-bold tracking-tight text-white">
+            Reset your password
+          </h1>
+          <p className="mt-1 text-xs text-[#9494A8]">
+            Enter your email address to receive a recovery link
+          </p>
+        </div>
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="email" className="mb-1.5 block text-xs font-medium text-muted">
-              Email
+            <label htmlFor="email" className="block text-[11px] font-medium uppercase tracking-wider text-[#9494A8] mb-2">
+              Email Address
             </label>
-            <Input id="email" name="email" type="email" placeholder="you@example.com" required />
+            <input
+              id="email"
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@example.com"
+              className="w-full h-12 rounded-2xl border border-white/10 bg-white/5 px-4 text-sm text-white outline-none transition focus:border-[#8B5CF6]"
+            />
           </div>
+
           {error && (
-            <p className="rounded-xl bg-danger/10 px-4 py-2.5 text-sm text-danger">{error}</p>
+            <p className="rounded-xl bg-red-500/10 p-3 text-xs text-red-400 border border-red-500/20">
+              {error}
+            </p>
           )}
-          <Button type="submit" variant="primary" className="w-full" disabled={isPending}>
-            {isPending ? "Sending…" : "Send reset link"}
+
+          <Button
+            type="submit"
+            variant="primary"
+            disabled={isPending}
+            className="w-full h-12 bg-gradient-to-r from-[#8B5CF6] to-[#10B981]"
+          >
+            {isPending ? "Sending link…" : "Send Reset Link"}
           </Button>
         </form>
-        <p className="mt-5 text-center text-xs text-muted">
-          Remember it?{" "}
-          <Link href="/login" className="text-primary hover:underline">Log in</Link>
-        </p>
+
+        <div className="mt-6 text-center text-xs text-[#9494A8]">
+          Remembered your password?{" "}
+          <Link href="/login" className="font-semibold text-[#8B5CF6] hover:underline">
+            Back to Login
+          </Link>
+        </div>
       </div>
-    </div>
+    </main>
   );
 }

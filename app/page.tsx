@@ -20,7 +20,7 @@ export default function Home() {
           STAGE 2 CHECKPOINT
         </p>
         <p className="mt-2 font-display text-2xl font-semibold">
-          Design system online ⚡
+          Design system online
         </p>
 
         <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
