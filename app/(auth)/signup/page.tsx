@@ -10,7 +10,7 @@ import { useState, useTransition } from "react";
 import Link from "next/link";
 import { signUp } from "../actions/auth";
 import { Button } from "@/components/ui/button";
-import { MailIcon, ZapIcon } from "@/components/ui/icons";
+import { MailIcon, DraftlyLogo } from "@/components/ui/icons";
 
 export default function SignupPage() {
   const [email, setEmail] = useState("");
@@ -67,8 +67,8 @@ export default function SignupPage() {
     <main className="flex min-h-screen items-center justify-center p-4">
       <div className="glass-panel w-full max-w-md p-8">
         <div className="mb-8 text-center">
-          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-[#8B5CF6] to-[#10B981] shadow-lg shadow-[#8B5CF6]/30">
-            <ZapIcon className="w-6 h-6 text-white" />
+          <div className="mx-auto mb-4 flex items-center justify-center">
+            <DraftlyLogo className="w-12 h-12" />
           </div>
           <h1 className="font-display text-2xl font-bold tracking-tight text-white">
             Create your account

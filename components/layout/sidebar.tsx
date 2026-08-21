@@ -10,6 +10,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { logout } from "@/app/(auth)/actions/auth";
 import {
+  DraftlyLogo,
   HomeIcon,
   SparklesIcon,
   LibraryIcon,
@@ -34,10 +35,8 @@ export function Sidebar({ userCredits = 15 }: { userCredits?: number }) {
     <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col border-r border-white/10 bg-[#030305]/80 backdrop-blur-2xl lg:flex">
       {/* BRAND BADGE */}
       <div className="flex h-20 items-center px-6 border-b border-white/10">
-        <Link href="/dashboard" className="flex items-center gap-3 group">
-          <div className="relative flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-[#8B5CF6] to-[#10B981] shadow-lg shadow-[#8B5CF6]/30 transition-transform duration-300 group-hover:scale-105">
-            <ZapIcon className="w-5 h-5 text-white" />
-          </div>
+        <Link href="/dashboard" className="flex items-center gap-3.5 group">
+          <DraftlyLogo className="w-9 h-9 transition-transform duration-300 group-hover:scale-105" />
           <span className="font-display text-2xl font-bold tracking-tight text-white">
             Draft<span className="text-[#10B981]">ly</span>
           </span>

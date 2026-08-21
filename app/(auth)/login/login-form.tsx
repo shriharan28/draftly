@@ -13,6 +13,7 @@ import { useSearchParams } from "next/navigation";
 import { login } from "../actions/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { DraftlyLogo } from "@/components/ui/icons";
 
 export default function LoginForm() {
   const [error, setError] = useState<string | null>(null);
@@ -41,9 +42,12 @@ export default function LoginForm() {
     <div className="w-full max-w-sm">
       <Link
         href="/"
-        className="mb-8 block text-center font-display text-2xl font-bold tracking-tight"
+        className="mb-8 flex items-center justify-center gap-3 font-display text-2xl font-bold tracking-tight"
       >
-        Draft<span className="text-gradient">ly</span>
+        <DraftlyLogo className="w-9 h-9" />
+        <span>
+          Draft<span className="text-gradient">ly</span>
+        </span>
       </Link>
 
       <div className="rounded-3xl border border-border bg-surface p-8">

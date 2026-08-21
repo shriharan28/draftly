@@ -5,7 +5,48 @@
  */
 import React from "react";
 
-/* --- BRAND LOGOS (Full-Color SVGs) --- */
+/* --- OFFICIAL DRAFTLY BRAND LOGO --- */
+
+export function DraftlyLogo({ className = "w-8 h-8" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 36 36" fill="none" className={className}>
+      <defs>
+        <linearGradient id="draftly-brand-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#8B5CF6" />
+          <stop offset="50%" stopColor="#7C3AED" />
+          <stop offset="100%" stopColor="#10B981" />
+        </linearGradient>
+        <linearGradient id="draftly-inner-spark" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#FFFFFF" />
+          <stop offset="100%" stopColor="#A7F3D0" />
+        </linearGradient>
+        <filter id="draftly-glow" x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="#8B5CF6" floodOpacity="0.4" />
+        </filter>
+      </defs>
+      {/* Brand Rounded Squircle Container */}
+      <rect width="36" height="36" rx="10" fill="url(#draftly-brand-grad)" filter="url(#draftly-glow)" />
+
+      {/* Geometric Monogram: Draft Page ('D') + AI Spark Beam */}
+      <path
+        d="M10 9.5H17.5C21.6421 9.5 25 12.8579 25 17C25 21.1421 21.6421 24.5 17.5 24.5H10V9.5Z"
+        stroke="#FFFFFF"
+        strokeWidth="3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      {/* Inner AI Spark Nib */}
+      <path
+        d="M15 14L20 19M20 14L15 19"
+        stroke="url(#draftly-inner-spark)"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+/* --- BRAND LOGOS (Full-Color SVGs for Platforms) --- */
 
 export function InstagramIcon({ className = "w-6 h-6" }: { className?: string }) {
   return (
