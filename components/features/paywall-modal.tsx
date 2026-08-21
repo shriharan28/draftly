@@ -9,7 +9,7 @@
 import { useState, useTransition } from "react";
 import { createCheckoutSession } from "@/app/(app)/billing/actions";
 import { Button } from "@/components/ui/button";
-import { ZapIcon, SparklesIcon, MicIcon, RocketIcon } from "@/components/ui/icons";
+import { ZapIcon, SparklesIcon, MicIcon, RocketIcon, DraftlyLogo } from "@/components/ui/icons";
 
 export function PaywallModal({
   isOpen,
@@ -46,9 +46,9 @@ export function PaywallModal({
           ✕
         </button>
 
-        {/* GLOWING ICON HEADER */}
-        <div className="mx-auto mb-5 grid h-16 w-16 place-items-center rounded-2xl bg-gradient-to-br from-[#8B5CF6] to-[#10B981] text-white shadow-lg shadow-[#8B5CF6]/40">
-          <ZapIcon className="w-8 h-8" />
+        {/* OFFICIAL DRAFTLY BRAND LOGO */}
+        <div className="mx-auto mb-5 flex items-center justify-center">
+          <DraftlyLogo className="w-14 h-14" />
         </div>
 
         <h2 className="font-display text-2xl font-bold text-white mb-2">

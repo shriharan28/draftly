@@ -23,7 +23,7 @@ export async function createCheckoutSession() {
 
   if (!priceId) {
     return {
-      error: "Stripe Price ID is not configured in environment variables.",
+      error: "Stripe Price ID is not set in .env.local. Add STRIPE_PRICE_PRO_ID=price_xxx from your Stripe Dashboard to enable live checkout.",
     };
   }
 
