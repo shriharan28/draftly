@@ -62,7 +62,7 @@ export function BillingContent({
       {/* NOTIFICATIONS */}
       {searchParams.success === "true" && (
         <div className="rounded-2xl border border-[#10B981]/30 bg-[#10B981]/15 p-4 text-xs text-[#10B981] font-medium">
-          🎉 Subscription active! 300 AI credits have been added to your account ledger.
+          🎉 Subscription active! 150 AI credits have been added to your account ledger.
         </div>
       )}
 
@@ -89,11 +89,11 @@ export function BillingContent({
           <ul className="space-y-3 text-xs text-[#F4F4FA] my-6">
             <li className="flex items-center gap-2.5">
               <span className="text-[#10B981] font-bold">✓</span>
-              <span>{isPro ? "300 Monthly AI Credits" : "15 Initial Sign-up Credits"}</span>
+              <span>{isPro ? "150 Monthly AI Credits" : "15 Initial Sign-up Credits"}</span>
             </li>
             <li className="flex items-center gap-2.5">
               <span className="text-[#10B981] font-bold">✓</span>
-              <span>Gemini AI Content Engine</span>
+              <span>{isPro ? "Gemini 3.6 Flash Engine" : "Gemini 2.5 Flash Engine"}</span>
             </li>
             <li className="flex items-center gap-2.5">
               <span className="text-[#10B981] font-bold">✓</span>
@@ -124,7 +124,7 @@ export function BillingContent({
             Draftly Pro Plan
           </div>
           <p className="text-xs text-[#9494A8]">
-            Unlock 300 AI credits monthly & priority speed.
+            Unlock 150 AI credits monthly & Gemini 3.6 Flash engine.
           </p>
 
           <div className="my-5 font-display text-4xl font-bold text-white">
@@ -134,7 +134,7 @@ export function BillingContent({
           <ul className="space-y-3 text-xs text-[#F4F4FA] my-6">
             <li className="flex items-center gap-2.5">
               <span className="text-[#10B981] font-bold">✓</span>
-              <strong>300 AI Credits Refreshed Monthly</strong>
+              <strong>150 AI Credits Refreshed Monthly</strong>
             </li>
             <li className="flex items-center gap-2.5">
               <span className="text-[#10B981] font-bold">✓</span>
@@ -142,7 +142,7 @@ export function BillingContent({
             </li>
             <li className="flex items-center gap-2.5">
               <span className="text-[#10B981] font-bold">✓</span>
-              <span>Priority Gemini 3.6 Flash Model Speed</span>
+              <span>Gemini 3.6 Flash Model Engine</span>
             </li>
             <li className="flex items-center gap-2.5">
               <span className="text-[#10B981] font-bold">✓</span>

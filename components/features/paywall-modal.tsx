@@ -55,7 +55,7 @@ export function PaywallModal({
           Upgrade to Draftly Pro
         </h2>
         <p className="text-xs text-[#9494A8] mb-6 leading-relaxed">
-          Get 300 monthly AI credits and unlock full generation speed for $9/month.
+          Get 150 monthly AI credits and unlock full generation speed for $9/month.
         </p>
 
         {/* FEATURE HIGHLIGHTS */}
@@ -65,7 +65,7 @@ export function PaywallModal({
           </div>
           <div className="flex items-center gap-2.5">
             <ZapIcon className="w-4 h-4 text-[#8B5CF6]" />
-            <span>300 AI Credits / Month</span>
+            <span>150 AI Credits / Month</span>
           </div>
           <div className="flex items-center gap-2.5">
             <MicIcon className="w-4 h-4 text-[#10B981]" />

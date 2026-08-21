@@ -28,13 +28,12 @@ export async function generateContentWithGemini(
   const systemInstruction = buildSystemPrompt();
   const prompt = buildUserPrompt(params);
 
-  // Models to try in order of preference
-  const modelsToTry = [
-    process.env.AI_MODEL || "gemini-3.6-flash",
-    "gemini-3.6-flash",
-    "gemini-2.5-flash",
-    "gemini-1.5-flash",
-  ];
+  // Models to try in order of preference depending on user plan tier
+  const primaryModel = params.model || process.env.AI_MODEL || "gemini-2.5-flash";
+  const modelsToTry =
+    primaryModel === "gemini-3.6-flash"
+      ? ["gemini-3.6-flash", "gemini-2.5-flash", "gemini-1.5-flash"]
+      : ["gemini-2.5-flash", "gemini-1.5-flash"];
 
   let lastError: any = null;
 

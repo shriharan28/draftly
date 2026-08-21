@@ -57,12 +57,12 @@ export async function POST(req: Request) {
             .single();
 
           const currentBalance = latestLedger?.balance_after ?? 0;
-          const newBalance = currentBalance + 300;
+          const newBalance = currentBalance + 150;
 
-          // 3. Grant +300 credits atomically in ledger
+          // 3. Grant +150 credits atomically in ledger
           await adminClient.from("credit_ledger").insert({
             user_id: userId,
-            delta: 300,
+            delta: 150,
             reason: "plan_grant",
             balance_after: newBalance,
             idempotency_key: `stripe_grant_${session.id}`,

@@ -62,28 +62,42 @@ export async function generateContentAction(params: {
     return { error: `Credit transaction failed: ${ledgerInsertError.message}` };
   }
 
-  // 2. Fetch user's profile and default brand voice for context
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("niche, tone")
-    .eq("id", user.id)
-    .single();
+  // 2. Fetch user's profile, default brand voice, and subscription status in parallel
+  const [profileRes, voiceRes, subRes] = await Promise.all([
+    supabase
+      .from("profiles")
+      .select("niche, tone")
+      .eq("id", user.id)
+      .single(),
+    supabase
+      .from("brand_voices")
+      .select("id, sample_text, tones")
+      .eq("user_id", user.id)
+      .eq("is_default", true)
+      .single(),
+    supabase
+      .from("subscriptions")
+      .select("status")
+      .eq("user_id", user.id)
+      .single(),
+  ]);
 
-  const { data: brandVoice } = await supabase
-    .from("brand_voices")
-    .select("id, sample_text, tones")
-    .eq("user_id", user.id)
-    .eq("is_default", true)
-    .single();
+  const profile = profileRes.data;
+  const brandVoice = voiceRes.data;
+  const sub = subRes.data;
+
+  const isPro = sub?.status === "active";
+  const selectedModel = isPro ? "gemini-3.6-flash" : "gemini-2.5-flash";
 
   try {
-    // 3. Call Gemini 3.6 Flash Model AI
+    // 3. Call Gemini AI Model matching user subscription tier
     const variants = await generateContentWithGemini({
       topic: params.topic,
       contentType: params.contentType,
       niche: profile?.niche || undefined,
       tonePreset: profile?.tone || brandVoice?.tones?.[0] || undefined,
       customRules: brandVoice?.sample_text || undefined,
+      model: selectedModel,
     });
 
     // 4. Save generation to Supabase
@@ -97,7 +111,7 @@ export async function generateContentAction(params: {
         tone: profile?.tone || "bold",
         variants: variants,
         status: "complete",
-        model: "gemini-3.6-flash",
+        model: selectedModel,
       })
       .select()
       .single();

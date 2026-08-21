@@ -21,6 +21,7 @@ export type GeneratePromptParams = {
   targetAudience?: string;
   tonePreset?: string;
   customRules?: string;
+  model?: string;
 };
 
 export const FORMAT_NAMES: Record<ContentType, string> = {
