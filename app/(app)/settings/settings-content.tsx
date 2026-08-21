@@ -235,7 +235,7 @@ export function SettingsContent({
             </div>
             <div className="font-display text-base font-bold text-white flex items-center gap-2">
               <SparklesIcon className="w-4 h-4 text-[#10B981]" />
-              <span>Gemini 2.0 Flash</span>
+              <span>Gemini 3.6 Flash Model</span>
             </div>
           </div>
         </div>

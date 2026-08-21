@@ -73,7 +73,7 @@ export function PaywallModal({
           </div>
           <div className="flex items-center gap-2.5">
             <RocketIcon className="w-4 h-4 text-[#8B5CF6]" />
-            <span>Priority Gemini AI Generation Queue</span>
+            <span>Priority Gemini 3.6 Flash Model Queue</span>
           </div>
           <div className="flex items-center gap-2.5">
             <SparklesIcon className="w-4 h-4 text-[#10B981]" />

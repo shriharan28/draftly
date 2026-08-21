@@ -49,7 +49,7 @@ export function QuickGenerateCard() {
             </h2>
           </div>
           <span className="font-mono text-xs text-[#9494A8]">
-            Format: {FORMAT_NAMES[selectedType]}
+            Gemini 3.6 Flash Model
           </span>
         </div>
 

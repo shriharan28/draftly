@@ -1,9 +1,9 @@
 /**
  * app/(app)/generate/actions.ts
  *
- * Server Action for AI Content Generation.
- * Deducts 1 credit from Supabase ledger, calls Gemini 2.0 Flash,
- * and saves generation variants to public.generations.
+ * Server Action for AI Content Generation & Library Saving.
+ * Deducts 1 credit from Supabase ledger, calls Gemini 3.6 Flash Model,
+ * saves generation variants to public.generations, and provides a save action.
  */
 "use server";
 
@@ -77,7 +77,7 @@ export async function generateContentAction(params: {
     .single();
 
   try {
-    // 3. Call Gemini 2.0 Flash AI
+    // 3. Call Gemini 3.6 Flash Model AI
     const variants = await generateContentWithGemini({
       topic: params.topic,
       contentType: params.contentType,
@@ -98,7 +98,7 @@ export async function generateContentAction(params: {
         tone: profile?.tone || "bold",
         variants: variants,
         status: "complete",
-        model: "gemini-2.0-flash",
+        model: "gemini-3.6-flash",
       })
       .select()
       .single();
@@ -109,6 +109,7 @@ export async function generateContentAction(params: {
 
     revalidatePath("/dashboard");
     revalidatePath("/generate");
+    revalidatePath("/library");
 
     return {
       success: true,
@@ -129,4 +130,38 @@ export async function generateContentAction(params: {
       error: err.message || "AI generation failed. Your credit has been refunded.",
     };
   }
+}
+
+export async function saveDraftToLibraryAction(params: {
+  topic: string;
+  contentType: string;
+  content: string;
+}) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return { error: "Authentication required." };
+
+  const { data, error } = await supabase
+    .from("generations")
+    .insert({
+      user_id: user.id,
+      content_type: params.contentType,
+      topic: params.topic,
+      variants: [params.content],
+      status: "saved",
+      model: "gemini-3.6-flash",
+    })
+    .select()
+    .single();
+
+  if (error) {
+    console.error("Error saving draft to library:", error);
+    return { error: error.message };
+  }
+
+  revalidatePath("/library");
+  return { success: true, id: data.id };
 }

@@ -142,7 +142,7 @@ export function BillingContent({
             </li>
             <li className="flex items-center gap-2.5">
               <span className="text-[#10B981] font-bold">✓</span>
-              <span>Priority Gemini AI Generation Queue</span>
+              <span>Priority Gemini 3.6 Flash Model Speed</span>
             </li>
             <li className="flex items-center gap-2.5">
               <span className="text-[#10B981] font-bold">✓</span>

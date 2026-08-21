@@ -2,13 +2,13 @@
  * app/(app)/generate/studio-generator.tsx
  *
  * Watermelon UI Inspired Content Studio React Component.
- * White-labeled AI Generation powered by Draftly AI & Supabase.
+ * Powered by Draftly AI (Gemini 3.6 Flash Model) & Supabase.
  * Zero emojis — Uses technical vector SVG icons throughout.
  */
 "use client";
 
 import { useState, useTransition } from "react";
-import { generateContentAction } from "./actions";
+import { generateContentAction, saveDraftToLibraryAction } from "./actions";
 import { ContentType, FORMAT_NAMES } from "@/lib/ai/prompts";
 import { Button } from "@/components/ui/button";
 import { CopyButton } from "@/components/ui/copy-button";
@@ -33,6 +33,45 @@ const FORMATS: { id: ContentType; label: string; icon: React.ReactNode }[] = [
   { id: "linkedin_post", label: "LinkedIn", icon: <LinkedInIcon className="w-5 h-5" /> },
   { id: "yt_desc", label: "YouTube", icon: <YouTubeIcon className="w-5 h-5" /> },
 ];
+
+function SaveDraftButton({
+  topic,
+  contentType,
+  content,
+}: {
+  topic: string;
+  contentType: string;
+  content: string;
+}) {
+  const [saved, setSaved] = useState(false);
+  const [isPending, startTransition] = useTransition();
+
+  function handleSave() {
+    startTransition(async () => {
+      const res = await saveDraftToLibraryAction({ topic, contentType, content });
+      if (res.success) {
+        setSaved(true);
+        setTimeout(() => setSaved(false), 3000);
+      }
+    });
+  }
+
+  return (
+    <Button
+      type="button"
+      variant="secondary"
+      onClick={handleSave}
+      disabled={isPending || saved}
+      className={`h-8 text-xs px-3 transition-all ${
+        saved
+          ? "bg-[#10B981]/15 text-[#10B981] border border-[#10B981]/30"
+          : "bg-white/5 border border-white/10 hover:border-[#8B5CF6] hover:text-white"
+      }`}
+    >
+      {saved ? "✓ Saved to Library" : isPending ? "Saving..." : "Save to Library"}
+    </Button>
+  );
+}
 
 export function StudioGenerator({
   initialTopic = "",
@@ -178,7 +217,7 @@ export function StudioGenerator({
               </div>
             </div>
             <p className="text-shimmer font-display text-lg font-bold">
-              Draftly AI is Writing…
+              Gemini 3.6 Flash Model is Writing…
             </p>
             <p className="mt-2 text-xs text-[#9494A8]">
               Structuring 3 high-converting variants tuned to your brand voice
@@ -221,7 +260,15 @@ export function StudioGenerator({
                   <span className="font-mono text-xs text-[#9494A8]">
                     {variant.text.split(/\s+/).length} words · {variant.text.length} chars
                   </span>
-                  <CopyButton text={variant.text} />
+
+                  <div className="flex items-center gap-2">
+                    <SaveDraftButton
+                      topic={topic}
+                      contentType={selectedFormat}
+                      content={variant.text}
+                    />
+                    <CopyButton text={variant.text} />
+                  </div>
                 </div>
               </div>
             ))}
