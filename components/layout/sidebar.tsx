@@ -79,11 +79,14 @@ export function Sidebar({
 
       {/* FOOTER PLAN CARD & LOGOUT */}
       <div className="p-4 border-t border-white/10 space-y-3">
-        <div className="glass-panel p-4">
+        <Link
+          href="/billing"
+          className="glass-panel p-4 block transition-all duration-200 hover:border-[#8B5CF6]/40 hover:bg-white/[0.08] hover:shadow-[0_0_20px_rgba(139,92,246,0.15)] group cursor-pointer"
+        >
           <div className="flex items-center justify-between text-xs mb-2">
-            <span className="text-[#9494A8]">Current Plan</span>
+            <span className="text-[#9494A8] group-hover:text-white transition-colors">Current Plan</span>
             <span
-              className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
+              className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider transition-transform group-hover:scale-105 ${
                 isPro
                   ? "bg-[#10B981]/20 text-[#10B981] border border-[#10B981]/40"
                   : "bg-[#8B5CF6]/20 text-[#8B5CF6]"
@@ -92,13 +95,18 @@ export function Sidebar({
               {isPro ? "PRO" : "FREE"}
             </span>
           </div>
-          <div className="flex items-center gap-2">
-            <ZapIcon className="w-4 h-4 text-[#8B5CF6]" />
-            <span className="font-display font-bold text-sm text-white">
-              {userCredits} AI Credits
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <ZapIcon className="w-4 h-4 text-[#8B5CF6]" />
+              <span className="font-display font-bold text-sm text-white">
+                {userCredits} AI Credits
+              </span>
+            </div>
+            <span className="text-[10px] text-[#8B5CF6] font-mono opacity-0 group-hover:opacity-100 transition-opacity">
+              Manage →
             </span>
           </div>
-        </div>
+        </Link>
 
         <form action={logout}>
           <button
