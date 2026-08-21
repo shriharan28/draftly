@@ -28,7 +28,13 @@ const NAV_ITEMS = [
   { href: "/billing", label: "Billing", icon: <CreditCardIcon /> },
 ];
 
-export function Sidebar({ userCredits = 15 }: { userCredits?: number }) {
+export function Sidebar({
+  userCredits = 15,
+  isPro = false,
+}: {
+  userCredits?: number;
+  isPro?: boolean;
+}) {
   const pathname = usePathname();
 
   return (
@@ -76,8 +82,14 @@ export function Sidebar({ userCredits = 15 }: { userCredits?: number }) {
         <div className="glass-panel p-4">
           <div className="flex items-center justify-between text-xs mb-2">
             <span className="text-[#9494A8]">Current Plan</span>
-            <span className="rounded-full bg-[#8B5CF6]/20 px-2 py-0.5 text-[10px] font-semibold text-[#8B5CF6]">
-              FREE
+            <span
+              className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
+                isPro
+                  ? "bg-[#10B981]/20 text-[#10B981] border border-[#10B981]/40"
+                  : "bg-[#8B5CF6]/20 text-[#8B5CF6]"
+              }`}
+            >
+              {isPro ? "PRO" : "FREE"}
             </span>
           </div>
           <div className="flex items-center gap-2">

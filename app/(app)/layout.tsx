@@ -26,8 +26,8 @@ export default async function AppLayout({
     redirect("/login");
   }
 
-  // Fetch profile and credit ledger in parallel for max performance
-  const [profileRes, ledgerRes] = await Promise.all([
+  // Fetch profile, credit ledger, and subscription status in parallel for max performance
+  const [profileRes, ledgerRes, subRes] = await Promise.all([
     supabase
       .from("profiles")
       .select("full_name, avatar_url, onboarded")
@@ -40,16 +40,23 @@ export default async function AppLayout({
       .order("id", { ascending: false })
       .limit(1)
       .single(),
+    supabase
+      .from("subscriptions")
+      .select("status")
+      .eq("user_id", user.id)
+      .single(),
   ]);
 
   const profile = profileRes.data;
   const ledger = ledgerRes.data;
+  const sub = subRes.data;
 
   // If user hasn't completed onboarding, redirect to /onboarding
   if (profile && profile.onboarded === false) {
     redirect("/onboarding");
   }
 
+  const isPro = sub?.status === "active";
   const userCredits = ledger?.balance_after ?? 15;
   const userInitial = (profile?.full_name || user.email || "U")
     .charAt(0)
@@ -65,7 +72,7 @@ export default async function AppLayout({
       <div className="fixed inset-0 bg-grid-pattern opacity-60 pointer-events-none" />
 
       {/* DESKTOP SIDEBAR */}
-      <Sidebar userCredits={userCredits} />
+      <Sidebar userCredits={userCredits} isPro={isPro} />
 
       {/* MAIN CONTENT AREA */}
       <div className="relative flex flex-1 flex-col lg:pl-64">
