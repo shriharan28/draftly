@@ -2,7 +2,7 @@
  * app/(app)/generate/studio-generator.tsx
  *
  * Watermelon UI Inspired Content Studio React Component.
- * Real-time AI Generation powered by Google Gemini 2.0 Flash & Supabase.
+ * White-labeled AI Generation powered by Draftly AI & Supabase.
  */
 "use client";
 
@@ -11,14 +11,21 @@ import { generateContentAction } from "./actions";
 import { ContentType, FORMAT_NAMES } from "@/lib/ai/prompts";
 import { Button } from "@/components/ui/button";
 import { CopyButton } from "@/components/ui/copy-button";
+import {
+  InstagramIcon,
+  ReelIcon,
+  XIcon,
+  LinkedInIcon,
+  YouTubeIcon,
+} from "@/components/ui/icons";
 
-const FORMATS: { id: ContentType; label: string; icon: string }[] = [
-  { id: "ig_caption", label: "IG Caption", icon: "📸" },
-  { id: "reel_hook", label: "Reel Hook", icon: "🎬" },
-  { id: "x_thread", label: "X Thread", icon: "🧵" },
-  { id: "x_post", label: "X Post", icon: "🐦" },
-  { id: "linkedin_post", label: "LinkedIn", icon: "💼" },
-  { id: "yt_desc", label: "YouTube", icon: "▶️" },
+const FORMATS: { id: ContentType; label: string; icon: React.ReactNode }[] = [
+  { id: "ig_caption", label: "IG Caption", icon: <InstagramIcon className="w-5 h-5" /> },
+  { id: "reel_hook", label: "Reel Hook", icon: <ReelIcon className="w-5 h-5" /> },
+  { id: "x_thread", label: "X Thread", icon: <XIcon className="w-4 h-4" /> },
+  { id: "x_post", label: "X Post", icon: <XIcon className="w-4 h-4" /> },
+  { id: "linkedin_post", label: "LinkedIn", icon: <LinkedInIcon className="w-5 h-5" /> },
+  { id: "yt_desc", label: "YouTube", icon: <YouTubeIcon className="w-5 h-5" /> },
 ];
 
 export function StudioGenerator({
@@ -83,13 +90,13 @@ export function StudioGenerator({
                   key={item.id}
                   type="button"
                   onClick={() => setSelectedFormat(item.id)}
-                  className={`flex flex-col items-center gap-1 rounded-2xl border p-3 text-xs font-medium transition-all duration-200 ${
+                  className={`flex flex-col items-center gap-1.5 rounded-2xl border p-3.5 text-xs font-medium transition-all duration-200 ${
                     active
                       ? "border-[#8B5CF6] bg-[#8B5CF6] text-white shadow-[0_0_20px_rgba(139,92,246,0.4)] scale-[1.02]"
                       : "border-white/10 bg-white/5 text-[#9494A8] hover:border-white/20 hover:text-white"
                   }`}
                 >
-                  <span className="text-base">{item.icon}</span>
+                  <span className="grid h-6 w-6 place-items-center">{item.icon}</span>
                   <span>{item.label}</span>
                 </button>
               );
@@ -127,7 +134,7 @@ export function StudioGenerator({
           {isPending ? (
             <span className="flex items-center gap-2">
               <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-              <span>Generating with Gemini AI…</span>
+              <span>Generating with Draftly AI…</span>
             </span>
           ) : (
             <span className="flex items-center gap-2">
@@ -157,7 +164,7 @@ export function StudioGenerator({
               </div>
             </div>
             <p className="text-shimmer font-display text-lg font-bold">
-              Gemini 2.0 Flash is Writing…
+              Draftly AI is Writing…
             </p>
             <p className="mt-2 text-xs text-[#9494A8]">
               Structuring 3 high-converting variants tuned to your brand voice
