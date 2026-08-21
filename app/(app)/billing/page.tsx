@@ -1,25 +1,47 @@
 /**
  * app/(app)/billing/page.tsx
  *
- * Billing & Subscription Page Stub.
- * Zero emojis — Uses technical vector SVG icons.
+ * Server Component for Billing & Subscriptions Page.
+ * Fetches subscription status and credit_ledger history from Supabase.
  */
-import { CreditCardIcon } from "@/components/ui/icons";
+import { createClient } from "@/lib/supabase/server";
+import { BillingContent } from "./billing-content";
 
-export default function BillingPage() {
+export default async function BillingPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ success?: string; canceled?: string }>;
+}) {
+  const supabase = await createClient();
+  const params = await searchParams;
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  // 1. Fetch Subscription status
+  const { data: sub } = await supabase
+    .from("subscriptions")
+    .select("status")
+    .eq("user_id", user?.id || "")
+    .single();
+
+  // 2. Fetch credit ledger history
+  const { data: ledgerRows } = await supabase
+    .from("credit_ledger")
+    .select("id, created_at, delta, reason, balance_after")
+    .eq("user_id", user?.id || "")
+    .order("id", { ascending: false })
+    .limit(10);
+
+  const currentBalance = ledgerRows?.[0]?.balance_after ?? 15;
+
   return (
-    <div className="py-6">
-      <div className="glass-panel p-8 text-center max-w-xl mx-auto">
-        <div className="mb-4 grid h-14 w-14 place-items-center rounded-2xl bg-white/5 text-[#8B5CF6] mx-auto">
-          <CreditCardIcon className="w-7 h-7" />
-        </div>
-        <h1 className="font-display text-2xl font-bold text-white mb-2">
-          Billing & Subscription
-        </h1>
-        <p className="text-xs text-[#9494A8] leading-relaxed">
-          Upgrade to Draftly Pro ($9/mo) for 300 monthly credits and custom voice fine-tuning.
-        </p>
-      </div>
-    </div>
+    <BillingContent
+      subscriptionStatus={sub?.status || "inactive"}
+      currentBalance={currentBalance}
+      ledgerRows={ledgerRows || []}
+      searchParams={params}
+    />
   );
 }
