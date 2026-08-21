@@ -18,19 +18,18 @@ export function Button({
     <button
       {...props}
       className={cn(
-        "inline-flex items-center justify-center gap-2 rounded-full font-medium",
-        "transition-all duration-150 ease-out active:scale-[0.98]",
+        "relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-full font-medium transition-all duration-200 ease-out active:scale-[0.98]",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background",
         "disabled:pointer-events-none disabled:opacity-50",
         size === "sm" && "h-9 px-4 text-sm",
         size === "md" && "h-11 px-6 text-sm",
         size === "lg" && "h-12 px-8 text-base",
         variant === "primary" &&
-          "bg-primary text-white hover:shadow-[0_0_32px_var(--primary-glow)]",
+          "bg-gradient-to-r from-primary to-[#6338FF] text-white shadow-[0_0_24px_var(--primary-glow)] hover:brightness-110 hover:shadow-[0_0_36px_var(--primary-glow)] hover:-translate-y-0.5",
         variant === "secondary" &&
-          "border border-border bg-surface-2 text-foreground hover:border-primary/40",
-        variant === "ghost" && "text-primary hover:underline",
-        variant === "danger" && "border border-danger text-danger hover:bg-danger/10",
+          "border border-border bg-surface-2/80 text-foreground backdrop-blur hover:border-primary/40 hover:bg-surface-2",
+        variant === "ghost" && "text-muted hover:text-foreground hover:bg-surface-2/50",
+        variant === "danger" && "border border-danger/40 bg-danger/10 text-danger hover:bg-danger/20",
         className
       )}
     />

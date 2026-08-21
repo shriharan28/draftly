@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MOCKUP GATE 3 — Draftly Subtle Technical AI Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #09090E;
+    --surface: rgba(18, 18, 26, 0.75);
+    --surface2: rgba(26, 26, 38, 0.6);
+    --border: rgba(255, 255, 255, 0.08);
+    --border-active: rgba(124, 92, 255, 0.5);
+    --text: #F4F4FA;
+    --muted: #8E8EA3;
+    --primary: #7C5CFF;
+    --glow: rgba(124, 92, 255, 0.35);
+    --accent: #FF4ECD;
+    --success: #A3F65A;
+    --display: 'Space Grotesk', system-ui, sans-serif;
+    --body: 'Inter', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--body);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+  }
+
+  /* Ambient Particle Glow Background */
+  .bg-glow-orb {
+    position: fixed;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(124,92,255,0.12) 0%, rgba(255,78,205,0.05) 40%, transparent 70%);
+    top: -200px;
+    right: -100px;
+    pointer-events: none;
+    z-index: 0;
+    animation: orbPulse 8s ease-in-out infinite alternate;
+  }
+  @keyframes orbPulse {
+    0% { transform: scale(1) translate(0, 0); }
+    100% { transform: scale(1.15) translate(-30px, 40px); }
+  }
+
+  .banner {
+    position: relative;
+    z-index: 10;
+    background: linear-gradient(90deg, #7C5CFF, #FF4ECD, #7C5CFF);
+    background-size: 200% 100%;
+    animation: bannerGradient 4s linear infinite;
+    color: #fff;
+    text-align: center;
+    font: 500 13px var(--body);
+    padding: 10px 16px;
+  }
+  @keyframes bannerGradient {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+  }
+
+  .shell { display: flex; min-height: calc(100vh - 40px); position: relative; z-index: 1; }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 240px; border-right: 1px solid var(--border); padding: 24px 16px;
+    display: flex; flex-direction: column; gap: 8px; position: sticky; top: 0; height: calc(100vh - 40px);
+    backdrop-filter: blur(16px); background: rgba(9, 9, 14, 0.8);
+  }
+  .logo { font: 700 22px var(--display); padding: 0 12px 20px; letter-spacing: -.5px; }
+  .logo span { background: linear-gradient(135deg,#7C5CFF,#FF4ECD); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .nav-item {
+    display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 14px;
+    color: var(--muted); font: 500 14px var(--body); cursor: pointer; transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .nav-item:hover { background: var(--surface2); color: var(--text); transform: translateX(3px); }
+  .nav-item.active { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+  .nav-item.active .ico { background: var(--primary); box-shadow: 0 0 24px var(--glow); }
+  .ico { width: 32px; height: 32px; border-radius: 10px; background: var(--surface2); display: grid; place-items: center; font-size: 15px; }
+
+  /* MAIN */
+  .main { flex: 1; padding: 32px; max-width: 1150px; margin: 0 auto; width: 100%; }
+  .topbar { display: flex; align-items: center; justify-between: space-between; margin-bottom: 28px; }
+  .topbar h1 { font: 600 26px var(--display); tracking-tight: -0.02em; }
+  .top-right { display: flex; align-items: center; gap: 16px; margin-left: auto; }
+  .credits {
+    display: flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px; border-radius: 999px;
+    background: var(--surface); border: 1px solid var(--border); font: 500 14px var(--mono);
+    backdrop-filter: blur(12px); box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  }
+  .credits .zap { color: var(--primary); }
+  .avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg,#7C5CFF,#FF4ECD); display: grid; place-items: center; font-weight: 600; }
+
+  /* STUDIO LAYOUT */
+  .studio-grid { display: grid; grid-template-columns: 1fr 1.25fr; gap: 24px; }
+  @media(max-width: 960px) { .studio-grid { grid-template-columns: 1fr; } .sidebar { display: none; } }
+
+  /* GLASSMORPHIC PANEL */
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 26px;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    position: relative;
+  }
+
+  .panel-title { font: 600 18px var(--display); margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; }
+  .voice-badge {
+    display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 999px;
+    background: rgba(124,92,255,0.08); border: 1px solid rgba(124,92,255,0.25);
+    font: 500 12px var(--body); color: var(--text); margin-bottom: 20px;
+  }
+  .voice-badge span { color: var(--primary); font-weight: 600; }
+
+  .field-label { display: block; font: 500 11px var(--body); color: var(--muted); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.08em; }
+
+  .type-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 22px; }
+  .type-chip {
+    padding: 12px 10px; border-radius: 14px; background: var(--surface2); border: 1px solid var(--border);
+    font: 500 12.5px var(--body); text-align: center; cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    user-select: none;
+  }
+  .type-chip:hover { border-color: rgba(124,92,255,0.4); transform: translateY(-2px); }
+  .type-chip.selected {
+    background: linear-gradient(135deg, rgba(124,92,255,0.9), rgba(100,70,235,0.95));
+    border-color: var(--primary); color: #fff;
+    box-shadow: 0 0 20px var(--glow);
+  }
+
+  .topic-textarea {
+    width: 100%; height: 130px; background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 18px; padding: 16px; color: var(--text); font: 400 14px var(--body);
+    outline: none; resize: none; margin-bottom: 22px; transition: all 0.2s ease;
+    line-height: 1.5;
+  }
+  .topic-textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(124,92,255,0.25); }
+
+  .generate-btn {
+    width: 100%; height: 52px; border-radius: 999px;
+    background: linear-gradient(135deg, #7C5CFF, #6338FF);
+    color: #fff; font: 600 15px var(--body); border: none; cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 0 32px var(--glow); display: flex; align-items: center; justify-content: center; gap: 8px;
+    position: relative; overflow: hidden;
+  }
+  .generate-btn::after {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transform: translateX(-100%);
+  }
+  .generate-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
+  .generate-btn:hover::after { animation: btnShimmer 1.2s infinite; }
+  @keyframes btnShimmer { 100% { transform: translateX(100%); } }
+  .generate-btn small { opacity: 0.8; font-family: var(--mono); font-size: 12px; }
+
+  /* SUBTLE TECHNICAL AI LOADER */
+  .ai-loader-container {
+    display: none;
+    padding: 48px 24px;
+    text-align: center;
+    animation: fadeIn 0.3s ease-out;
+  }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+  .ai-pulse-ring {
+    position: relative;
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 24px;
+    display: grid;
+    place-items: center;
+  }
+  .ai-pulse-ring::before, .ai-pulse-ring::after {
+    content: ""; position: absolute; inset: 0; border-radius: 50%;
+    border: 2px solid var(--primary);
+    animation: ringExpand 2s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+  }
+  .ai-pulse-ring::after { animation-delay: -1s; }
+  @keyframes ringExpand {
+    0% { transform: scale(0.6); opacity: 1; }
+    100% { transform: scale(1.6); opacity: 0; }
+  }
+  .ai-center-icon {
+    font-size: 24px;
+    filter: drop-shadow(0 0 10px var(--primary));
+    animation: float 2s ease-in-out infinite alternate;
+  }
+  @keyframes float { from { transform: translateY(-2px); } to { transform: translateY(2px); } }
+
+  /* SHIMMERING AI TEXT (SV-Animations inspired) */
+  .shimmer-text {
+    font: 600 17px var(--display);
+    background: linear-gradient(90deg, #8E8EA3 0%, #F4F4FA 30%, #7C5CFF 50%, #FF4ECD 70%, #8E8EA3 100%);
+    background-size: 250% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: textShimmer 2.5s linear infinite;
+    margin-bottom: 8px;
+  }
+  @keyframes textShimmer { 0% { background-position: 100% 0; } 100% { background-position: -100% 0; } }
+
+  .loader-steps-list {
+    display: inline-flex; flex-direction: column; gap: 8px; margin-top: 16px; text-align: left;
+  }
+  .loader-step-item {
+    font-size: 13px; color: var(--muted); display: flex; align-items: center; gap: 10px;
+    transition: all 0.3s ease;
+  }
+  .loader-step-item.active { color: var(--text); font-weight: 500; }
+  .loader-step-item.active .dot { background: var(--primary); box-shadow: 0 0 12px var(--primary); transform: scale(1.2); }
+  .loader-step-item.completed { color: var(--success); }
+  .loader-step-item.completed .dot { background: var(--success); }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--surface2); transition: 0.3s; }
+
+  /* VARIANTS DISPLAY */
+  .variants-container { display: flex; flex-direction: column; gap: 18px; }
+
+  .variant-card {
+    background: var(--surface2); border: 1px solid var(--border); border-radius: 20px; padding: 22px;
+    position: relative; transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .variant-card:hover { border-color: rgba(124,92,255,0.4); transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+
+  .variant-header { display: flex; justify-between: space-between; align-items: center; margin-bottom: 14px; }
+  .variant-tag {
+    font: 500 11px var(--mono); color: var(--primary); text-transform: uppercase; letter-spacing: 0.06em;
+    background: rgba(124,92,255,0.12); padding: 5px 12px; border-radius: 999px; border: 1px solid rgba(124,92,255,0.2);
+  }
+
+  .variant-body { font-size: 14px; line-height: 1.65; color: var(--text); white-space: pre-wrap; margin-bottom: 18px; }
+
+  .variant-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 14px; border-top: 1px solid var(--border); }
+  .word-count { font-size: 12px; color: var(--muted); font-family: var(--mono); }
+  .copy-btn {
+    padding: 7px 18px; border-radius: 999px; background: var(--surface); border: 1px solid var(--border);
+    color: var(--text); font: 500 12.5px var(--body); cursor: pointer; transition: all 0.15s ease-out;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .copy-btn:hover { border-color: var(--primary); color: var(--primary); background: rgba(124,92,255,0.1); }
+</style>
+</head>
+<body>
+  <div class="bg-glow-orb"></div>
+
+  <div class="banner">
+    🎨 MOCKUP GATE 3 — Subtle Technical AI Era Studio Generator Preview (Design Gallery Inspired).
+  </div>
+
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="logo">Draft<span>ly</span></div>
+      <div class="nav-item"><div class="ico">🏠</div>Dashboard</div>
+      <div class="nav-item active"><div class="ico">✨</div>Generate</div>
+      <div class="nav-item"><div class="ico">📚</div>Library</div>
+      <div class="nav-item"><div class="ico">⚙️</div>Settings</div>
+      <div class="nav-item"><div class="ico">💳</div>Billing</div>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <h1>Content Studio</h1>
+        <div class="top-right">
+          <div class="credits"><span class="zap">⚡</span><span class="tnum">15</span></div>
+          <div class="avatar">S</div>
+        </div>
+      </div>
+
+      <div class="studio-grid">
+        <!-- LEFT PANEL: CONTROL PANEL -->
+        <div class="panel">
+          <div class="panel-title">
+            <span>✨ Create Content</span>
+          </div>
+
+          <div class="voice-badge">
+            🎙️ Voice Persona: <span>Bold & Punchy (Tech)</span>
+          </div>
+
+          <div class="form-group">
+            <label class="field-label">Content Format</label>
+            <div class="type-grid">
+              <div class="type-chip selected" onclick="selectType(this)">IG Caption</div>
+              <div class="type-chip" onclick="selectType(this)">Reel Hook</div>
+              <div class="type-chip" onclick="selectType(this)">X Thread</div>
+              <div class="type-chip" onclick="selectType(this)">X Post</div>
+              <div class="type-chip" onclick="selectType(this)">LinkedIn</div>
+              <div class="type-chip" onclick="selectType(this)">YT Desc</div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="field-label">What do you want to post about?</label>
+            <textarea id="topicInput" class="topic-textarea" placeholder="e.g. Why 90% of solo developers fail because they build in secret instead of sharing early">Why 90% of solo developers fail because they build in secret instead of sharing early</textarea>
+          </div>
+
+          <button class="generate-btn" onclick="generateWithAI()">
+            <span>⚡ Generate 3 AI Variants</span>
+            <small>· 1 credit</small>
+          </button>
+        </div>
+
+        <!-- RIGHT PANEL: AI OUTPUT & LOADER THEATER -->
+        <div class="panel">
+          <div class="panel-title">
+            <span>🎯 AI Output Variants</span>
+          </div>
+
+          <!-- SHIMMERING LOADER THEATER -->
+          <div id="aiLoader" class="ai-loader-container">
+            <div class="ai-pulse-ring">
+              <div class="ai-center-icon">✨</div>
+            </div>
+            <div class="shimmer-text" id="shimmerMsg">Initializing Gemini 2.0 Engine...</div>
+            <div style="font-size:13px; color:var(--muted)">Applying your custom brand voice parameters</div>
+
+            <div class="loader-steps-list">
+              <div class="loader-step-item active" id="step1">
+                <div class="dot"></div>
+                <span>Parsing topic & target audience</span>
+              </div>
+              <div class="loader-step-item" id="step2">
+                <div class="dot"></div>
+                <span>Invoking Google Gemini AI LLM</span>
+              </div>
+              <div class="loader-step-item" id="step3">
+                <div class="dot"></div>
+                <span>Formatting 3 distinct viral angles</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- VARIANTS CONTAINER -->
+          <div id="variantsDisplay" class="variants-container">
+            <!-- VARIANT 1 -->
+            <div class="variant-card">
+              <div class="variant-header">
+                <span class="variant-tag">Option 1 — Direct Hook</span>
+              </div>
+              <div class="variant-body" id="var1Body">Building in secret is developer suicide.
+
+You spend 3 months polishing code nobody asked for.
+You launch to crickets.
+You quit.
+
+The fix? Show the mess. Post the bugs. Share the 2 AM breakthroughs.
+Your first 100 users don't want a finished product — they want to be part of the story. 📈</div>
+              <div class="variant-footer">
+                <span class="word-count">56 words · 312 chars</span>
+                <button class="copy-btn" onclick="copyVariant(this, 'var1Body')">📋 Copy</button>
+              </div>
+            </div>
+
+            <!-- VARIANT 2 -->
+            <div class="variant-card">
+              <div class="variant-header">
+                <span class="variant-tag">Option 2 — Contrarian Angle</span>
+              </div>
+              <div class="variant-body" id="var2Body">Unpopular opinion: Nobody cares about your tech stack.
+
+They care about the problem you solve.
+If you're building a SaaS in 2026, document the process from Day 1:
+1. Day 1: The problem
+2. Day 7: The ugly prototype
+3. Day 30: The first paying customer
+
+Stop hiding behind your IDE. 🚀</div>
+              <div class="variant-footer">
+                <span class="word-count">52 words · 298 chars</span>
+                <button class="copy-btn" onclick="copyVariant(this, 'var2Body')">📋 Copy</button>
+              </div>
+            </div>
+
+            <!-- VARIANT 3 -->
+            <div class="variant-card">
+              <div class="variant-header">
+                <span class="variant-tag">Option 3 — Actionable List</span>
+              </div>
+              <div class="variant-body" id="var3Body">Why solo founders fail (and how to avoid it):
+
+❌ Mistake: Coding for 90 days before talking to a human
+✅ Fix: Build in public. Share your daily wins, failures, and lessons.
+
+People buy from people they trust. Build the audience while you build the product.</div>
+              <div class="variant-footer">
+                <span class="word-count">47 words · 275 chars</span>
+                <button class="copy-btn" onclick="copyVariant(this, 'var3Body')">📋 Copy</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    let activeFormat = 'IG Caption';
+
+    function selectType(chip) {
+      document.querySelectorAll('.type-chip').forEach(c => c.classList.remove('selected'));
+      chip.classList.add('selected');
+      activeFormat = chip.innerText;
+    }
+
+    function copyVariant(btn, bodyId) {
+      const text = document.getElementById(bodyId).innerText;
+      navigator.clipboard.writeText(text);
+      btn.innerText = '✅ Copied!';
+      btn.style.color = '#A3F65A';
+      setTimeout(() => {
+        btn.innerText = '📋 Copy';
+        btn.style.color = 'var(--text)';
+      }, 1800);
+    }
+
+    function generateWithAI() {
+      const topic = document.getElementById('topicInput').value || 'Building in public';
+      const loader = document.getElementById('aiLoader');
+      const display = document.getElementById('variantsDisplay');
+
+      display.style.display = 'none';
+      loader.style.display = 'block';
+
+      // Animate loader steps
+      const step1 = document.getElementById('step1');
+      const step2 = document.getElementById('step2');
+      const step3 = document.getElementById('step3');
+      const shimmerMsg = document.getElementById('shimmerMsg');
+
+      step1.className = 'loader-step-item active';
+      step2.className = 'loader-step-item';
+      step3.className = 'loader-step-item';
+      shimmerMsg.innerText = `Analyzing prompt for ${activeFormat}...`;
+
+      setTimeout(() => {
+        step1.className = 'loader-step-item completed';
+        step2.className = 'loader-step-item active';
+        shimmerMsg.innerText = 'Consulting Gemini 2.0 Flash engine...';
+      }, 700);
+
+      setTimeout(() => {
+        step2.className = 'loader-step-item completed';
+        step3.className = 'loader-step-item active';
+        shimmerMsg.innerText = `Formatting 3 viral ${activeFormat} variations...`;
+      }, 1400);
+
+      setTimeout(() => {
+        step3.className = 'loader-step-item completed';
+        loader.style.display = 'none';
+        display.style.display = 'flex';
+
+        // Update output text dynamically based on prompt & format selected to preview real behavior!
+        document.getElementById('var1Body').innerText = `[${activeFormat} · Direct Angle]\n\n${topic}\n\nHere is how you execute it: Stop waiting for permission. Share the exact journey from day 1.\n\n#building #tech #content`;
+        document.getElementById('var2Body').innerText = `[${activeFormat} · Contrarian Angle]\n\nMost people think ${topic} is hard.\n\nIt's not. The hard part is being consistent when nobody is watching. Start today.`;
+        document.getElementById('var3Body').innerText = `[${activeFormat} · Playbook Angle]\n\nThe 3-step framework for "${topic}":\n\n1. Define the core insight\n2. Hook the reader immediately\n3. Deliver undeniable value\n\nSave this for later! 📌`;
+      }, 2200);
+    }
+  </script>
+</body>
+</html>

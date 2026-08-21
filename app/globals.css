@@ -1,21 +1,21 @@
 @import "tailwindcss";
 
 /* ============================================================
-   DRAFTLY DESIGN TOKENS — source of truth: docs/UIUX_DESIGN_BRIEF.md
-   Dark-first identity. Light theme = token swap (post-MVP).
+   DRAFTLY DESIGN TOKENS — Technical AI Era Aesthetic
    ============================================================ */
 
 :root {
-  --background: #0A0A0F;            /* canvas — near-black, violet undertone */
-  --surface: #12121A;               /* cards */
-  --surface-2: #1A1A26;             /* hover / nested */
-  --border: rgba(255, 255, 255, 0.07); /* hairlines */
-  --foreground: #F4F4FA;            /* primary text */
-  --muted: #8E8EA3;                 /* secondary text (5.1:1 on surface) */
-  --primary: #7C5CFF;               /* ultraviolet — actions */
+  --background: #09090E;               /* Pitch-black canvas with deep indigo tint */
+  --surface: rgba(18, 18, 26, 0.75);   /* Translucent glass card */
+  --surface-2: rgba(26, 26, 38, 0.6);  /* Nested elements */
+  --border: rgba(255, 255, 255, 0.08); /* Hairline borders */
+  --border-active: rgba(124, 92, 255, 0.4);
+  --foreground: #F4F4FA;               /* Primary white text */
+  --muted: #8E8EA3;                    /* Secondary muted text */
+  --primary: #7C5CFF;                  /* Electric violet */
   --primary-glow: rgba(124, 92, 255, 0.35);
-  --accent: #FF4ECD;                /* hot pink — gradient partner / Pro */
-  --success: #A3F65A;
+  --accent: #FF4ECD;                   /* Neon pink accent */
+  --success: #A3F65A;                  /* Neon lime */
   --warning: #FFB020;
   --danger: #FF5C5C;
 }
@@ -25,6 +25,7 @@
   --color-surface: var(--surface);
   --color-surface-2: var(--surface-2);
   --color-border: var(--border);
+  --color-border-active: var(--border-active);
   --color-foreground: var(--foreground);
   --color-muted: var(--muted);
   --color-primary: var(--primary);
@@ -43,9 +44,43 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-inter), system-ui, sans-serif;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
 }
 
-/* gradient used sparingly: hero words, primary-button hover, Pro badge */
+/* Subtle Technical Grid Background */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 32px 32px;
+  pointer-events: none;
+  z-index: -2;
+  opacity: 0.6;
+}
+
+/* Ambient Radial Glow Orb */
+.bg-glow-orb {
+  position: fixed;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(124,92,255,0.12) 0%, rgba(255,78,205,0.05) 40%, transparent 70%);
+  top: -200px;
+  right: -100px;
+  pointer-events: none;
+  z-index: -1;
+  animation: orbPulse 8s ease-in-out infinite alternate;
+}
+
+@keyframes orbPulse {
+  0% { transform: scale(1) translate(0, 0); }
+  100% { transform: scale(1.15) translate(-30px, 40px); }
+}
+
+/* Gradient Text */
 .text-gradient {
   background: linear-gradient(135deg, #7c5cff, #ff4ecd);
   -webkit-background-clip: text;
@@ -53,12 +88,35 @@ body {
   color: transparent;
 }
 
+/* Shimmer Animated Text (SV-Animations Style) */
+.shimmer-text {
+  background: linear-gradient(90deg, #8E8EA3 0%, #F4F4FA 30%, #7C5CFF 50%, #FF4ECD 70%, #8E8EA3 100%);
+  background-size: 250% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: textShimmer 2.5s linear infinite;
+}
+
+@keyframes textShimmer {
+  0% { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}
+
+/* Glassmorphism Card Style */
+.glass-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
 ::selection {
   background: var(--primary);
   color: white;
 }
 
-/* number displays (credits meter) must never jitter */
 .tnum {
   font-variant-numeric: tabular-nums;
 }
