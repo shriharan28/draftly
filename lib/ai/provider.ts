@@ -30,9 +30,10 @@ export async function generateContentWithGemini(
 
   // Models to try in order of preference
   const modelsToTry = [
-    process.env.AI_MODEL || "gemini-3.7-flash", "gemini-2.5-flash",
+    process.env.AI_MODEL || "gemini-3.6-flash",
+    "gemini-3.6-flash",
+    "gemini-2.5-flash",
     "gemini-1.5-flash",
-    "gemini-2.0-flash",
   ];
 
   let lastError: any = null;
