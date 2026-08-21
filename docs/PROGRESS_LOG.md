@@ -9,8 +9,8 @@
 
 | Field | Value |
 |---|---|
-| **Current stage** | **Stage 5 COMPLETE ✅** (Stripe Billing & Paywall Modal) → next: Stage 6 (Resend Email & Production Hardening) |
-| **Next action** | Stage 6: Resend Email Integration (Welcome emails, credit reset notifications, password reset links) & Production Hardening |
+| **Current stage** | **Stage 6 IN PROGRESS 🚀** (High-Converting Landing Page & Legal Pages Built) → next: Stage 7 Launch Armor & Go-Live |
+| **Next action** | Stage 7: Launch Armor & Go-Live Production Checklists |
 | **Blockers** | None |
 | **App** | Draftly — AI Content Studio |
 | **Live URL** | **https://draftly-pink.vercel.app** |
@@ -20,7 +20,9 @@
 
 ## Entries (newest at top — append after every work session)
 
-### 009 — 2026-08-21 — 💳 STAGE 5 COMPLETE — Stripe Billing Engine & Subscription Paywall
+### 010 — 2026-08-21 — 🌟 STAGE 6 IN PROGRESS — High-Converting Landing Page & Legal Suite
+- **Done:** Mockup Gate 5 APPROVED. Built high-converting GenZ dark-mode Landing Page in `app/page.tsx` featuring live interactive studio preview, feature cards, and pricing comparison ($0 Starter vs $9/mo Pro). Built plain-language legal pages in `app/legal/terms/page.tsx` and `app/legal/privacy/page.tsx`. Verified clean compilation with `npm run build` ✅ (17/17 static & dynamic routes).
+- **Next:** Stage 7 — Launch Armor & Go-Live Production Checklists.
 - **Done:** Mockup Gate 4 APPROVED. Installed `stripe` and `@stripe/stripe-js`. Created `lib/stripe/client.ts` for Stripe customer lookup/creation. Created `createCheckoutSession` and `createPortalSession` server actions in `app/(app)/billing/actions.ts`. Created `app/api/stripe/webhook/route.ts` handling `checkout.session.completed`, granting +300 credits into `public.credit_ledger` using `adminClient`. Built interactive `PaywallModal` component and `BillingContent` page with live credit ledger table. `npm run build` ✅ (15/15 routes static/dynamic). Pushed to `main` → deployed live on Vercel!
 - **Next:** Stage 6 — Resend Email Notifications & Final Production Polish.
 

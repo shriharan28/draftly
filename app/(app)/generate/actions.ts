@@ -151,8 +151,10 @@ export async function saveDraftToLibraryAction(params: {
       content_type: params.contentType,
       topic: params.topic,
       variants: [params.content],
-      status: "saved",
+      status: "complete",
+      chosen_index: 0,
       model: "gemini-3.6-flash",
+      tone: "bold",
     })
     .select()
     .single();

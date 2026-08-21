@@ -1,0 +1,41 @@
+<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="vortex-outer" x1="10%" y1="10%" x2="90%" y2="90%">
+      <stop offset="0%" stop-color="#D8B4FE" />
+      <stop offset="40%" stop-color="#A855F7" />
+      <stop offset="80%" stop-color="#6D28D9" />
+      <stop offset="100%" stop-color="#3B0764" />
+    </linearGradient>
+
+    <linearGradient id="vortex-inner" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#C084FC" />
+      <stop offset="60%" stop-color="#7E22CE" />
+      <stop offset="100%" stop-color="#2E1065" />
+    </linearGradient>
+
+    <radialGradient id="vortex-orb" cx="40%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#F5D0FE" />
+      <stop offset="50%" stop-color="#D8B4FE" />
+      <stop offset="100%" stop-color="#7E22CE" />
+    </radialGradient>
+  </defs>
+
+  <g>
+    <path
+      d="M 50 12 C 68 12 88 35 84 55 C 80 75 58 84 45 84 C 32 84 15 72 20 52 C 24 34 38 12 50 12 Z"
+      fill="url(#vortex-outer)"
+    />
+    <path
+      d="M 52 20 C 66 22 78 40 73 57 C 68 72 50 78 38 74 C 28 70 24 55 29 44 C 34 32 42 19 52 20 Z"
+      fill="url(#vortex-inner)"
+      opacity="0.9"
+    />
+    <path
+      d="M 50 28 C 60 30 68 44 64 56 C 60 67 46 70 38 65 C 32 60 31 49 36 41 C 41 33 45 27 50 28 Z"
+      fill="#1E1B4B"
+      opacity="0.8"
+    />
+    <circle cx="50" cy="51" r="7.5" fill="url(#vortex-orb)" />
+    <circle cx="48" cy="49" r="2.5" fill="#FFFFFF" opacity="0.8" />
+  </g>
+</svg>

@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mockup Gate 5 — Draftly Landing Page</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0A0A0F;
+      --surface: #12121A;
+      --surface-2: #1A1A26;
+      --border: rgba(255, 255, 255, 0.08);
+      --text: #F4F4FA;
+      --text-muted: #8E8EA3;
+      --primary: #8B5CF6;
+      --accent: #FF4ECD;
+      --success: #10B981;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    .font-display {
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* GRADIENTS & GLOWS */
+    .text-gradient {
+      background: linear-gradient(135deg, #8B5CF6 0%, #FF4ECD 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .bg-gradient {
+      background: linear-gradient(135deg, #8B5CF6 0%, #10B981 100%);
+    }
+
+    .btn-glow {
+      box-shadow: 0 0 32px rgba(139, 92, 246, 0.4);
+    }
+
+    .glow-sphere {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(120px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* FLOATING ANIMATED ICONS IN NEGATIVE SPACE */
+    @keyframes float-1 {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-16px) rotate(6deg); }
+    }
+
+    @keyframes float-2 {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(14px) rotate(-8deg); }
+    }
+
+    @keyframes float-3 {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-12px) rotate(-4deg); }
+    }
+
+    .floating-icon {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      backdrop-filter: blur(12px);
+      z-index: 2;
+      transition: all 0.3s ease;
+      pointer-events: none;
+    }
+
+    .floating-icon svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    /* Color Accents */
+    .float-violet {
+      background: rgba(139, 92, 246, 0.12);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      color: #8B5CF6;
+      box-shadow: 0 0 24px rgba(139, 92, 246, 0.25);
+    }
+
+    .float-pink {
+      background: rgba(255, 78, 205, 0.12);
+      border: 1px solid rgba(255, 78, 205, 0.3);
+      color: #FF4ECD;
+      box-shadow: 0 0 24px rgba(255, 78, 205, 0.25);
+    }
+
+    .float-emerald {
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #10B981;
+      box-shadow: 0 0 24px rgba(16, 185, 129, 0.25);
+    }
+
+    /* CONTAINER */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* NAVBAR */
+    header {
+      position: sticky;
+      top: 0;
+      background: rgba(10, 10, 15, 0.8);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      z-index: 50;
+      padding: 16px 0;
+    }
+
+    .nav-flex {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: #fff;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo-badge {
+      font-size: 10px;
+      background: rgba(139, 92, 246, 0.15);
+      color: var(--primary);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      padding: 2px 8px;
+      border-radius: 99px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: #fff;
+    }
+
+    .nav-cta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: 99px;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+    }
+
+    .btn-secondary {
+      background: var(--surface-2);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      border-color: rgba(255, 255, 255, 0.2);
+      color: #fff;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #8B5CF6 0%, #10B981 100%);
+      color: #fff;
+      box-shadow: 0 0 24px rgba(139, 92, 246, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 32px rgba(139, 92, 246, 0.5);
+    }
+
+    /* HERO */
+    .hero-section {
+      padding: 96px 0 64px;
+      text-align: center;
+      position: relative;
+    }
+
+    .pill-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(139, 92, 246, 0.1);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      padding: 6px 16px;
+      border-radius: 99px;
+      font-size: 12px;
+      color: #F4F4FA;
+      margin-bottom: 24px;
+    }
+
+    .hero-title {
+      font-size: 56px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      max-width: 850px;
+      margin: 0 auto 20px;
+      line-height: 1.15;
+    }
+
+    .hero-sub {
+      font-size: 18px;
+      color: var(--text-muted);
+      max-width: 640px;
+      margin: 0 auto 36px;
+    }
+
+    /* DEMO INTERACTIVE WIDGET */
+    .demo-widget {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 32px;
+      max-width: 900px;
+      margin: 40px auto 0;
+      text-align: left;
+      box-shadow: 0 20px 80px rgba(0, 0, 0, 0.5);
+    }
+
+    .demo-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .demo-chips {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .demo-chip {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 6px 14px;
+      border-radius: 99px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .demo-chip.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .demo-input {
+      width: 100%;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: #fff;
+      padding: 14px;
+      border-radius: 12px;
+      font-size: 14px;
+      margin-bottom: 16px;
+      outline: none;
+    }
+
+    .demo-output {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      font-size: 14px;
+      color: #F4F4FA;
+      white-space: pre-wrap;
+    }
+
+    /* FEATURES GRID */
+    .features-section {
+      padding: 96px 0;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 36px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .section-sub {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 16px;
+      margin-bottom: 64px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .feature-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px;
+      transition: all 0.2s;
+    }
+
+    .feature-card:hover {
+      border-color: rgba(139, 92, 246, 0.4);
+      transform: translateY(-4px);
+    }
+
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: rgba(139, 92, 246, 0.1);
+      display: grid;
+      place-items: center;
+      color: var(--primary);
+      margin-bottom: 20px;
+      font-size: 20px;
+    }
+
+    .feature-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .feature-desc {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    /* PRICING */
+    .pricing-section {
+      padding: 96px 0;
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .price-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 40px;
+      position: relative;
+    }
+
+    .price-card.pro {
+      border-color: var(--primary);
+      box-shadow: 0 0 40px rgba(139, 92, 246, 0.2);
+    }
+
+    .price-tag {
+      font-size: 40px;
+      font-weight: 700;
+      margin: 16px 0;
+    }
+
+    .price-features {
+      list-style: none;
+      margin: 24px 0;
+    }
+
+    .price-features li {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .price-features li span {
+      color: var(--success);
+    }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 48px 0;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    .footer-flex {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* Hide floating icons on small mobile screens to keep negative space clean */
+    @media (max-width: 900px) {
+      .floating-icon {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- GLOW BG -->
+  <div class="glow-sphere" style="top: 10%; left: 30%; width: 500px; height: 500px; background: rgba(139, 92, 246, 0.15);"></div>
+  <div class="glow-sphere" style="top: 50%; right: 10%; width: 400px; height: 400px; background: rgba(16, 185, 129, 0.1);"></div>
+
+  <!-- NAVBAR -->
+  <header>
+    <div class="container nav-flex">
+      <a href="#" class="logo">
+        Draft<span class="text-gradient">ly</span>
+        <span class="logo-badge">PRO v1.0</span>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#demo">Live Studio Demo</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+      </ul>
+
+      <div class="nav-cta">
+        <a href="/login" class="btn btn-secondary">Log In</a>
+        <a href="/signup" class="btn btn-primary btn-glow">Get Started Free ⚡</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <section class="hero-section">
+    <div class="container" style="position: relative;">
+      
+      <!-- FLOATING CONTENT CREATION ICONS IN NEGATIVE SPACE -->
+      <!-- Left Top: Voice Persona Mic -->
+      <div class="floating-icon float-violet" style="top: 10px; left: 20px; animation: float-1 5s ease-in-out infinite;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/>
+          <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+          <line x1="12" y1="19" x2="12" y2="22"/>
+        </svg>
+      </div>
+
+      <!-- Left Middle: Content Draft Pen -->
+      <div class="floating-icon float-pink" style="top: 130px; left: 80px; animation: float-2 6s ease-in-out infinite;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 20h9"/>
+          <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+        </svg>
+      </div>
+
+      <!-- Left Bottom: Video Reel -->
+      <div class="floating-icon float-emerald" style="top: 250px; left: 10px; animation: float-3 5.5s ease-in-out infinite;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="23 7 16 12 23 17 23 7"/>
+          <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+        </svg>
+      </div>
+
+      <!-- Right Top: AI Sparkles -->
+      <div class="floating-icon float-pink" style="top: 15px; right: 25px; animation: float-2 5.2s ease-in-out infinite;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3L12 3z"/>
+        </svg>
+      </div>
+
+      <!-- Right Middle: Speed Lightning -->
+      <div class="floating-icon float-violet" style="top: 140px; right: 75px; animation: float-1 6.2s ease-in-out infinite;">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+        </svg>
+      </div>
+
+      <!-- Right Bottom: Viral Rocket -->
+      <div class="floating-icon float-emerald" style="top: 260px; right: 15px; animation: float-3 5.8s ease-in-out infinite;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/>
+          <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/>
+        </svg>
+      </div>
+
+      <div class="pill-badge font-mono">
+        <span>✨ Powered by Gemini 3.6 Flash Model</span>
+      </div>
+
+      <h1 class="hero-title font-display">
+        Turn Any Idea Into <span class="text-gradient">3 Viral Posts</span> in 5 Seconds
+      </h1>
+
+      <p class="hero-sub">
+        The AI Content Studio tuned to your authentic brand voice persona. Generate high-converting IG Captions, Reel Hooks, X Threads, and LinkedIn posts instantly.
+      </p>
+
+      <div style="display: flex; justify-content: center; gap: 16px;">
+        <a href="/signup" class="btn btn-primary btn-glow" style="padding: 14px 32px; font-size: 16px;">
+          Start Generating Free · 15 Credits
+        </a>
+      </div>
+
+      <!-- INTERACTIVE DEMO WIDGET -->
+      <div id="demo" class="demo-widget">
+        <div class="demo-header">
+          <span class="font-display" style="font-weight: 700; color: #fff;">Interactive Studio Preview</span>
+          <span class="font-mono" style="font-size: 12px; color: var(--primary);">Gemini 3.6 Flash</span>
+        </div>
+
+        <div class="demo-chips">
+          <button class="demo-chip active">X Thread</button>
+          <button class="demo-chip">IG Caption</button>
+          <button class="demo-chip">LinkedIn</button>
+          <button class="demo-chip">Reel Hook</button>
+        </div>
+
+        <input type="text" class="demo-input" value="5 harsh truths about launching a SaaS in 2026 without an audience" readonly>
+
+        <div class="demo-output">
+<strong style="color: var(--primary); font-family: 'JetBrains Mono', monospace;">1/5 — Direct Hype Hook</strong>
+2026 is officially the year where building a SaaS is easy, but getting anyone to care is 100x harder.
+
+If you have 0 audience and 0 pre-launch distribution, read this before touching code: 🧵👇
+
+<strong style="color: var(--primary); font-family: 'JetBrains Mono', monospace;">2/5 — The Distribution Trap</strong>
+Most indie hackers spend 3 months polishing features and 0 days talking to customers.
+In 2026, your product isn't your moat—your distribution loop is.
+
+<strong style="color: var(--primary); font-family: 'JetBrains Mono', monospace;">3/5 — Proof Over Hype</strong>
+Build in public from day one. Show raw metrics, failed launches, and real user feedback. People don't follow products; they follow honest builders.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section id="features" class="features-section">
+    <div class="container">
+      <h2 class="section-title font-display">Engineered for Modern Content Creators</h2>
+      <p class="section-sub">Stop spending hours staring at a blank cursor. Draftly crafts ready-to-publish drafts in seconds.</p>
+
+      <div class="grid-3">
+        <div class="feature-card">
+          <div class="feature-icon">🎙️</div>
+          <h3 class="feature-title font-display">Brand Voice Persona</h3>
+          <p class="feature-desc">Teaches the AI your unique tone, keywords, and audience profile during onboarding so you never sound like generic AI fluff.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <h3 class="feature-title font-display">6 Multi-Platform Formats</h3>
+          <p class="feature-desc">Tailored prompt templates for IG Captions, Reel Scripts, full multi-tweet X Threads, LinkedIn posts, and YouTube descriptions.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">💎</div>
+          <h3 class="feature-title font-display">Transparent Credit Ledger</h3>
+          <p class="feature-desc">No hidden charges or forced monthly renewals. Every single credit deduction is tracked transparently in your append-only ledger.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section id="pricing" class="pricing-section">
+    <div class="container">
+      <h2 class="section-title font-display">Simple, Honest Pricing</h2>
+      <p class="section-sub">Start with 15 free credits on signup. Upgrade to Pro when you're ready to scale.</p>
+
+      <div class="pricing-grid">
+        <div class="price-card">
+          <h3 class="font-display" style="font-size: 20px;">Starter</h3>
+          <div class="price-tag font-display">$0 <span style="font-size: 16px; color: var(--text-muted); font-weight: 400;">/ forever</span></div>
+          <p style="font-size: 14px; color: var(--text-muted);">Perfect for testing out Draftly.</p>
+          <ul class="price-features">
+            <li><span>✓</span> 15 Free Credits on Signup</li>
+            <li><span>✓</span> All 6 Content Formats</li>
+            <li><span>✓</span> Brand Voice Persona</li>
+            <li><span>✓</span> Saved Content Library</li>
+          </ul>
+          <a href="/signup" class="btn btn-secondary" style="width: 100%;">Create Free Account</a>
+        </div>
+
+        <div class="price-card pro">
+          <div style="position: absolute; top: 20px; right: 20px; background: rgba(139, 92, 246, 0.2); color: var(--primary); font-size: 11px; font-weight: 600; padding: 4px 12px; border-radius: 99px; border: 1px solid rgba(139, 92, 246, 0.4);" class="font-mono">MOST POPULAR</div>
+          <h3 class="font-display" style="font-size: 20px;">Pro Creator</h3>
+          <div class="price-tag font-display">$9 <span style="font-size: 16px; color: var(--text-muted); font-weight: 400;">/ month</span></div>
+          <p style="font-size: 14px; color: var(--text-muted);">For active creators and founders.</p>
+          <ul class="price-features">
+            <li><span>✓</span> 500 Credits / Month</li>
+            <li><span>✓</span> Priority Gemini 3.6 AI Access</li>
+            <li><span>✓</span> Unlimited Library Storage</li>
+            <li><span>✓</span> Priority Support</li>
+          </ul>
+          <a href="/signup" class="btn btn-primary btn-glow" style="width: 100%;">Upgrade to Pro</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container footer-flex">
+      <div>
+        <a href="#" class="logo" style="font-size: 20px;">Draft<span class="text-gradient">ly</span></a>
+        <p style="font-size: 12px; margin-top: 4px;">© 2026 Draftly AI. All rights reserved.</p>
+      </div>
+
+      <div style="display: flex; gap: 24px;">
+        <a href="/legal/terms" style="color: var(--text-muted); text-decoration: none;">Terms of Service</a>
+        <a href="/legal/privacy" style="color: var(--text-muted); text-decoration: none;">Privacy Policy</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

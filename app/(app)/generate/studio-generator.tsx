@@ -76,9 +76,11 @@ function SaveDraftButton({
 export function StudioGenerator({
   initialTopic = "",
   initialType = "ig_caption",
+  initialVariants = null,
 }: {
   initialTopic?: string;
   initialType?: string;
+  initialVariants?: { angle: string; text: string }[] | null;
 }) {
   const [topic, setTopic] = useState(initialTopic);
   const [selectedFormat, setSelectedFormat] = useState<ContentType>(
@@ -87,7 +89,9 @@ export function StudioGenerator({
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
-  const [variants, setVariants] = useState<{ angle: string; text: string }[] | null>(null);
+  const [variants, setVariants] = useState<{ angle: string; text: string }[] | null>(
+    initialVariants
+  );
 
   function handleGenerate() {
     if (!topic.trim()) {

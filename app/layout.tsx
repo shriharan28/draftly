@@ -25,6 +25,11 @@ export const metadata: Metadata = {
   },
   description:
     "Turn your ideas into platform-ready content — captions, threads, hooks — in your voice, in seconds.",
+  icons: {
+    icon: "/icon.svg",
+    shortcut: "/icon.svg",
+    apple: "/icon.svg",
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

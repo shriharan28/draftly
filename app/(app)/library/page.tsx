@@ -18,6 +18,7 @@ export default async function LibraryPage() {
     .from("generations")
     .select("id, created_at, content_type, topic, variants")
     .eq("user_id", user?.id || "")
+    .not("chosen_index", "is", null)
     .order("created_at", { ascending: false });
 
   // Process rows: flatten variants array into individual saved draft cards

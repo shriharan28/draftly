@@ -64,12 +64,44 @@ Output ONLY a raw, valid JSON array containing exactly 3 distinct variant object
 export function buildUserPrompt(params: GeneratePromptParams): string {
   const { topic, contentType, tonePreset, customRules } = params;
 
+  let formatInstructions = "";
+
+  if (contentType === "x_thread") {
+    formatInstructions = `
+CRITICAL X THREAD REQUIREMENTS:
+- You MUST write a COMPLETE, full multi-tweet sequential thread for EACH variant (5 to 7 tweets per thread).
+- NEVER output only the opening hook or 1/10. Write out every single numbered tweet from beginning to end (e.g. 1/5, 2/5, 3/5, 4/5, 5/5).
+- Number each tweet clearly at the beginning of the line (e.g. "1/5", "2/5", "3/5", "4/5", "5/5").
+- Separate each tweet in the thread with double linebreaks so it is clearly readable as a sequence.`;
+  } else if (contentType === "reel_hook") {
+    formatInstructions = `
+CRITICAL REEL/SHORT HOOK REQUIREMENTS:
+- Provide high-converting video script hooks including visual directions [On-Screen Visual] and spoken voiceover lines.`;
+  } else if (contentType === "x_post") {
+    formatInstructions = `
+CRITICAL X SINGLE POST REQUIREMENTS:
+- Keep under 280 characters. Sharp, punchy, high-impact single tweet.`;
+  } else if (contentType === "linkedin_post") {
+    formatInstructions = `
+CRITICAL LINKEDIN POST REQUIREMENTS:
+- High-performing thought leadership format: killer opening hook line, short spaced paragraphs, key bullet point takeaways, and a compelling question CTA at the end.`;
+  } else if (contentType === "ig_caption") {
+    formatInstructions = `
+CRITICAL INSTAGRAM CAPTION REQUIREMENTS:
+- Full caption format: bold opening hook, value-packed body paragraph, clear call-to-action, and relevant hashtags.`;
+  } else if (contentType === "yt_desc") {
+    formatInstructions = `
+CRITICAL YOUTUBE DESCRIPTION REQUIREMENTS:
+- Complete description format: engaging summary, key topics/timestamps section, resources/links section placeholder, and search tags.`;
+  }
+
   return `Write 3 distinct viral variants for a ${FORMAT_NAMES[contentType]}.
 
 User Topic: "${topic}"
 
 Tone Persona: ${tonePreset || "Bold & Punchy"}
 Custom Guidelines: ${customRules || "Keep it punchy, authentic, and naturally engaging."}
+${formatInstructions}
 
 Variant Structure:
 - Option 1 (Direct Hook): High energy, instant hook, grabs immediate attention.
