@@ -9,8 +9,8 @@
 
 | Field | Value |
 |---|---|
-| **Current stage** | **Stage 3 COMPLETE ✅** (Auth + Onboarding Wizard) → next: Stage 4 (AI Generation Engine) |
-| **Next action** | Stage 4: AI Generation Engine (Google Gemini 2.0 Flash integration, credit consumption, content variants generation) |
+| **Current stage** | **Stage 4 COMPLETE ✅** (AI Generation Engine & Watermelon UI Theme) → next: Stage 5 (Stripe Billing & Paywall) |
+| **Next action** | Stage 5: Stripe Billing (Pro Plan $9/mo, Webhooks, Credit Grants, Paywall Modal) |
 | **Blockers** | None |
 | **App** | Draftly — AI Content Studio |
 | **Live URL** | **https://draftly-pink.vercel.app** |
@@ -19,6 +19,10 @@
 ---
 
 ## Entries (newest at top — append after every work session)
+
+### 008 — 2026-08-21 — 🚀 STAGE 4 COMPLETE — Real AI Content Engine (Gemini 2.0 Flash + Watermelon UI)
+- **Done:** Mockup Gate 3 APPROVED. Integrated `ui.watermelon.sh` design tokens into `app/globals.css`. Built `lib/ai/prompts.ts` (6 content formats) and `lib/ai/provider.ts` using `@google/genai` (Gemini 2.0 Flash). Built `generateContentAction` server action to deduct 1 credit via `spend_credits` RPC function, invoke Gemini AI, and persist outputs to Supabase `generations` table. Created interactive `StudioGenerator` React component with live credit deduction and instant copy buttons. `npm run build` ✅. Pushed to `main` → deployed live on Vercel!
+- **Next:** Stage 5 — Stripe Billing & Pro Subscription Paywall.
 
 ### 007 — 2026-08-21 — 🎉 STAGE 3 COMPLETE — 3-Step Onboarding Wizard & Profile Voice Integration
 - **Done:** Mockup Gate 2 APPROVED. Built `OnboardingWizard` React component with step transitions. Created `app/(app)/onboarding/actions.ts` to persist niche, target audience, platform choices, and brand voice to `profiles` and `brand_voices` tables in Supabase. Built & verified `npm run build` ✅. Pushed to `main` branch → live on Vercel.
