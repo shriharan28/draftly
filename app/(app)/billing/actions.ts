@@ -18,12 +18,12 @@ export async function createCheckoutSession() {
     return { error: "Authentication required." };
   }
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.APP_URL || "http://localhost:3000";
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.APP_URL || "https://draftly-pink.vercel.app";
   const priceId = process.env.STRIPE_PRICE_PRO_ID;
 
   if (!priceId) {
     return {
-      error: "Stripe Price ID is not set in .env.local. Add STRIPE_PRICE_PRO_ID=price_xxx from your Stripe Dashboard to enable live checkout.",
+      error: "Stripe Price ID is not set. Please add STRIPE_PRICE_PRO_ID in your Vercel Environment Variables.",
     };
   }
 
