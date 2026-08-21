@@ -1,25 +1,59 @@
 /**
  * app/(app)/settings/page.tsx
  *
- * Settings Page Stub (Stage 4).
- * Zero emojis — Uses technical vector SVG icons.
+ * Server Component for Settings Page.
+ * Fetches user profile, brand voice, subscription status, and credit balance from Supabase.
  */
-import { SettingsIcon } from "@/components/ui/icons";
+import { createClient } from "@/lib/supabase/server";
+import { SettingsContent } from "./settings-content";
 
-export default function SettingsPage() {
+export default async function SettingsPage() {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  // 1. Fetch Profile
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("niche, target_audience")
+    .eq("id", user?.id || "")
+    .single();
+
+  // 2. Fetch Default Brand Voice
+  const { data: brandVoice } = await supabase
+    .from("brand_voices")
+    .select("tone, voice_instructions")
+    .eq("user_id", user?.id || "")
+    .eq("is_default", true)
+    .single();
+
+  // 3. Fetch Subscription Status
+  const { data: sub } = await supabase
+    .from("subscriptions")
+    .select("status")
+    .eq("user_id", user?.id || "")
+    .single();
+
+  // 4. Fetch Latest Credit Balance
+  const { data: latestLedger } = await supabase
+    .from("credit_ledger")
+    .select("balance_after")
+    .eq("user_id", user?.id || "")
+    .order("id", { ascending: false })
+    .limit(1)
+    .single();
+
+  const userCredits = latestLedger?.balance_after ?? 15;
+
   return (
-    <div className="py-6">
-      <div className="glass-panel p-8 text-center max-w-xl mx-auto">
-        <div className="mb-4 grid h-14 w-14 place-items-center rounded-2xl bg-white/5 text-[#8B5CF6] mx-auto">
-          <SettingsIcon className="w-7 h-7" />
-        </div>
-        <h1 className="font-display text-2xl font-bold text-white mb-2">
-          Brand Voice & Account Settings
-        </h1>
-        <p className="text-xs text-[#9494A8] leading-relaxed">
-          Manage your brand voice presets, platform preferences, and profile details.
-        </p>
-      </div>
-    </div>
+    <SettingsContent
+      profile={profile || {}}
+      brandVoice={brandVoice || {}}
+      subscriptionStatus={sub?.status || "inactive"}
+      userCredits={userCredits}
+      userEmail={user?.email || ""}
+    />
   );
 }
