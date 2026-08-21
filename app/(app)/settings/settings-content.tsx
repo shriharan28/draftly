@@ -292,8 +292,8 @@ export function SettingsContent({
               AI Engine Model
             </div>
             <div className="font-display text-base font-bold text-white flex items-center gap-2">
-              <SparklesIcon className="w-4 h-4 text-[#10B981]" />
-              <span>Gemini 3.6 Flash Model</span>
+              <SparklesIcon className={`w-4 h-4 ${isPro ? "text-[#10B981]" : "text-[#8B5CF6]"}`} />
+              <span>{isPro ? "Gemini 3.6 Flash Model" : "Gemini 2.5 Flash Model"}</span>
             </div>
           </div>
         </div>
