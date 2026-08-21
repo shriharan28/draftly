@@ -2,7 +2,7 @@
  * lib/ai/provider.ts
  *
  * Google Gemini 2.0 Flash AI provider adapter.
- * Uses GOOGLE_AI_API_KEY from environment variables.
+ * Uses GOOGLE_AI_API_KEY or GEMINI_API_KEY from environment variables.
  */
 import { GoogleGenAI } from "@google/genai";
 import { buildSystemPrompt, buildUserPrompt, GeneratePromptParams } from "./prompts";
@@ -15,10 +15,12 @@ export type VariantOutput = {
 export async function generateContentWithGemini(
   params: GeneratePromptParams
 ): Promise<VariantOutput[]> {
-  const apiKey = process.env.GOOGLE_AI_API_KEY;
+  const apiKey = process.env.GOOGLE_AI_API_KEY || process.env.GEMINI_API_KEY;
 
   if (!apiKey) {
-    throw new Error("GOOGLE_AI_API_KEY is not configured in environment variables.");
+    throw new Error(
+      "GOOGLE_AI_API_KEY is not configured in environment variables."
+    );
   }
 
   const ai = new GoogleGenAI({ apiKey });
