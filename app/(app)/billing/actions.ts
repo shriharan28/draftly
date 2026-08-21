@@ -18,7 +18,7 @@ export async function createCheckoutSession() {
     return { error: "Authentication required." };
   }
 
-  const appUrl = process.env.APP_URL || "http://localhost:3000";
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.APP_URL || "http://localhost:3000";
   const priceId = process.env.STRIPE_PRICE_PRO_ID;
 
   if (!priceId) {
@@ -63,7 +63,7 @@ export async function createPortalSession() {
     return { error: "Authentication required." };
   }
 
-  const appUrl = process.env.APP_URL || "http://localhost:3000";
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.APP_URL || "http://localhost:3000";
 
   try {
     const customerId = await getOrCreateStripeCustomer(user.id, user.email || "");

@@ -5,7 +5,65 @@
  * Fetches subscription status and credit_ledger history from Supabase.
  */
 import { createClient } from "@/lib/supabase/server";
+import { adminClient } from "@/lib/supabase/admin";
+import { stripe } from "@/lib/stripe/client";
 import { BillingContent } from "./billing-content";
+
+async function syncStripeCheckoutSuccess(userId: string) {
+  try {
+    const { data: existingSub } = await adminClient
+      .from("subscriptions")
+      .select("status, stripe_customer_id")
+      .eq("user_id", userId)
+      .single();
+
+    if (existingSub) {
+      // 1. Mark subscription as active
+      if (existingSub.status !== "active") {
+        await adminClient
+          .from("subscriptions")
+          .update({
+            status: "active",
+            updated_at: new Date().toISOString(),
+          })
+          .eq("user_id", userId);
+      }
+
+      // 2. Check if a plan_grant has already been granted recently for this user
+      const { data: existingGrant } = await adminClient
+        .from("credit_ledger")
+        .select("id")
+        .eq("user_id", userId)
+        .eq("reason", "plan_grant")
+        .limit(1);
+
+      if (!existingGrant || existingGrant.length === 0) {
+        // Fetch latest balance
+        const { data: latestLedger } = await adminClient
+          .from("credit_ledger")
+          .select("balance_after")
+          .eq("user_id", userId)
+          .order("id", { ascending: false })
+          .limit(1)
+          .single();
+
+        const currentBalance = latestLedger?.balance_after ?? 0;
+        const newBalance = currentBalance + 300;
+
+        // Insert +300 credits into ledger
+        await adminClient.from("credit_ledger").insert({
+          user_id: userId,
+          delta: 300,
+          reason: "plan_grant",
+          balance_after: newBalance,
+          idempotency_key: `sync_grant_${userId}`,
+        });
+      }
+    }
+  } catch (err) {
+    console.error("Error syncing checkout success:", err);
+  }
+}
 
 export default async function BillingPage({
   searchParams,
@@ -18,6 +76,11 @@ export default async function BillingPage({
   const {
     data: { user },
   } = await supabase.auth.getUser();
+
+  // If redirected back from Stripe with success=true, sync subscription & grant +300 credits
+  if (params.success === "true" && user) {
+    await syncStripeCheckoutSuccess(user.id);
+  }
 
   // 1. Fetch Subscription status
   const { data: sub } = await supabase
