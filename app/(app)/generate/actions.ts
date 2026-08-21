@@ -27,7 +27,7 @@ export async function generateContentAction(params: {
   }
 
   // 1. Get current credit balance from credit_ledger
-  const { data: latestLedger } = await supabase
+  const { data: latestLedger, error: fetchError } = await supabase
     .from("credit_ledger")
     .select("balance_after")
     .eq("user_id", user.id)
@@ -45,19 +45,22 @@ export async function generateContentAction(params: {
 
   const newBalance = currentBalance - 1;
 
-  // Deduct 1 credit in credit_ledger
+  // Deduct 1 credit in credit_ledger adhering to table constraints:
+  // - reason MUST be one of ('signup_grant','monthly_grant','plan_grant','generation','refund','admin_adjust')
+  // - idempotency_key is required and unique
   const { error: ledgerInsertError } = await supabase
     .from("credit_ledger")
     .insert({
       user_id: user.id,
       delta: -1,
-      reason: `generation:${params.contentType}`,
+      reason: "generation",
       balance_after: newBalance,
+      idempotency_key: `gen_${crypto.randomUUID()}`,
     });
 
   if (ledgerInsertError) {
     console.error("Error updating credit_ledger:", ledgerInsertError);
-    return { error: "Failed to process credit transaction. Please try again." };
+    return { error: `Credit transaction failed: ${ledgerInsertError.message}` };
   }
 
   // 2. Fetch user's profile and default brand voice for context
@@ -118,8 +121,9 @@ export async function generateContentAction(params: {
     await supabase.from("credit_ledger").insert({
       user_id: user.id,
       delta: 1,
-      reason: "refund:generation_failed",
+      reason: "refund",
       balance_after: currentBalance,
+      idempotency_key: `refund_${crypto.randomUUID()}`,
     });
 
     return {
