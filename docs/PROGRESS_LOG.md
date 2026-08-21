@@ -9,8 +9,8 @@
 
 | Field | Value |
 |---|---|
-| **Current stage** | **Stage 4 COMPLETE ✅** (AI Generation Engine & Watermelon UI Theme) → next: Stage 5 (Stripe Billing & Paywall) |
-| **Next action** | Stage 5: Stripe Billing (Pro Plan $9/mo, Webhooks, Credit Grants, Paywall Modal) |
+| **Current stage** | **Stage 5 COMPLETE ✅** (Stripe Billing & Paywall Modal) → next: Stage 6 (Resend Email & Production Hardening) |
+| **Next action** | Stage 6: Resend Email Integration (Welcome emails, credit reset notifications, password reset links) & Production Hardening |
 | **Blockers** | None |
 | **App** | Draftly — AI Content Studio |
 | **Live URL** | **https://draftly-pink.vercel.app** |
@@ -19,6 +19,10 @@
 ---
 
 ## Entries (newest at top — append after every work session)
+
+### 009 — 2026-08-21 — 💳 STAGE 5 COMPLETE — Stripe Billing Engine & Subscription Paywall
+- **Done:** Mockup Gate 4 APPROVED. Installed `stripe` and `@stripe/stripe-js`. Created `lib/stripe/client.ts` for Stripe customer lookup/creation. Created `createCheckoutSession` and `createPortalSession` server actions in `app/(app)/billing/actions.ts`. Created `app/api/stripe/webhook/route.ts` handling `checkout.session.completed`, granting +300 credits into `public.credit_ledger` using `adminClient`. Built interactive `PaywallModal` component and `BillingContent` page with live credit ledger table. `npm run build` ✅ (15/15 routes static/dynamic). Pushed to `main` → deployed live on Vercel!
+- **Next:** Stage 6 — Resend Email Notifications & Final Production Polish.
 
 ### 008 — 2026-08-21 — 🚀 STAGE 4 COMPLETE — Real AI Content Engine (Gemini 2.0 Flash + Watermelon UI)
 - **Done:** Mockup Gate 3 APPROVED. Integrated `ui.watermelon.sh` design tokens into `app/globals.css`. Built `lib/ai/prompts.ts` (6 content formats) and `lib/ai/provider.ts` using `@google/genai` (Gemini 2.0 Flash). Built `generateContentAction` server action to deduct 1 credit via `spend_credits` RPC function, invoke Gemini AI, and persist outputs to Supabase `generations` table. Created interactive `StudioGenerator` React component with live credit deduction and instant copy buttons. `npm run build` ✅. Pushed to `main` → deployed live on Vercel!
