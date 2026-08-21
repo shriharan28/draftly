@@ -36,9 +36,9 @@ export default function LandingPage() {
         }}
       />
 
-      {/* PULSING GLOW SPHERES */}
-      <div className="pointer-events-none absolute left-1/2 top-0 h-[600px] w-[800px] -translate-x-1/2 rounded-full bg-[#8B5CF6]/15 blur-[140px] animate-pulse" />
-      <div className="pointer-events-none absolute right-10 top-[40%] h-[450px] w-[450px] rounded-full bg-[#10B981]/10 blur-[130px] animate-pulse" />
+      {/* STATIC GLOW SPHERES */}
+      <div className="pointer-events-none absolute left-1/2 top-0 h-[600px] w-[800px] -translate-x-1/2 rounded-full bg-[#8B5CF6]/15 blur-[140px]" />
+      <div className="pointer-events-none absolute right-10 top-[40%] h-[450px] w-[450px] rounded-full bg-[#10B981]/10 blur-[130px]" />
 
       {/* STICKY NAVBAR */}
       <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0A0A0F]/85 backdrop-blur-xl">
