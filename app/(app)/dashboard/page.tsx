@@ -23,40 +23,47 @@ export default async function DashboardPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("full_name, tone, niche")
-    .eq("id", user?.id || "")
-    .single();
+  const userId = user?.id || "";
 
-  const { data: brandVoice } = await supabase
-    .from("brand_voices")
-    .select("tones")
-    .eq("user_id", user?.id || "")
-    .eq("is_default", true)
-    .single();
+  // Fetch all 5 dashboard data sources in parallel for instant page load
+  const [profileRes, brandVoiceRes, ledgerRes, totalSavedRes, rawGenRes] = await Promise.all([
+    supabase
+      .from("profiles")
+      .select("full_name, tone, niche")
+      .eq("id", userId)
+      .single(),
+    supabase
+      .from("brand_voices")
+      .select("tones")
+      .eq("user_id", userId)
+      .eq("is_default", true)
+      .single(),
+    supabase
+      .from("credit_ledger")
+      .select("balance_after")
+      .eq("user_id", userId)
+      .order("id", { ascending: false })
+      .limit(1)
+      .single(),
+    supabase
+      .from("generations")
+      .select("*", { count: "exact", head: true })
+      .eq("user_id", userId)
+      .not("chosen_index", "is", null),
+    supabase
+      .from("generations")
+      .select("id, created_at, content_type, topic, variants")
+      .eq("user_id", userId)
+      .not("chosen_index", "is", null)
+      .order("created_at", { ascending: false })
+      .limit(3),
+  ]);
 
-  const { data: ledger } = await supabase
-    .from("credit_ledger")
-    .select("balance_after")
-    .eq("user_id", user?.id || "")
-    .order("id", { ascending: false })
-    .limit(1)
-    .single();
-
-  const { count: totalSavedCount } = await supabase
-    .from("generations")
-    .select("*", { count: "exact", head: true })
-    .eq("user_id", user?.id || "")
-    .not("chosen_index", "is", null);
-
-  const { data: rawGenerations } = await supabase
-    .from("generations")
-    .select("id, created_at, content_type, topic, variants")
-    .eq("user_id", user?.id || "")
-    .not("chosen_index", "is", null)
-    .order("created_at", { ascending: false })
-    .limit(3);
+  const profile = profileRes.data;
+  const brandVoice = brandVoiceRes.data;
+  const ledger = ledgerRes.data;
+  const totalSavedCount = totalSavedRes.count;
+  const rawGenerations = rawGenRes.data;
 
   let displayName =
     profile?.full_name ||

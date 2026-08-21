@@ -14,40 +14,42 @@ export default async function SettingsPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // 1. Fetch Profile
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("full_name, niche, tone")
-    .eq("id", user?.id || "")
-    .single();
+  const userId = user?.id || "";
 
-  // 2. Fetch Default Brand Voice
-  const { data: brandVoice } = await supabase
-    .from("brand_voices")
-    .select("tones, sample_text")
-    .eq("user_id", user?.id || "")
-    .eq("is_default", true)
-    .single();
+  // Fetch all 4 settings parameters in parallel for sub-second page transitions
+  const [profileRes, brandVoiceRes, subRes, ledgerRes] = await Promise.all([
+    supabase
+      .from("profiles")
+      .select("full_name, niche, tone")
+      .eq("id", userId)
+      .single(),
+    supabase
+      .from("brand_voices")
+      .select("tones, sample_text")
+      .eq("user_id", userId)
+      .eq("is_default", true)
+      .single(),
+    supabase
+      .from("subscriptions")
+      .select("status")
+      .eq("user_id", userId)
+      .single(),
+    supabase
+      .from("credit_ledger")
+      .select("balance_after")
+      .eq("user_id", userId)
+      .order("id", { ascending: false })
+      .limit(1)
+      .single(),
+  ]);
+
+  const profile = profileRes.data;
+  const brandVoice = brandVoiceRes.data;
+  const sub = subRes.data;
+  const latestLedger = ledgerRes.data;
 
   const savedTone = (brandVoice?.tones && brandVoice.tones[0]) || profile?.tone || "Bold & Punchy";
   const savedInstructions = brandVoice?.sample_text || "";
-
-  // 3. Fetch Subscription Status
-  const { data: sub } = await supabase
-    .from("subscriptions")
-    .select("status")
-    .eq("user_id", user?.id || "")
-    .single();
-
-  // 4. Fetch Latest Credit Balance
-  const { data: latestLedger } = await supabase
-    .from("credit_ledger")
-    .select("balance_after")
-    .eq("user_id", user?.id || "")
-    .order("id", { ascending: false })
-    .limit(1)
-    .single();
-
   const userCredits = latestLedger?.balance_after ?? 15;
 
   return (

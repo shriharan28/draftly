@@ -26,26 +26,29 @@ export default async function AppLayout({
     redirect("/login");
   }
 
-  // Fetch current user profile
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("full_name, avatar_url, onboarded")
-    .eq("id", user.id)
-    .single();
+  // Fetch profile and credit ledger in parallel for max performance
+  const [profileRes, ledgerRes] = await Promise.all([
+    supabase
+      .from("profiles")
+      .select("full_name, avatar_url, onboarded")
+      .eq("id", user.id)
+      .single(),
+    supabase
+      .from("credit_ledger")
+      .select("balance_after")
+      .eq("user_id", user.id)
+      .order("id", { ascending: false })
+      .limit(1)
+      .single(),
+  ]);
+
+  const profile = profileRes.data;
+  const ledger = ledgerRes.data;
 
   // If user hasn't completed onboarding, redirect to /onboarding
   if (profile && profile.onboarded === false) {
     redirect("/onboarding");
   }
-
-  // Fetch current credit balance
-  const { data: ledger } = await supabase
-    .from("credit_ledger")
-    .select("balance_after")
-    .eq("user_id", user.id)
-    .order("id", { ascending: false })
-    .limit(1)
-    .single();
 
   const userCredits = ledger?.balance_after ?? 15;
   const userInitial = (profile?.full_name || user.email || "U")
