@@ -25,14 +25,13 @@ export async function updateBrandVoiceAction(formData: FormData) {
   const voiceInstructions = formData.get("voiceInstructions") as string;
 
   try {
-    // 1. Update Profile full_name, niche, tone & target audience
+    // 1. Update Profile full_name, niche & tone (only valid columns in profiles table)
     const { error: profileError } = await supabase
       .from("profiles")
       .update({
         full_name: fullName || null,
         niche: niche || null,
         tone: tone || "Bold & Punchy",
-        target_audience: targetAudience || null,
         updated_at: new Date().toISOString(),
       })
       .eq("id", user.id);
@@ -42,7 +41,15 @@ export async function updateBrandVoiceAction(formData: FormData) {
       return { error: profileError.message };
     }
 
-    // 2. Safely update or insert default brand voice
+    // 2. Format combined instructions (target audience + custom guidelines) for brand_voices.sample_text
+    const combinedInstructions = [
+      targetAudience ? `Target Audience: ${targetAudience}` : "",
+      voiceInstructions ? `Custom Guidelines: ${voiceInstructions}` : "",
+    ]
+      .filter(Boolean)
+      .join("\n");
+
+    // 3. Safely update or insert default brand voice
     const { data: existingVoice } = await supabase
       .from("brand_voices")
       .select("id")
@@ -55,7 +62,7 @@ export async function updateBrandVoiceAction(formData: FormData) {
         .from("brand_voices")
         .update({
           tones: tone ? [tone] : ["Bold & Punchy"],
-          sample_text: voiceInstructions || null,
+          sample_text: combinedInstructions || null,
         })
         .eq("id", existingVoice.id);
 
@@ -67,7 +74,7 @@ export async function updateBrandVoiceAction(formData: FormData) {
         user_id: user.id,
         name: "Default Voice",
         tones: tone ? [tone] : ["Bold & Punchy"],
-        sample_text: voiceInstructions || null,
+        sample_text: combinedInstructions || null,
         is_default: true,
       });
 

@@ -65,7 +65,7 @@ export async function generateContentAction(params: {
   // 2. Fetch user's profile and default brand voice for context
   const { data: profile } = await supabase
     .from("profiles")
-    .select("niche, target_audience, tone")
+    .select("niche, tone")
     .eq("id", user.id)
     .single();
 
@@ -82,7 +82,6 @@ export async function generateContentAction(params: {
       topic: params.topic,
       contentType: params.contentType,
       niche: profile?.niche || undefined,
-      targetAudience: profile?.target_audience || undefined,
       tonePreset: profile?.tone || brandVoice?.tones?.[0] || undefined,
       customRules: brandVoice?.sample_text || undefined,
     });
