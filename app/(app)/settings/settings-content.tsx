@@ -121,10 +121,13 @@ export function SettingsContent({
             className="w-full h-11 rounded-xl border border-white/10 bg-[#0C0C12] px-4 text-xs text-white focus:border-[#8B5CF6] focus:outline-none"
           >
             <option value="tech">Tech & Software Engineering</option>
+            <option value="saas">B2B SaaS & Entrepreneurship</option>
+            <option value="business">Business & E-Commerce</option>
             <option value="marketing">Digital Marketing & Growth</option>
             <option value="fitness">Health & Fitness</option>
-            <option value="saas">B2B SaaS & Entrepreneurship</option>
             <option value="design">Design & Creative Arts</option>
+            <option value="creator">Content Creator & Media</option>
+            <option value="lifestyle">Lifestyle & Personal Brand</option>
           </select>
         </div>
 

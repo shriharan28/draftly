@@ -84,11 +84,28 @@ export default async function DashboardPage() {
     displayName = "Creator";
   }
 
+  const NICHE_LABELS: Record<string, string> = {
+    tech: "Tech & Software",
+    saas: "B2B SaaS & Startup",
+    business: "Business & E-Commerce",
+    marketing: "Digital Marketing",
+    fitness: "Health & Fitness",
+    design: "Design & Creative",
+    creator: "Content Creator",
+    lifestyle: "Lifestyle & Brand",
+  };
+
   const activeTone =
     (brandVoice?.tones && brandVoice.tones[0]) ||
     profile?.tone ||
     "Bold & Punchy";
-  const activeNiche = profile?.niche ? `${profile.niche.toUpperCase()} Persona` : "100% Calibrated";
+
+  const rawNiche = (profile?.niche || "").toLowerCase();
+  const activeNiche = NICHE_LABELS[rawNiche]
+    ? `${NICHE_LABELS[rawNiche]} Persona`
+    : profile?.niche
+    ? `${profile.niche.toUpperCase()} Persona`
+    : "100% Calibrated";
   const userCredits = ledger?.balance_after ?? 15;
 
   const realGenerations = (rawGenerations || []).map((gen) => {

@@ -62,7 +62,7 @@ Output ONLY a raw, valid JSON array containing exactly 3 distinct variant object
 }
 
 export function buildUserPrompt(params: GeneratePromptParams): string {
-  const { topic, contentType, tonePreset, customRules } = params;
+  const { topic, contentType, niche, tonePreset, customRules } = params;
 
   let formatInstructions = "";
 
@@ -99,6 +99,7 @@ CRITICAL YOUTUBE DESCRIPTION REQUIREMENTS:
 
 User Topic: "${topic}"
 
+Target Niche / Industry: ${niche || "General Content Creation"}
 Tone Persona: ${tonePreset || "Bold & Punchy"}
 Custom Guidelines: ${customRules || "Keep it punchy, authentic, and naturally engaging."}
 ${formatInstructions}
