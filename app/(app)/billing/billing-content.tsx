@@ -74,32 +74,34 @@ export function BillingContent({
 
       {/* PRICING & PLAN CARDS */}
       <div className="grid gap-6 md:grid-cols-2">
-        {/* CURRENT FREE CARD */}
-        <div className="glass-panel p-7">
-          <div className="mb-2 text-lg font-bold font-display text-white">Current Plan</div>
-          <p className="text-xs text-[#9494A8]">
-            {isPro ? "You are currently on Draftly Pro." : "You are on the Free Starter tier."}
-          </p>
+        {/* CURRENT PLAN CARD */}
+        <div className="glass-panel p-7 flex flex-col justify-between">
+          <div>
+            <div className="mb-2 text-lg font-bold font-display text-white">Current Plan</div>
+            <p className="text-xs text-[#9494A8]">
+              {isPro ? "You are currently on Draftly Pro." : "You are on the Free Starter tier."}
+            </p>
 
-          <div className="my-5 font-display text-4xl font-bold text-white">
-            {isPro ? "$9" : "$0"}{" "}
-            <span className="text-sm font-medium text-[#9494A8]">/ month</span>
+            <div className="my-5 font-display text-4xl font-bold text-white">
+              {isPro ? "$9" : "$0"}{" "}
+              <span className="text-sm font-medium text-[#9494A8]">/ month</span>
+            </div>
+
+            <ul className="space-y-3 text-xs text-[#F4F4FA] my-6">
+              <li className="flex items-center gap-2.5">
+                <span className="text-[#10B981] font-bold">✓</span>
+                <span>{isPro ? "150 Monthly AI Credits" : "15 Initial Sign-up Credits"}</span>
+              </li>
+              <li className="flex items-center gap-2.5">
+                <span className="text-[#10B981] font-bold">✓</span>
+                <span>{isPro ? "Gemini 3.6 Flash Engine" : "Gemini 2.5 Flash Engine"}</span>
+              </li>
+              <li className="flex items-center gap-2.5">
+                <span className="text-[#10B981] font-bold">✓</span>
+                <span>All 6 Social Content Formats</span>
+              </li>
+            </ul>
           </div>
-
-          <ul className="space-y-3 text-xs text-[#F4F4FA] my-6">
-            <li className="flex items-center gap-2.5">
-              <span className="text-[#10B981] font-bold">✓</span>
-              <span>{isPro ? "150 Monthly AI Credits" : "15 Initial Sign-up Credits"}</span>
-            </li>
-            <li className="flex items-center gap-2.5">
-              <span className="text-[#10B981] font-bold">✓</span>
-              <span>{isPro ? "Gemini 3.6 Flash Engine" : "Gemini 2.5 Flash Engine"}</span>
-            </li>
-            <li className="flex items-center gap-2.5">
-              <span className="text-[#10B981] font-bold">✓</span>
-              <span>All 6 Social Content Formats</span>
-            </li>
-          </ul>
 
           {isPro && (
             <Button
@@ -114,49 +116,57 @@ export function BillingContent({
           )}
         </div>
 
-        {/* PRO UPGRADE CARD */}
-        <div className="glass-panel p-7 relative border-[#8B5CF6]/40 bg-gradient-to-br from-[#8B5CF6]/15 to-[#030305] shadow-[0_0_40px_rgba(139,92,246,0.15)]">
-          <div className="absolute top-5 right-5 rounded-full border border-[#8B5CF6]/30 bg-[#8B5CF6]/15 px-3 py-1 font-mono text-[10px] font-semibold text-[#8B5CF6] uppercase tracking-wider">
-            RECOMMENDED
-          </div>
+        {/* RIGHT COLUMN: IF PRO SHOW BUY CREDITS, IF FREE SHOW PRO UPGRADE CARD */}
+        {isPro ? (
+          <PayAsYouGoCalculator
+            isPro={isPro}
+            handleUpgrade={handleUpgrade}
+            isPending={isPending}
+          />
+        ) : (
+          <div className="glass-panel p-7 relative border-[#8B5CF6]/40 bg-gradient-to-br from-[#8B5CF6]/15 to-[#030305] shadow-[0_0_40px_rgba(139,92,246,0.15)] flex flex-col justify-between">
+            <div>
+              <div className="absolute top-5 right-5 rounded-full border border-[#8B5CF6]/30 bg-[#8B5CF6]/15 px-3 py-1 font-mono text-[10px] font-semibold text-[#8B5CF6] uppercase tracking-wider">
+                RECOMMENDED
+              </div>
 
-          <div className="mb-1 text-xl font-bold font-display text-[#8B5CF6]">
-            Draftly Pro Plan
-          </div>
-          <p className="text-xs text-[#9494A8]">
-            Unlock 150 AI credits monthly & Gemini 3.6 Flash engine.
-          </p>
+              <div className="mb-1 text-xl font-bold font-display text-[#8B5CF6]">
+                Draftly Pro Plan
+              </div>
+              <p className="text-xs text-[#9494A8]">
+                Unlock 150 AI credits monthly & Gemini 3.6 Flash engine.
+              </p>
 
-          <div className="my-5 font-display text-4xl font-bold text-white">
-            $9 <span className="text-sm font-medium text-[#9494A8]">/ month</span>
-          </div>
+              <div className="my-5 font-display text-4xl font-bold text-white">
+                $9 <span className="text-sm font-medium text-[#9494A8]">/ month</span>
+              </div>
 
-          <ul className="space-y-3 text-xs text-[#F4F4FA] my-6">
-            <li className="flex items-center gap-2.5">
-              <span className="text-[#10B981] font-bold">✓</span>
-              <strong>150 AI Credits Refreshed Monthly</strong>
-            </li>
-            <li className="flex items-center gap-2.5">
-              <span className="text-[#10B981] font-bold">✓</span>
-              <span>Custom Brand Voice Fine-tuning</span>
-            </li>
-            <li className="flex items-center gap-2.5">
-              <span className="text-[#10B981] font-bold">✓</span>
-              <span>Gemini 3.6 Flash Model Engine</span>
-            </li>
-            <li className="flex items-center gap-2.5">
-              <span className="text-[#10B981] font-bold">✓</span>
-              <span>Unlimited Library Exports</span>
-            </li>
-          </ul>
+              <ul className="space-y-3 text-xs text-[#F4F4FA] my-6">
+                <li className="flex items-center gap-2.5">
+                  <span className="text-[#10B981] font-bold">✓</span>
+                  <strong>150 AI Credits Refreshed Monthly</strong>
+                </li>
+                <li className="flex items-center gap-2.5">
+                  <span className="text-[#10B981] font-bold">✓</span>
+                  <span>Custom Brand Voice Fine-tuning</span>
+                </li>
+                <li className="flex items-center gap-2.5">
+                  <span className="text-[#10B981] font-bold">✓</span>
+                  <span>Gemini 3.6 Flash Model Engine</span>
+                </li>
+                <li className="flex items-center gap-2.5">
+                  <span className="text-[#10B981] font-bold">✓</span>
+                  <span>Unlimited Library Exports</span>
+                </li>
+              </ul>
 
-          {error && (
-            <p className="mb-3 rounded-xl bg-red-500/10 p-3 text-xs text-red-400 border border-red-500/20">
-              {error}
-            </p>
-          )}
+              {error && (
+                <p className="mb-3 rounded-xl bg-red-500/10 p-3 text-xs text-red-400 border border-red-500/20">
+                  {error}
+                </p>
+              )}
+            </div>
 
-          {!isPro && (
             <Button
               type="button"
               variant="primary"
@@ -167,16 +177,18 @@ export function BillingContent({
               <ZapIcon className="w-4 h-4" />
               <span>{isPending ? "Connecting to Stripe…" : "Upgrade to Pro ($9/mo)"}</span>
             </Button>
-          )}
-        </div>
+          </div>
+        )}
       </div>
 
-      {/* PAY AS YOU GO FLEX CREDIT CALCULATOR CARD */}
-      <PayAsYouGoCalculator
-        isPro={isPro}
-        handleUpgrade={handleUpgrade}
-        isPending={isPending}
-      />
+      {/* SHOW BUY CREDITS BOTTOM CARD ONLY FOR FREE USERS (LOCKED STATE) */}
+      {!isPro && (
+        <PayAsYouGoCalculator
+          isPro={isPro}
+          handleUpgrade={handleUpgrade}
+          isPending={isPending}
+        />
+      )}
 
       {/* CREDIT TRANSACTION HISTORY LEDGER */}
       <div className="glass-panel p-6">
