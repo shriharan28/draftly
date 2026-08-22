@@ -90,13 +90,13 @@ async function syncCreditTopUpSuccess(userId: string, creditsStr?: string, sessi
     const { error: insertError } = await adminClient.from("credit_ledger").insert({
       user_id: userId,
       delta: creditsToGrant,
-      reason: "top_up",
+      reason: "plan_grant",
       balance_after: newBalance,
       idempotency_key: idempotencyKey,
     });
 
     if (insertError) {
-      console.log("Top-up sync log (already processed or existing):", insertError.message);
+      console.error("Top-up sync error:", insertError.message);
     }
   } catch (err) {
     console.error("Error syncing credit top-up success:", err);

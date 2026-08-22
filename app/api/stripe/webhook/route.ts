@@ -55,7 +55,7 @@ export async function POST(req: Request) {
               await adminClient.from("credit_ledger").insert({
                 user_id: userId,
                 delta: grantedCredits,
-                reason: "top_up",
+                reason: "plan_grant",
                 balance_after: newBalance,
                 idempotency_key: `stripe_topup_${session.id}`,
               });
