@@ -28,15 +28,15 @@ export async function generateContentWithGemini(
   const systemInstruction = buildSystemPrompt();
   const prompt = buildUserPrompt(params);
 
-  // Map UI model choices to valid Google Gemini API model IDs
-  // gemini-2.5-flash (Free) -> gemini-2.0-flash
-  // gemini-3.6-flash (Pro)  -> gemini-2.0-flash
+  // Primary model selection per tier:
+  // Pro Tier: gemini-3.6-flash (fallback gemini-2.0-pro-exp-02-05 / gemini-2.0-flash)
+  // Free Tier: gemini-2.5-flash (fallback gemini-2.0-flash)
   const primaryModel = params.model || process.env.AI_MODEL || "gemini-2.5-flash";
 
   const modelsToTry =
     primaryModel === "gemini-3.6-flash"
-      ? ["gemini-2.0-flash"]
-      : ["gemini-2.0-flash"];
+      ? ["gemini-3.6-flash", "gemini-2.0-pro-exp-02-05", "gemini-2.0-flash"]
+      : ["gemini-2.5-flash", "gemini-2.0-flash"];
 
   let lastError: any = null;
 
