@@ -31,7 +31,7 @@ export function BillingContent({
     reason: string;
     balance_after: number;
   }[];
-  searchParams: { success?: string; canceled?: string };
+  searchParams: { success?: string; canceled?: string; credits?: string };
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
@@ -66,7 +66,9 @@ export function BillingContent({
       {/* NOTIFICATIONS */}
       {searchParams.success === "true" && (
         <div className="rounded-2xl border border-[#10B981]/30 bg-[#10B981]/15 p-4 text-xs text-[#10B981] font-medium">
-          🎉 Subscription active! 150 AI credits have been added to your account ledger.
+          {searchParams.credits
+            ? `🎉 Purchase successful! ${searchParams.credits} AI credits have been added to your account ledger.`
+            : "🎉 Subscription active! 150 AI credits have been added to your account ledger."}
         </div>
       )}
 
