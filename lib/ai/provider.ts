@@ -30,13 +30,13 @@ export async function generateContentWithGemini(
 
   // Primary models & fallbacks per user tier:
   // Pro Tier: gemini-3.7-flash (fallback: gemini-3.1-flash-lite)
-  // Free Tier: gemini-2.5-flash (fallback: gemini-2.5-flash-lite)
-  const primaryModel = params.model || process.env.AI_MODEL || "gemini-2.5-flash";
+  // Free Tier: gemini-3.1-flash-lite (fallback: gemini-3.1-flash-lite-preview)
+  const primaryModel = params.model || process.env.AI_MODEL || "gemini-3.1-flash-lite";
 
   const modelsToTry =
     primaryModel === "gemini-3.7-flash"
       ? ["gemini-3.7-flash", "gemini-3.1-flash-lite"]
-      : ["gemini-2.5-flash", "gemini-2.5-flash-lite"];
+      : ["gemini-3.1-flash-lite", "gemini-3.1-flash-lite-preview"];
 
   let lastError: any = null;
 

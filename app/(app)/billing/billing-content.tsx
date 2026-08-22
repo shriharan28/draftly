@@ -100,7 +100,7 @@ export function BillingContent({
               </li>
               <li className="flex items-center gap-2.5">
                 <span className="text-[#10B981] font-bold">✓</span>
-                <span>{isPro ? "Gemini 3.7 Flash Engine" : "Gemini 2.5 Flash Engine"}</span>
+                <span>{isPro ? "Gemini 3.7 Flash Engine" : "Gemini 3.1 Flash Lite Engine"}</span>
               </li>
               <li className="flex items-center gap-2.5">
                 <span className="text-[#10B981] font-bold">✓</span>

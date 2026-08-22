@@ -95,7 +95,7 @@ export function StudioGenerator({
     (initialType as ContentType) || "ig_caption"
   );
   const [selectedModel, setSelectedModel] = useState<string>(
-    isPro ? "gemini-3.7-flash" : "gemini-2.5-flash"
+    isPro ? "gemini-3.7-flash" : "gemini-3.1-flash-lite"
   );
   const [isPaywallOpen, setIsPaywallOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
@@ -155,19 +155,19 @@ export function StudioGenerator({
             AI Model Engine
           </label>
           <div className="grid grid-cols-2 gap-2.5">
-            {/* GEMINI 2.5 FLASH BUTTON */}
+            {/* GEMINI 3.1 FLASH LITE BUTTON */}
             <button
               type="button"
-              onClick={() => setSelectedModel("gemini-2.5-flash")}
+              onClick={() => setSelectedModel("gemini-3.1-flash-lite")}
               className={`flex items-center justify-between rounded-2xl border p-3 text-xs font-medium transition-all duration-200 ${
-                selectedModel === "gemini-2.5-flash"
+                selectedModel === "gemini-3.1-flash-lite"
                   ? "border-[#8B5CF6] bg-[#8B5CF6]/20 text-white shadow-[0_0_15px_rgba(139,92,246,0.3)] scale-[1.01]"
                   : "border-white/10 bg-white/5 text-[#9494A8] hover:border-white/20 hover:text-white"
               }`}
             >
               <div className="flex items-center gap-2">
                 <SparklesIcon className="w-4 h-4 text-[#8B5CF6]" />
-                <span>Gemini 2.5 Flash</span>
+                <span>Gemini 3.1 Flash Lite</span>
               </div>
               <span className="text-[10px] font-mono text-[#9494A8]">Free</span>
             </button>
