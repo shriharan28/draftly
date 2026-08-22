@@ -28,12 +28,15 @@ export async function generateContentWithGemini(
   const systemInstruction = buildSystemPrompt();
   const prompt = buildUserPrompt(params);
 
-  // Models to try in order of preference depending on user plan tier
+  // Map UI model choices to valid Google Gemini API model IDs
+  // gemini-2.5-flash (Free) -> gemini-2.0-flash
+  // gemini-3.6-flash (Pro)  -> gemini-2.0-flash
   const primaryModel = params.model || process.env.AI_MODEL || "gemini-2.5-flash";
+
   const modelsToTry =
     primaryModel === "gemini-3.6-flash"
-      ? ["gemini-3.6-flash", "gemini-2.5-flash", "gemini-1.5-flash"]
-      : ["gemini-2.5-flash", "gemini-1.5-flash"];
+      ? ["gemini-2.0-flash"]
+      : ["gemini-2.0-flash"];
 
   let lastError: any = null;
 
@@ -63,13 +66,12 @@ export async function generateContentWithGemini(
         return parsed;
       }
     } catch (err: any) {
-      console.warn(`Model ${modelName} failed, trying fallback:`, err.message);
+      console.warn(`Model ${modelName} attempt failed:`, err.message);
       lastError = err;
-      // If error is 404 model not found, loop continues to next fallback model
     }
   }
 
-  console.error("All Gemini model attempts failed:", lastError);
+  console.error("Gemini AI generation failed:", lastError);
   throw new Error(
     lastError?.message || "Failed to generate content with Gemini AI."
   );
