@@ -7,7 +7,11 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { createCheckoutSession, createPortalSession } from "./actions";
+import {
+  createCheckoutSession,
+  createPortalSession,
+  createCreditCheckoutSession,
+} from "./actions";
 import { PaywallModal } from "@/components/features/paywall-modal";
 import { Button } from "@/components/ui/button";
 import { ZapIcon } from "@/components/ui/icons";
@@ -259,94 +263,109 @@ function PayAsYouGoCalculator({
   handleUpgrade: () => void;
   isPending: boolean;
 }) {
-  const [credits, setCredits] = useState<number>(100);
+  const [credits, setCredits] = useState<number>(50);
+  const [isCreditPending, startCreditTransition] = useTransition();
+  const [creditError, setCreditError] = useState<string | null>(null);
 
-  const getUnitPrice = (c: number) => {
-    if (c >= 500) return 0.035;
-    if (c >= 250) return 0.04;
-    if (c >= 100) return 0.045;
-    return 0.05;
-  };
-
-  const unitPrice = getUnitPrice(credits);
+  const unitPrice = 0.045; // $0.045 per credit
   const totalPrice = (credits * unitPrice).toFixed(2);
 
+  function handleBuyCredits() {
+    setCreditError(null);
+    startCreditTransition(async () => {
+      const res = await createCreditCheckoutSession(credits);
+      if (res.error) {
+        setCreditError(res.error);
+      } else if (res.url) {
+        window.location.href = res.url;
+      }
+    });
+  }
+
   return (
-    <div className="glass-panel p-6 border-[#8B5CF6]/30 bg-[#030305] relative overflow-hidden">
-      {/* HEADER: TITLE & PRO BADGE */}
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-3">
-          <h3 className="font-display text-xl font-bold text-white">Buy Credits</h3>
-          <span className="rounded-full border border-[#8B5CF6]/40 bg-[#8B5CF6]/15 px-3 py-1 font-mono text-[10px] font-bold text-[#8B5CF6] uppercase tracking-wider">
-            PRO MEMBERS ONLY
-          </span>
+    <div className="glass-panel p-6 border-[#8B5CF6]/30 bg-[#030305] relative overflow-hidden flex flex-col justify-between">
+      <div>
+        {/* HEADER: TITLE & PRO BADGE */}
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <h3 className="font-display text-xl font-bold text-white">Buy Credits</h3>
+            <span className="rounded-full border border-[#8B5CF6]/40 bg-[#8B5CF6]/15 px-3 py-1 font-mono text-[10px] font-bold text-[#8B5CF6] uppercase tracking-wider">
+              PRO MEMBERS ONLY
+            </span>
+          </div>
+
+          {/* PRICE DISPLAY */}
+          <div className="flex items-baseline gap-1 font-display">
+            <span className="text-xs text-[#9494A8]">Price:</span>
+            <span className="text-2xl font-bold text-white">${totalPrice}</span>
+          </div>
         </div>
 
-        {/* PRICE DISPLAY */}
-        <div className="flex items-baseline gap-1 font-display">
-          <span className="text-xs text-[#9494A8]">Price:</span>
-          <span className="text-2xl font-bold text-white">${totalPrice}</span>
-        </div>
+        {/* PRO MEMBERS ONLY LOCKED STATE OVERLAY FOR FREE USERS */}
+        {!isPro ? (
+          <div className="rounded-2xl border border-dashed border-white/10 bg-white/5 p-6 text-center">
+            <div className="mb-2 font-display text-sm font-semibold text-white">
+              🔒 Credit Top-Ups are Locked
+            </div>
+            <p className="text-xs text-[#9494A8] max-w-sm mx-auto mb-4">
+              Pay As You Go credit packs are exclusively available for Draftly Pro members.
+            </p>
+            <Button
+              type="button"
+              variant="primary"
+              onClick={handleUpgrade}
+              disabled={isPending}
+              className="h-10 text-xs px-5 bg-gradient-to-r from-[#8B5CF6] to-[#10B981]"
+            >
+              Upgrade to Pro to Unlock
+            </Button>
+          </div>
+        ) : (
+          /* RANGE BAR & BUY ACTION FOR PRO MEMBERS */
+          <div className="space-y-6">
+            <div>
+              <div className="mb-2 flex items-center justify-between font-mono text-xs text-[#9494A8]">
+                <span>Range Bar:</span>
+                <span className="text-white font-bold text-sm">
+                  {credits} AI Credits
+                </span>
+              </div>
+
+              <input
+                type="range"
+                min={10}
+                max={100}
+                step={5}
+                value={credits}
+                onChange={(e) => setCredits(Number(e.target.value))}
+                className="w-full h-2.5 rounded-lg appearance-none cursor-pointer bg-white/10 accent-[#8B5CF6] focus:outline-none"
+              />
+
+              <div className="mt-1.5 flex justify-between font-mono text-[10px] text-[#9494A8]">
+                <span>10 Credits</span>
+                <span>50 Credits</span>
+                <span>100 Credits</span>
+              </div>
+            </div>
+
+            {creditError && (
+              <p className="rounded-xl bg-red-500/10 p-3 text-xs text-red-400 border border-red-500/20">
+                {creditError}
+              </p>
+            )}
+
+            <Button
+              type="button"
+              variant="primary"
+              onClick={handleBuyCredits}
+              disabled={isCreditPending}
+              className="w-full h-11 text-xs font-semibold bg-gradient-to-r from-[#8B5CF6] to-[#10B981]"
+            >
+              {isCreditPending ? "Connecting to Stripe…" : `Buy ${credits} Credits for $${totalPrice}`}
+            </Button>
+          </div>
+        )}
       </div>
-
-      {/* PRO MEMBERS ONLY LOCKED STATE OVERLAY FOR FREE USERS */}
-      {!isPro ? (
-        <div className="rounded-2xl border border-dashed border-white/10 bg-white/5 p-6 text-center">
-          <div className="mb-2 font-display text-sm font-semibold text-white">
-            🔒 Credit Top-Ups are Locked
-          </div>
-          <p className="text-xs text-[#9494A8] max-w-sm mx-auto mb-4">
-            Pay As You Go credit packs are exclusively available for Draftly Pro members.
-          </p>
-          <Button
-            type="button"
-            variant="primary"
-            onClick={handleUpgrade}
-            disabled={isPending}
-            className="h-10 text-xs px-5 bg-gradient-to-r from-[#8B5CF6] to-[#10B981]"
-          >
-            Upgrade to Pro to Unlock
-          </Button>
-        </div>
-      ) : (
-        /* RANGE BAR & BUY ACTION FOR PRO MEMBERS */
-        <div className="space-y-6">
-          <div>
-            <div className="mb-2 flex items-center justify-between font-mono text-xs text-[#9494A8]">
-              <span>Range Bar:</span>
-              <span className="text-white font-bold text-sm">
-                {credits} AI Credits
-              </span>
-            </div>
-
-            <input
-              type="range"
-              min={25}
-              max={1000}
-              step={25}
-              value={credits}
-              onChange={(e) => setCredits(Number(e.target.value))}
-              className="w-full h-2.5 rounded-lg appearance-none cursor-pointer bg-white/10 accent-[#8B5CF6] focus:outline-none"
-            />
-
-            <div className="mt-1.5 flex justify-between font-mono text-[10px] text-[#9494A8]">
-              <span>25 Credits</span>
-              <span>500 Credits</span>
-              <span>1000 Credits</span>
-            </div>
-          </div>
-
-          <Button
-            type="button"
-            variant="primary"
-            onClick={handleUpgrade}
-            disabled={isPending}
-            className="w-full h-11 text-xs font-semibold bg-gradient-to-r from-[#8B5CF6] to-[#10B981]"
-          >
-            {isPending ? "Processing..." : `Buy ${credits} Credits for $${totalPrice}`}
-          </Button>
-        </div>
-      )}
     </div>
   );
 }

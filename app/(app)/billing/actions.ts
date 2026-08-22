@@ -63,7 +63,7 @@ export async function createPortalSession() {
     return { error: "Authentication required." };
   }
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.APP_URL || "http://localhost:3000";
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.APP_URL || "https://draftly-pink.vercel.app";
 
   try {
     const customerId = await getOrCreateStripeCustomer(user.id, user.email || "");
@@ -77,5 +77,56 @@ export async function createPortalSession() {
   } catch (err: any) {
     console.error("Stripe portal error:", err);
     return { error: err.message || "Failed to create Stripe Portal session." };
+  }
+}
+
+export async function createCreditCheckoutSession(credits: number) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return { error: "Authentication required." };
+  }
+
+  // Validate range (min 10, max 100)
+  const validCredits = Math.min(Math.max(Math.round(credits), 10), 100);
+  const unitPriceInCents = Math.round(validCredits * 0.045 * 100); // e.g. 100 credits = $4.50 = 450 cents
+
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.APP_URL || "https://draftly-pink.vercel.app";
+
+  try {
+    const customerId = await getOrCreateStripeCustomer(user.id, user.email || "");
+
+    const session = await stripe.checkout.sessions.create({
+      customer: customerId,
+      mode: "payment",
+      line_items: [
+        {
+          price_data: {
+            currency: "usd",
+            product_data: {
+              name: `Draftly AI Credits Top-Up (${validCredits} Credits)`,
+              description: `One-time credit pack top-up of ${validCredits} AI generation credits for Draftly Pro members.`,
+            },
+            unit_amount: unitPriceInCents,
+          },
+          quantity: 1,
+        },
+      ],
+      success_url: `${appUrl}/billing?success=true&credits=${validCredits}`,
+      cancel_url: `${appUrl}/billing?canceled=true`,
+      metadata: {
+        user_id: user.id,
+        credits: String(validCredits),
+        type: "credit_topup",
+      },
+    });
+
+    return { url: session.url };
+  } catch (err: any) {
+    console.error("Stripe credit checkout error:", err);
+    return { error: err.message || "Failed to create credit checkout session." };
   }
 }

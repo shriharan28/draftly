@@ -37,36 +37,59 @@ export async function POST(req: Request) {
         const customerId = session.customer as string;
 
         if (userId) {
-          // 1. Update subscription status
-          await adminClient.from("subscriptions").upsert({
-            user_id: userId,
-            stripe_customer_id: customerId,
-            stripe_subscription_id: session.subscription as string,
-            status: "active",
-            price_id: process.env.STRIPE_PRICE_PRO_ID || null,
-            updated_at: new Date().toISOString(),
-          });
+          if (session.metadata?.type === "credit_topup") {
+            // ONE-TIME CREDIT PACK PURCHASE
+            const grantedCredits = parseInt(session.metadata.credits || "0", 10);
+            if (grantedCredits > 0) {
+              const { data: latestLedger } = await adminClient
+                .from("credit_ledger")
+                .select("balance_after")
+                .eq("user_id", userId)
+                .order("id", { ascending: false })
+                .limit(1)
+                .single();
 
-          // 2. Fetch current user balance
-          const { data: latestLedger } = await adminClient
-            .from("credit_ledger")
-            .select("balance_after")
-            .eq("user_id", userId)
-            .order("id", { ascending: false })
-            .limit(1)
-            .single();
+              const currentBalance = latestLedger?.balance_after ?? 0;
+              const newBalance = currentBalance + grantedCredits;
 
-          const currentBalance = latestLedger?.balance_after ?? 0;
-          const newBalance = currentBalance + 150;
+              await adminClient.from("credit_ledger").insert({
+                user_id: userId,
+                delta: grantedCredits,
+                reason: "top_up",
+                balance_after: newBalance,
+                idempotency_key: `stripe_topup_${session.id}`,
+              });
+            }
+          } else {
+            // PRO PLAN SUBSCRIPTION CHECKOUT
+            await adminClient.from("subscriptions").upsert({
+              user_id: userId,
+              stripe_customer_id: customerId,
+              stripe_subscription_id: session.subscription as string,
+              status: "active",
+              price_id: process.env.STRIPE_PRICE_PRO_ID || null,
+              updated_at: new Date().toISOString(),
+            });
 
-          // 3. Grant +150 credits atomically in ledger
-          await adminClient.from("credit_ledger").insert({
-            user_id: userId,
-            delta: 150,
-            reason: "plan_grant",
-            balance_after: newBalance,
-            idempotency_key: `stripe_grant_${session.id}`,
-          });
+            const { data: latestLedger } = await adminClient
+              .from("credit_ledger")
+              .select("balance_after")
+              .eq("user_id", userId)
+              .order("id", { ascending: false })
+              .limit(1)
+              .single();
+
+            const currentBalance = latestLedger?.balance_after ?? 0;
+            const newBalance = currentBalance + 150;
+
+            await adminClient.from("credit_ledger").insert({
+              user_id: userId,
+              delta: 150,
+              reason: "plan_grant",
+              balance_after: newBalance,
+              idempotency_key: `stripe_grant_${session.id}`,
+            });
+          }
         }
         break;
       }
