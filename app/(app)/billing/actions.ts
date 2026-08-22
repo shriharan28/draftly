@@ -117,7 +117,7 @@ export async function createCreditCheckoutSession(credits: number) {
           quantity: 1,
         },
       ],
-      success_url: `${appUrl}/billing?success=true&credits=${validCredits}`,
+      success_url: `${appUrl}/billing?success=true&credits=${validCredits}&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${appUrl}/billing?canceled=true`,
       metadata: {
         user_id: user.id,

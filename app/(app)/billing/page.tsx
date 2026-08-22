@@ -65,37 +65,39 @@ async function syncStripeCheckoutSuccess(userId: string) {
   }
 }
 
-async function syncCreditTopUpSuccess(userId: string, creditsStr?: string) {
+async function syncCreditTopUpSuccess(userId: string, creditsStr?: string, sessionId?: string) {
   if (!creditsStr) return;
   const creditsToGrant = parseInt(creditsStr, 10);
   if (isNaN(creditsToGrant) || creditsToGrant <= 0) return;
 
   try {
+    // 1. Fetch latest ledger balance
     const { data: latestLedger } = await adminClient
       .from("credit_ledger")
-      .select("balance_after, created_at, delta, reason")
+      .select("balance_after")
       .eq("user_id", userId)
       .order("id", { ascending: false })
       .limit(1)
       .single();
 
-    // Prevent double-crediting if already processed by webhook in the last 2 minutes
-    const lastCreatedAt = latestLedger?.created_at ? new Date(latestLedger.created_at).getTime() : 0;
-    const now = Date.now();
-    if (latestLedger?.reason === "top_up" && latestLedger?.delta === creditsToGrant && now - lastCreatedAt < 120000) {
-      return;
-    }
-
     const currentBalance = latestLedger?.balance_after ?? 0;
     const newBalance = currentBalance + creditsToGrant;
+    const idempotencyKey = sessionId
+      ? `stripe_topup_${sessionId}`
+      : `topup_${userId}_${Date.now()}`;
 
-    await adminClient.from("credit_ledger").insert({
+    // 2. Insert atomically into credit_ledger using adminClient
+    const { error: insertError } = await adminClient.from("credit_ledger").insert({
       user_id: userId,
       delta: creditsToGrant,
       reason: "top_up",
       balance_after: newBalance,
-      idempotency_key: `sync_topup_${userId}_${creditsToGrant}_${Math.floor(Date.now() / 60000)}`,
+      idempotency_key: idempotencyKey,
     });
+
+    if (insertError) {
+      console.log("Top-up sync log (already processed or existing):", insertError.message);
+    }
   } catch (err) {
     console.error("Error syncing credit top-up success:", err);
   }
@@ -104,7 +106,7 @@ async function syncCreditTopUpSuccess(userId: string, creditsStr?: string) {
 export default async function BillingPage({
   searchParams,
 }: {
-  searchParams: Promise<{ success?: string; canceled?: string; credits?: string }>;
+  searchParams: Promise<{ success?: string; canceled?: string; credits?: string; session_id?: string }>;
 }) {
   const supabase = await createClient();
   const params = await searchParams;
@@ -116,7 +118,7 @@ export default async function BillingPage({
   // If redirected back from Stripe with success=true, sync subscription or top-up credits
   if (params.success === "true" && user) {
     if (params.credits) {
-      await syncCreditTopUpSuccess(user.id, params.credits);
+      await syncCreditTopUpSuccess(user.id, params.credits, params.session_id);
     } else {
       await syncStripeCheckoutSuccess(user.id);
     }
