@@ -100,7 +100,7 @@ export function BillingContent({
               </li>
               <li className="flex items-center gap-2.5">
                 <span className="text-[#10B981] font-bold">✓</span>
-                <span>{isPro ? "Gemini 3.6 Flash Engine" : "Gemini 2.5 Flash Engine"}</span>
+                <span>{isPro ? "Gemini 3.7 Flash Engine" : "Gemini 2.5 Flash Engine"}</span>
               </li>
               <li className="flex items-center gap-2.5">
                 <span className="text-[#10B981] font-bold">✓</span>
@@ -140,7 +140,7 @@ export function BillingContent({
                 Draftly Pro Plan
               </div>
               <p className="text-xs text-[#9494A8]">
-                Unlock 150 AI credits monthly & Gemini 3.6 Flash engine.
+                Unlock 150 AI credits monthly & Gemini 3.7 Flash engine.
               </p>
 
               <div className="my-5 font-display text-4xl font-bold text-white">
@@ -158,7 +158,7 @@ export function BillingContent({
                 </li>
                 <li className="flex items-center gap-2.5">
                   <span className="text-[#10B981] font-bold">✓</span>
-                  <span>Gemini 3.6 Flash Model Engine</span>
+                  <span>Gemini 3.7 Flash Model Engine</span>
                 </li>
                 <li className="flex items-center gap-2.5">
                   <span className="text-[#10B981] font-bold">✓</span>

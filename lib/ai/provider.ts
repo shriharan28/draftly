@@ -28,15 +28,15 @@ export async function generateContentWithGemini(
   const systemInstruction = buildSystemPrompt();
   const prompt = buildUserPrompt(params);
 
-  // Primary model selection per tier:
-  // Pro Tier: gemini-3.6-flash (fallback gemini-2.0-pro-exp-02-05 / gemini-2.0-flash)
-  // Free Tier: gemini-2.5-flash (fallback gemini-2.0-flash)
+  // Primary models & fallbacks per user tier:
+  // Pro Tier: gemini-3.7-flash (fallback: gemini-3.1-flash-lite)
+  // Free Tier: gemini-2.5-flash (fallback: gemini-2.5-flash-lite)
   const primaryModel = params.model || process.env.AI_MODEL || "gemini-2.5-flash";
 
   const modelsToTry =
-    primaryModel === "gemini-3.6-flash"
-      ? ["gemini-3.6-flash", "gemini-2.0-pro-exp-02-05", "gemini-2.0-flash"]
-      : ["gemini-2.5-flash", "gemini-2.0-flash"];
+    primaryModel === "gemini-3.7-flash"
+      ? ["gemini-3.7-flash", "gemini-3.1-flash-lite"]
+      : ["gemini-2.5-flash", "gemini-2.5-flash-lite"];
 
   let lastError: any = null;
 

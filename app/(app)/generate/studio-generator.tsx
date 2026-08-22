@@ -95,7 +95,7 @@ export function StudioGenerator({
     (initialType as ContentType) || "ig_caption"
   );
   const [selectedModel, setSelectedModel] = useState<string>(
-    isPro ? "gemini-3.6-flash" : "gemini-2.5-flash"
+    isPro ? "gemini-3.7-flash" : "gemini-2.5-flash"
   );
   const [isPaywallOpen, setIsPaywallOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
@@ -172,25 +172,25 @@ export function StudioGenerator({
               <span className="text-[10px] font-mono text-[#9494A8]">Free</span>
             </button>
 
-            {/* GEMINI 3.6 FLASH (PRO) BUTTON */}
+            {/* GEMINI 3.7 FLASH (PRO) BUTTON */}
             <button
               type="button"
               onClick={() => {
                 if (!isPro) {
                   setIsPaywallOpen(true);
                 } else {
-                  setSelectedModel("gemini-3.6-flash");
+                  setSelectedModel("gemini-3.7-flash");
                 }
               }}
               className={`flex items-center justify-between rounded-2xl border p-3 text-xs font-medium transition-all duration-200 ${
-                selectedModel === "gemini-3.6-flash"
+                selectedModel === "gemini-3.7-flash"
                   ? "border-[#10B981] bg-[#10B981]/20 text-white shadow-[0_0_15px_rgba(16,185,129,0.3)] scale-[1.01]"
                   : "border-white/10 bg-white/5 text-[#9494A8] hover:border-white/20 hover:text-white"
               }`}
             >
               <div className="flex items-center gap-2">
                 <ZapIcon className="w-4 h-4 text-[#10B981]" />
-                <span>Gemini 3.6 Flash</span>
+                <span>Gemini 3.7 Flash</span>
               </div>
               <span className="rounded-full bg-[#10B981]/20 border border-[#10B981]/40 px-2 py-0.5 font-mono text-[9px] font-bold text-[#10B981]">
                 PRO
@@ -283,7 +283,7 @@ export function StudioGenerator({
               <ZapIcon className="w-4 h-4" />
               <span>Generate 3 AI Variants</span>
               <span className="font-mono text-xs opacity-80">
-                · {selectedModel === "gemini-3.6-flash" ? "3 credits" : "1 credit"}
+                · {selectedModel === "gemini-3.7-flash" ? "3 credits" : "1 credit"}
               </span>
             </span>
           )}
@@ -312,7 +312,7 @@ export function StudioGenerator({
               </div>
             </div>
             <p className="text-shimmer font-display text-lg font-bold">
-              Gemini 3.6 Flash Model is Writing…
+              Gemini 3.7 Flash Model is Writing…
             </p>
             <p className="mt-2 text-xs text-[#9494A8]">
               Structuring 3 high-converting variants tuned to your brand voice

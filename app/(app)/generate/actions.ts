@@ -61,11 +61,11 @@ export async function generateContentAction(params: {
   const latestLedger = ledgerRes.data;
 
   const isPro = sub?.status === "active";
-  const requestedModel = params.model || (isPro ? "gemini-3.6-flash" : "gemini-2.5-flash");
-  const selectedModel = requestedModel === "gemini-3.6-flash" && isPro ? "gemini-3.6-flash" : "gemini-2.5-flash";
+  const requestedModel = params.model || (isPro ? "gemini-3.7-flash" : "gemini-2.5-flash");
+  const selectedModel = requestedModel === "gemini-3.7-flash" && isPro ? "gemini-3.7-flash" : "gemini-2.5-flash";
 
-  // Dynamic credit cost: 3 credits for Gemini 3.6 Flash, 1 credit for Gemini 2.5 Flash
-  const creditCost = selectedModel === "gemini-3.6-flash" ? 3 : 1;
+  // Dynamic credit cost: 3 credits for Gemini 3.7 Flash, 1 credit for Gemini 2.5 Flash
+  const creditCost = selectedModel === "gemini-3.7-flash" ? 3 : 1;
   const currentBalance = latestLedger?.balance_after ?? 0;
 
   if (currentBalance < creditCost) {
@@ -77,7 +77,7 @@ export async function generateContentAction(params: {
       };
     }
     return {
-      error: `Insufficient credits! You need ${creditCost} credit${creditCost > 1 ? "s" : ""} for ${selectedModel === "gemini-3.6-flash" ? "Gemini 3.6 Flash" : "Gemini 2.5 Flash"} (you have ${currentBalance}). Buy credits to keep generating.`,
+      error: `Insufficient credits! You need ${creditCost} credit${creditCost > 1 ? "s" : ""} for ${selectedModel === "gemini-3.7-flash" ? "Gemini 3.7 Flash" : "Gemini 2.5 Flash"} (you have ${currentBalance}). Buy credits to keep generating.`,
       insufficientCredits: true,
       isPro: true,
     };
@@ -178,7 +178,7 @@ export async function saveDraftToLibraryAction(params: {
       variants: [params.content],
       status: "complete",
       chosen_index: 0,
-      model: "gemini-3.6-flash",
+      model: "gemini-3.7-flash",
       tone: "bold",
     })
     .select()

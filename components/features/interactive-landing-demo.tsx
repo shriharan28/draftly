@@ -129,7 +129,7 @@ export function InteractiveLandingDemo() {
               Interactive Studio Preview
             </h3>
           </div>
-          <span className="font-mono text-xs text-[#8E8EA3]">Gemini 3.6 Flash</span>
+          <span className="font-mono text-xs text-[#8E8EA3]">Gemini 3.7 Flash</span>
         </div>
 
         <div className="mb-4 flex flex-wrap gap-2">

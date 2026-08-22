@@ -146,7 +146,7 @@ export default function LandingPage() {
 
           <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#8B5CF6]/40 bg-[#8B5CF6]/10 px-4 py-1.5 font-mono text-xs text-[#F4F4FA] shadow-[0_0_16px_rgba(139,92,246,0.2)]">
             <SparklesIcon className="w-3.5 h-3.5 text-[#8B5CF6]" />
-            <span>Powered by Gemini 3.6 Flash AI Model</span>
+            <span>Powered by Gemini 3.7 Flash AI Model</span>
           </div>
 
           <h1 className="font-display text-4xl font-extrabold tracking-tight sm:text-6xl lg:text-7xl leading-[1.15]">
@@ -303,7 +303,7 @@ export default function LandingPage() {
                     <span className="text-[#10B981]">✓</span> 500 Credits / Month
                   </li>
                   <li className="flex items-center gap-2">
-                    <span className="text-[#10B981]">✓</span> Priority Gemini 3.6 AI Access
+                    <span className="text-[#10B981]">✓</span> Priority Gemini 3.7 AI Access
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="text-[#10B981]">✓</span> Unlimited Library Storage
