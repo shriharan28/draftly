@@ -312,7 +312,7 @@ export function StudioGenerator({
               </div>
             </div>
             <p className="text-shimmer font-display text-lg font-bold">
-              Gemini 3.7 Flash Model is Writing…
+              Draftly AI is Writing…
             </p>
             <p className="mt-2 text-xs text-[#9494A8]">
               Structuring 3 high-converting variants tuned to your brand voice
