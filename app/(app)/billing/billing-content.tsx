@@ -267,7 +267,7 @@ function PayAsYouGoCalculator({
   const [isCreditPending, startCreditTransition] = useTransition();
   const [creditError, setCreditError] = useState<string | null>(null);
 
-  const unitPrice = 0.045; // $0.045 per credit
+  const unitPrice = 0.199; // $1.99 per 10 credits ($0.199 per credit)
   const totalPrice = (credits * unitPrice).toFixed(2);
 
   function handleBuyCredits() {

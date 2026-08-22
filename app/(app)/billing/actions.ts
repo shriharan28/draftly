@@ -92,7 +92,8 @@ export async function createCreditCheckoutSession(credits: number) {
 
   // Validate range (min 10, max 100)
   const validCredits = Math.min(Math.max(Math.round(credits), 10), 100);
-  const unitPriceInCents = Math.round(validCredits * 0.045 * 100); // e.g. 100 credits = $4.50 = 450 cents
+  // Rate: $1.99 per 10 credits ($0.199 / credit) -> 10 credits = $1.99 (199 cents)
+  const unitPriceInCents = Math.round(validCredits * 0.199 * 100);
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.APP_URL || "https://draftly-pink.vercel.app";
 
@@ -109,6 +110,7 @@ export async function createCreditCheckoutSession(credits: number) {
             product_data: {
               name: `Draftly AI Credits Top-Up (${validCredits} Credits)`,
               description: `One-time credit pack top-up of ${validCredits} AI generation credits for Draftly Pro members.`,
+              tax_code: "txcd_10000000",
             },
             unit_amount: unitPriceInCents,
           },
