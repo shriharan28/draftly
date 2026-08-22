@@ -240,9 +240,30 @@ export function StudioGenerator({
         </div>
 
         {error && (
-          <p className="mb-4 rounded-xl bg-red-500/10 p-3 text-xs text-red-400 border border-red-500/20">
-            {error}
-          </p>
+          <div className="mb-4 rounded-xl bg-red-500/10 p-3.5 border border-red-500/20 text-xs text-red-300 flex flex-col gap-2.5">
+            <p>{error}</p>
+            {error.includes("Insufficient credits") && (
+              <div>
+                {!isPro ? (
+                  <Button
+                    type="button"
+                    variant="primary"
+                    onClick={() => setIsPaywallOpen(true)}
+                    className="h-8 text-[11px] px-3.5 bg-gradient-to-r from-[#8B5CF6] to-[#10B981]"
+                  >
+                    Upgrade to Draftly Pro
+                  </Button>
+                ) : (
+                  <a
+                    href="/billing"
+                    className="inline-flex h-8 items-center rounded-xl bg-gradient-to-r from-[#8B5CF6] to-[#10B981] px-3.5 text-[11px] font-semibold text-white transition hover:opacity-90"
+                  >
+                    Buy AI Credits
+                  </a>
+                )}
+              </div>
+            )}
+          </div>
         )}
 
         <Button

@@ -69,8 +69,17 @@ export async function generateContentAction(params: {
   const currentBalance = latestLedger?.balance_after ?? 0;
 
   if (currentBalance < creditCost) {
+    if (!isPro) {
+      return {
+        error: `Insufficient credits! You need ${creditCost} credit${creditCost > 1 ? "s" : ""} to generate (you have ${currentBalance}). Upgrade to Draftly Pro for 150 monthly AI credits.`,
+        insufficientCredits: true,
+        isPro: false,
+      };
+    }
     return {
-      error: `Insufficient credits! ${selectedModel === "gemini-3.6-flash" ? "Gemini 3.6 Flash" : "Gemini 2.5 Flash"} requires ${creditCost} credits (you have ${currentBalance}). Upgrade or buy credits.`,
+      error: `Insufficient credits! You need ${creditCost} credit${creditCost > 1 ? "s" : ""} for ${selectedModel === "gemini-3.6-flash" ? "Gemini 3.6 Flash" : "Gemini 2.5 Flash"} (you have ${currentBalance}). Buy credits to keep generating.`,
+      insufficientCredits: true,
+      isPro: true,
     };
   }
 
