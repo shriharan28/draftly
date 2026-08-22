@@ -296,11 +296,13 @@ function PayAsYouGoCalculator({
             </span>
           </div>
 
-          {/* PRICE DISPLAY */}
-          <div className="flex items-baseline gap-1 font-display">
-            <span className="text-xs text-[#9494A8]">Price:</span>
-            <span className="text-2xl font-bold text-white">${totalPrice}</span>
-          </div>
+          {/* PRICE DISPLAY (ONLY FOR PRO USERS) */}
+          {isPro && (
+            <div className="flex items-baseline gap-1 font-display">
+              <span className="text-xs text-[#9494A8]">Price:</span>
+              <span className="text-2xl font-bold text-white">${totalPrice}</span>
+            </div>
+          )}
         </div>
 
         {/* PRO MEMBERS ONLY LOCKED STATE OVERLAY FOR FREE USERS */}
