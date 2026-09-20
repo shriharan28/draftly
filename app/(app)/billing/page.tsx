@@ -190,7 +190,6 @@ export default async function BillingPage({
       console.log("=== BILLING PAGE DEBUG ===");
       console.log("Stripe Subscription ID:", sub.stripe_subscription_id);
       console.log("Stripe cancel_at_period_end:", stripeSub.cancel_at_period_end);
-      console.log("Stripe current_period_end:", stripeSub.current_period_end);
       console.log("==========================");
     } catch (err) {
       console.error("Error fetching stripe subscription:", err);
