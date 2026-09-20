@@ -168,8 +168,9 @@ export default async function BillingPage({
 
   let cancelAtPeriodEnd = false;
   let daysRemaining = 0;
+  let debugError = null;
   
-  if (sub?.status === "active" && sub?.stripe_subscription_id) {
+  if (sub && sub.stripe_subscription_id && sub.status === "active") {
     try {
       const stripeSub = await stripe.subscriptions.retrieve(sub.stripe_subscription_id);
       cancelAtPeriodEnd = stripeSub.cancel_at_period_end;
@@ -191,8 +192,9 @@ export default async function BillingPage({
       console.log("Stripe Subscription ID:", sub.stripe_subscription_id);
       console.log("Stripe cancel_at_period_end:", stripeSub.cancel_at_period_end);
       console.log("==========================");
-    } catch (err) {
+    } catch (err: any) {
       console.error("Error fetching stripe subscription:", err);
+      debugError = err.message;
     }
   } else {
     console.log("=== BILLING PAGE DEBUG ===");
