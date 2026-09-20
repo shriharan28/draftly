@@ -6,10 +6,11 @@
  */
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useTransition, useEffect } from "react";
 import { createCheckoutSession } from "@/app/(app)/billing/actions";
 import { Button } from "@/components/ui/button";
 import { ZapIcon, SparklesIcon, MicIcon, RocketIcon, DraftlyLogo } from "@/components/ui/icons";
+import { usePostHog } from "posthog-js/react";
 
 export function PaywallModal({
   isOpen,
@@ -20,6 +21,13 @@ export function PaywallModal({
 }) {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
+  const posthog = usePostHog();
+
+  useEffect(() => {
+    if (isOpen && posthog) {
+      posthog.capture("paywall_view");
+    }
+  }, [isOpen, posthog]);
 
   if (!isOpen) return null;
 

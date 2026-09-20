@@ -1,0 +1,16 @@
+{
+  "name": "Draftly — AI Content Studio",
+  "short_name": "Draftly",
+  "description": "Turn your ideas into platform-ready content in seconds.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0C0C12",
+  "theme_color": "#8B5CF6",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

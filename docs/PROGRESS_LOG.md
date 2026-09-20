@@ -9,8 +9,8 @@
 
 | Field | Value |
 |---|---|
-| **Current stage** | **Stage 6 IN PROGRESS 🚀** (High-Converting Landing Page & Legal Pages Built) → next: Stage 7 Launch Armor & Go-Live |
-| **Next action** | Stage 7: Launch Armor & Go-Live Production Checklists |
+| **Current stage** | **Stage 7 IN PROGRESS 🚀** (Launch Armor & Go-Live) |
+| **Next action** | Stage 7: Sentry, UptimeRobot, Security Checklist, Runbook |
 | **Blockers** | None |
 | **App** | Draftly — AI Content Studio |
 | **Live URL** | **https://draftly-pink.vercel.app** |
@@ -19,6 +19,10 @@
 ---
 
 ## Entries (newest at top — append after every work session)
+
+### 011 — 2026-09-20 — 🏁 STAGE 6 COMPLETE — Production Polish (Emails, SEO, Analytics)
+- **Done:** Added `resend` and configured `WelcomeEmail` (on onboarding) and `LowCreditsEmail` (via cron `/api/cron/low-credits`). Integrated `posthog-js` and `posthog-node` to track `activation`, `paywall_view`, and `paid` funnel events. Configured global SEO metadata, `sitemap.ts`, `robots.ts`, and `manifest.json`. Added global App Router error boundary (`app/(app)/error.tsx`).
+- **Next:** Stage 7 — Launch Armor & Go-Live Production Checklists.
 
 ### 010 — 2026-08-21 — 🌟 STAGE 6 IN PROGRESS — High-Converting Landing Page & Legal Suite
 - **Done:** Mockup Gate 5 APPROVED. Built high-converting GenZ dark-mode Landing Page in `app/page.tsx` featuring live interactive studio preview, feature cards, and pricing comparison ($0 Starter vs $9/mo Pro). Built plain-language legal pages in `app/legal/terms/page.tsx` and `app/legal/privacy/page.tsx`. Verified clean compilation with `npm run build` ✅ (17/17 static & dynamic routes).

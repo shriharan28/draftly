@@ -39,7 +39,7 @@ export async function createCheckoutSession() {
           quantity: 1,
         },
       ],
-      success_url: `${appUrl}/billing?success=true`,
+      success_url: `${appUrl}/billing?success=true&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${appUrl}/billing?canceled=true`,
       metadata: {
         user_id: user.id,

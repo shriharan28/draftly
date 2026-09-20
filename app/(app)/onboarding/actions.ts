@@ -19,6 +19,9 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import { resend, EMAIL_FROM } from "@/lib/resend/client";
+import { getWelcomeEmailHtml } from "@/lib/resend/templates";
+import { posthog } from "@/lib/posthog/server";
 
 export type OnboardingData = {
   niche: string;
@@ -70,6 +73,33 @@ export async function saveOnboarding(data: OnboardingData) {
     // Non-fatal if voice insert fails, but log it
   }
 
-  // 3. Complete & redirect to Dashboard
+  // 3. Send welcome email (non-blocking)
+  if (user.email) {
+    try {
+      await resend.emails.send({
+        from: `Draftly <${EMAIL_FROM}>`,
+        to: user.email,
+        subject: "Welcome to Draftly! 🎉",
+        html: getWelcomeEmailHtml(),
+      });
+    } catch (emailError) {
+      console.error("Failed to send welcome email:", emailError);
+    }
+  }
+
+  // 4. Analytics: Track activation
+  posthog.capture({
+    distinctId: user.id,
+    event: 'activation',
+    properties: {
+      niche: data.niche,
+      platforms: data.platforms,
+    }
+  });
+
+  // Flush posthog to ensure event is sent before redirect
+  await posthog.shutdown();
+
+  // 5. Complete & redirect to Dashboard
   redirect("/dashboard");
 }

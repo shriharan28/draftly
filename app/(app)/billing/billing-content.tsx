@@ -18,11 +18,15 @@ import { ZapIcon } from "@/components/ui/icons";
 
 export function BillingContent({
   subscriptionStatus,
+  cancelAtPeriodEnd,
+  daysRemaining = 0,
   currentBalance,
   ledgerRows,
   searchParams,
 }: {
   subscriptionStatus: string;
+  cancelAtPeriodEnd?: boolean;
+  daysRemaining?: number;
   currentBalance: number;
   ledgerRows: {
     id: number;
@@ -81,8 +85,13 @@ export function BillingContent({
       {/* PRICING & PLAN CARDS */}
       <div className="grid gap-6 md:grid-cols-2">
         {/* CURRENT PLAN CARD */}
-        <div className="glass-panel p-7 flex flex-col justify-between">
-          <div>
+        <div className="glass-panel p-7 flex flex-col justify-between relative overflow-hidden">
+          {cancelAtPeriodEnd && (
+            <div className="absolute top-0 left-0 w-full bg-[#F59E0B]/10 border-b border-[#F59E0B]/20 p-2 text-center text-[11px] font-semibold text-[#F59E0B]">
+              ⚠️ Subscription cancels in {daysRemaining} days. You will lose Pro benefits after this period.
+            </div>
+          )}
+          <div className={cancelAtPeriodEnd ? "pt-8" : ""}>
             <div className="mb-2 text-lg font-bold font-display text-white">Current Plan</div>
             <p className="text-xs text-[#9494A8]">
               {isPro ? "You are currently on Draftly Pro." : "You are on the Free Starter tier."}

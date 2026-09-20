@@ -300,7 +300,7 @@ export default function LandingPage() {
 
                 <ul className="mt-6 space-y-3 text-xs text-[#8E8EA3]">
                   <li className="flex items-center gap-2">
-                    <span className="text-[#10B981]">✓</span> 500 Credits / Month
+                    <span className="text-[#10B981]">✓</span> 150 Credits / Month
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="text-[#10B981]">✓</span> Priority Gemini 3.7 AI Access

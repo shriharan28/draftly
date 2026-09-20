@@ -62,14 +62,14 @@ export async function POST(req: Request) {
             }
           } else {
             // PRO PLAN SUBSCRIPTION CHECKOUT
-            await adminClient.from("subscriptions").upsert({
-              user_id: userId,
-              stripe_customer_id: customerId,
-              stripe_subscription_id: session.subscription as string,
-              status: "active",
-              price_id: process.env.STRIPE_PRICE_PRO_ID || null,
-              updated_at: new Date().toISOString(),
-            });
+            await adminClient.from("subscriptions")
+              .update({
+                stripe_subscription_id: session.subscription as string,
+                status: "active",
+                price_id: process.env.STRIPE_PRICE_PRO_ID || null,
+                updated_at: new Date().toISOString(),
+              })
+              .eq("stripe_customer_id", customerId);
 
             const { data: latestLedger } = await adminClient
               .from("credit_ledger")
@@ -90,6 +90,17 @@ export async function POST(req: Request) {
               idempotency_key: `stripe_grant_${session.id}`,
             });
           }
+          
+          // Analytics: Track paid event
+          const { posthog } = await import("@/lib/posthog/server");
+          posthog.capture({
+            distinctId: userId,
+            event: 'paid',
+            properties: {
+              plan: session.metadata?.type === "credit_topup" ? "topup" : "pro",
+            }
+          });
+          await posthog.shutdown();
         }
         break;
       }
