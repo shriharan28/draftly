@@ -15,10 +15,13 @@ export async function deleteGenerationAction(id: string) {
     return { error: "Authentication required." };
   }
 
+  // The ID from the client is in the format "uuid-idx"
+  const realId = id.substring(0, id.lastIndexOf("-"));
+
   const { error } = await adminClient
     .from("generations")
     .delete()
-    .eq("id", id)
+    .eq("id", realId)
     .eq("user_id", user.id);
 
   if (error) {
