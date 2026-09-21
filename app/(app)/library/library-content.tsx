@@ -44,6 +44,7 @@ export function LibraryContent({ generations }: { generations: GenerationRow[] }
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [draftToDelete, setDraftToDelete] = useState<{ id: string; topic: string } | null>(null);
 
   const filtered = generations.filter((gen) => {
     const matchesFormat = selectedFormat === "all" || gen.format === selectedFormat;
@@ -60,14 +61,18 @@ export function LibraryContent({ generations }: { generations: GenerationRow[] }
     setTimeout(() => setCopiedId(null), 2000);
   }
 
-  function handleDelete(id: string) {
-    if (confirm("Are you sure you want to delete this draft?")) {
-      setDeletingId(id);
-      startTransition(async () => {
-        await deleteGenerationAction(id);
-        setDeletingId(null);
-      });
-    }
+  function handleDeleteRequest(id: string, topic: string) {
+    setDraftToDelete({ id, topic });
+  }
+
+  function handleConfirmDelete() {
+    if (!draftToDelete) return;
+    setDeletingId(draftToDelete.id);
+    startTransition(async () => {
+      await deleteGenerationAction(draftToDelete.id);
+      setDeletingId(null);
+      setDraftToDelete(null);
+    });
   }
 
   function getPlatformIcon(format: string) {
@@ -201,7 +206,7 @@ export function LibraryContent({ generations }: { generations: GenerationRow[] }
                   <Button
                     type="button"
                     variant="ghost"
-                    onClick={() => handleDelete(gen.id)}
+                    onClick={() => handleDeleteRequest(gen.id, gen.topic || "this draft")}
                     disabled={isPending && deletingId === gen.id}
                     className="h-8 text-xs px-3 text-red-400 hover:text-red-300 hover:bg-red-500/10"
                   >
@@ -219,6 +224,37 @@ export function LibraryContent({ generations }: { generations: GenerationRow[] }
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* CUSTOM DELETE CONFIRMATION MODAL */}
+      {draftToDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+          <div className="w-full max-w-sm rounded-2xl border border-white/10 bg-[#12121A] p-6 shadow-2xl animate-in zoom-in-95 duration-200">
+            <h3 className="text-lg font-bold text-white mb-2">Delete Draft?</h3>
+            <p className="text-sm text-[#9494A8] mb-6">
+              Are you sure you want to permanently delete{" "}
+              <span className="text-white font-medium">"{draftToDelete.topic}"</span>? This action cannot be undone.
+            </p>
+            <div className="flex items-center justify-end gap-3">
+              <Button
+                variant="ghost"
+                onClick={() => setDraftToDelete(null)}
+                disabled={isPending}
+                className="text-xs hover:bg-white/5 text-[#9494A8] hover:text-white"
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="primary"
+                onClick={handleConfirmDelete}
+                disabled={isPending}
+                className="text-xs bg-red-500 hover:bg-red-600 text-white border-none shadow-[0_0_15px_rgba(239,68,68,0.3)]"
+              >
+                {isPending ? "Deleting..." : "Yes, delete it"}
+              </Button>
+            </div>
+          </div>
         </div>
       )}
     </div>
