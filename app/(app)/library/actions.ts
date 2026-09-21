@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { adminClient } from "@/lib/supabase/admin";
 import { revalidatePath } from "next/cache";
 
 export async function deleteGenerationAction(id: string) {
@@ -14,7 +15,7 @@ export async function deleteGenerationAction(id: string) {
     return { error: "Authentication required." };
   }
 
-  const { error } = await supabase
+  const { error } = await adminClient
     .from("generations")
     .delete()
     .eq("id", id)
