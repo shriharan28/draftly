@@ -53,7 +53,6 @@ function SaveDraftButton({
       const res = await saveDraftToLibraryAction({ topic, contentType, content });
       if (res.success) {
         setSaved(true);
-        setTimeout(() => setSaved(false), 3000);
       }
     });
   }
