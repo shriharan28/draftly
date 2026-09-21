@@ -6,8 +6,9 @@
  */
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import Link from "next/link";
+import { deleteGenerationAction } from "./actions";
 import { Button } from "@/components/ui/button";
 import {
   LibraryIcon,
@@ -41,6 +42,8 @@ export function LibraryContent({ generations }: { generations: GenerationRow[] }
   const [selectedFormat, setSelectedFormat] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [isPending, startTransition] = useTransition();
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const filtered = generations.filter((gen) => {
     const matchesFormat = selectedFormat === "all" || gen.format === selectedFormat;
@@ -55,6 +58,16 @@ export function LibraryContent({ generations }: { generations: GenerationRow[] }
     navigator.clipboard.writeText(text);
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 2000);
+  }
+
+  function handleDelete(id: string) {
+    if (confirm("Are you sure you want to delete this draft?")) {
+      setDeletingId(id);
+      startTransition(async () => {
+        await deleteGenerationAction(id);
+        setDeletingId(null);
+      });
+    }
   }
 
   function getPlatformIcon(format: string) {
@@ -184,14 +197,25 @@ export function LibraryContent({ generations }: { generations: GenerationRow[] }
                   {gen.content.split(" ").length} words
                 </span>
 
-                <Button
-                  type="button"
-                  variant="secondary"
-                  onClick={() => handleCopy(gen.id, gen.content)}
-                  className="h-8 text-xs px-3"
-                >
-                  {copiedId === gen.id ? "✓ Copied!" : "Copy Text"}
-                </Button>
+                <div className="flex items-center gap-2">
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    onClick={() => handleDelete(gen.id)}
+                    disabled={isPending && deletingId === gen.id}
+                    className="h-8 text-xs px-3 text-red-400 hover:text-red-300 hover:bg-red-500/10"
+                  >
+                    {isPending && deletingId === gen.id ? "Deleting..." : "Delete"}
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    onClick={() => handleCopy(gen.id, gen.content)}
+                    className="h-8 text-xs px-3"
+                  >
+                    {copiedId === gen.id ? "✓ Copied!" : "Copy Text"}
+                  </Button>
+                </div>
               </div>
             </div>
           ))}
