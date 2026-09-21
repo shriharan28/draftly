@@ -145,22 +145,25 @@ export default async function BillingPage({
 }) {
   const supabase = await createClient();
   const params = await searchParams;
+  const { credits, session_id } = params;
 
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // If redirected back from Stripe with success=true, sync subscription or top-up credits
-  if (params.success === "true" && user) {
-    if (params.credits) {
-      await syncCreditTopUpSuccess(user.id, params.credits, params.session_id);
+  // If redirected back from Stripe with session_id, sync subscription or top-up credits
+  if (user && session_id) {
+    if (credits) {
+      await syncCreditTopUpSuccess(user.id, credits, session_id);
     } else {
-      await syncStripeCheckoutSuccess(user.id, params.session_id);
+      // We only want to run this once per session_id.
+      // In strict mode, React runs this twice, but the idempotency key in the DB prevents double-charging.
+      await syncStripeCheckoutSuccess(user.id, session_id);
     }
   }
 
   // 1. Fetch Subscription status
-  const { data: sub } = await supabase
+  const { data: sub } = await adminClient
     .from("subscriptions")
     .select("status, stripe_subscription_id")
     .eq("user_id", user?.id || "")
